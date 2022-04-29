@@ -1,7 +1,7 @@
-/* $Id: etc.c,v 1.1 1996/11/07 08:03:32 ryo freeze $
+ï»¿/* $Id: etc.c,v 1.1 1996/11/07 08:03:32 ryo freeze $
  *
- *	ƒ\[ƒXƒR[ƒhƒWƒFƒlƒŒ[ƒ^
- *	G—pƒ‹[ƒ`ƒ“
+ *	ã‚½ãƒ¼ã‚¹ã‚³ãƒ¼ãƒ‰ã‚¸ã‚§ãƒãƒ¬ãƒ¼ã‚¿
+ *	é›‘ç”¨ãƒ«ãƒ¼ãƒãƒ³
  *	Copyright (C) 1989,1990 K.Abe
  *	All rights reserved.
  *	Copyright (C) 1997-2010 Tachibana
@@ -29,43 +29,43 @@ extern void print_title (void);
 extern ULONG
 atox (char* p)
 {
-    ULONG val = 0;
+	ULONG val = 0;
 
-    if (p[0] == (char)'$')
+	if (p[0] == (char)'$')
 	p++;
-    /* 0x... ‚È‚ç“ª‚Ì 0x ‚ğæ‚èœ‚­ */
-    else if (p[0] == (char)'0' && p[1] == (char)'x' && p[2])
+	/* 0x... ãªã‚‰é ­ã® 0x ã‚’å–ã‚Šé™¤ã */
+	else if (p[0] == (char)'0' && p[1] == (char)'x' && p[2])
 	p += 2;
 
-    while (isxdigit (*(unsigned char*)p)) {
+	while (isxdigit (*(unsigned char*)p)) {
 	unsigned char c = *p++;
 	val <<= 4;
 	if (isdigit (c))
-	    val += c - '0';
+		val += c - '0';
 	else
-	    val += tolower (c) - 'a' + 10;
-    }
-    return val;
+		val += tolower (c) - 'a' + 10;
+	}
+	return val;
 }
 
 
-/* ƒtƒH[ƒ}ƒbƒg•¶š—ñ‚ğ•\¦‚µ‚ÄƒGƒ‰[I—¹‚·‚é. */
+/* ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆæ–‡å­—åˆ—ã‚’è¡¨ç¤ºã—ã¦ã‚¨ãƒ©ãƒ¼çµ‚äº†ã™ã‚‹. */
 extern void
 err (const char* fmt, ...)
 {
-    va_list ap;
+	va_list ap;
 
-    print_title ();
-    va_start (ap, fmt);
-    vfprintf (stderr, fmt, ap);
-    va_end (ap);
+	print_title ();
+	va_start (ap, fmt);
+	vfprintf (stderr, fmt, ap);
+	va_end (ap);
 
-    free_labelbuf ();
-    free_relocate_buffer ();
-    free_symbuf ();
-    free_load_buffer ();
+	free_labelbuf ();
+	free_relocate_buffer ();
+	free_symbuf ();
+	free_load_buffer ();
 
-    exit (EXIT_FAILURE);
+	exit (EXIT_FAILURE);
 }
 
 
@@ -77,14 +77,14 @@ err (const char* fmt, ...)
 extern void*
 Malloc (ULONG byte)
 {
-    void* rc;
+	void* rc;
 
-    if (byte == 0)
+	if (byte == 0)
 	byte = 1;
-    if ((rc = malloc (byte)) == NULL)
-	err ("ƒq[ƒvƒƒ‚ƒŠ‚ª•s‘«‚µ‚Ä‚¢‚Ü‚·.\n");
+	if ((rc = malloc (byte)) == NULL)
+	err ("Insufficient heap memory.\n");
 
-    return rc;
+	return rc;
 }
 
 
@@ -93,15 +93,15 @@ Malloc (ULONG byte)
 
   safe mfree
 
-  free() ‚Í NULL ‚ğ“n‚µ‚½ê‡‚Í‰½‚à‚¹‚¸‚É³íI—¹‚·‚é‚Ì‚ÅA’Êí‚Í
+  free() ã¯ NULL ã‚’æ¸¡ã—ãŸå ´åˆã¯ä½•ã‚‚ã›ãšã«æ­£å¸¸çµ‚äº†ã™ã‚‹ã®ã§ã€é€šå¸¸ã¯
   #define Mfree(ptr) free(ptr)
-  ‚Æ‚µ‚Ä‚¨‚«‚Ü‚·.  
+  ã¨ã—ã¦ãŠãã¾ã™.
 
 */
 extern void
 Mfree (void* ptr)
 {
-    if (ptr)
+	if (ptr)
 	free (ptr);
 }
 #endif
@@ -115,11 +115,12 @@ Mfree (void* ptr)
 extern void*
 Realloc (void* ptr, int size)
 {
-    void* rc;
-    
-    if ((rc = realloc (ptr, size)) == NULL)
-	err ("ƒq[ƒvƒƒ‚ƒŠ‚ª•s‘«‚µ‚Ä‚¢‚Ü‚·.\n");
-    return rc;
+	void* rc;
+
+
+	if ((rc = realloc (ptr, size)) == NULL)
+	err ("Heap memory is insufficient.\n");
+	return rc;
 }
 
 
@@ -127,13 +128,13 @@ Realloc (void* ptr, int size)
 extern int
 eprintf (const char* fmt, ...)
 {
-    int cnt;
-    va_list ap;
+	int cnt;
+	va_list ap;
 
-    va_start (ap, fmt);
-    cnt = vfprintf (stderr, fmt, ap);
-    va_end (ap);
-    return cnt;
+	va_start (ap, fmt);
+	cnt = vfprintf (stderr, fmt, ap);
+	va_end (ap);
+	return cnt;
 }
 #endif
 
@@ -141,22 +142,25 @@ eprintf (const char* fmt, ...)
 extern int
 eputc (int c)
 {
-    return fputc (c, stderr);
+	return fputc (c, stderr);
 }
 
 
-#ifndef	__GNUC__
+#ifdef GOMWING //#ifndef	__GNUC__
 extern ULONG
 min (ULONG a, ULONG b)
 {
-    return a < b ? a : b;
+	return a < b ? a : b;
 }
 
 extern ULONG
 max (ULONG a, ULONG b);
 {
-    return a > b ? a : b;
+	return a > b ? a : b;
 }
+#else
+#define min(a,b) (((a)<(b))?(a):(b))
+#define max(a,b) (((a)>(b))?(a):(b))
 #endif
 
 
@@ -164,13 +168,13 @@ max (ULONG a, ULONG b);
 extern char*
 strupr (char* str)
 {
-    unsigned char* p;
+	unsigned char* p;
 
-    for (p = (unsigned char*) str; *p; p++) {
+	for (p = (unsigned char*) str; *p; p++) {
 	if (islower (*p))
-	    *p = toupper (*p);
-    }
-    return str;
+		*p = toupper (*p);
+	}
+	return str;
 }
 #endif
 

@@ -1,7 +1,7 @@
-/* $Id: offset.c,v 1.1 1996/11/07 08:03:52 ryo freeze $
+ï»¿/* $Id: offset.c,v 1.1 1996/11/07 08:03:52 ryo freeze $
  *
- *	ƒ\[ƒXƒR[ƒhƒWƒFƒlƒŒ[ƒ^
- *	Ä”z’uƒe[ƒuƒ‹ŠÇ—ƒ‚ƒWƒ…[ƒ‹
+ *	ã‚½ãƒ¼ã‚¹ã‚³ãƒ¼ãƒ‰ã‚¸ã‚§ãƒãƒ¬ãƒ¼ã‚¿
+ *	å†é…ç½®ãƒ†ãƒ¼ãƒ–ãƒ«ç®¡ç†ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«
  *	Copyright (C) 1989,1990 K.Abe
  *	All rights reserved.
  *	Copyright (C) 1997-2010 Tachibana
@@ -19,138 +19,137 @@
 /* #define DEBUG */
 
 
-static address* Reltable = NULL;	/* Ä”z’uƒe[ƒuƒ‹‚Ì“ª */
-static int Relnum;			/* Ä”z’uƒe[ƒuƒ‹‚Ì—v‘f” */
+static address* Reltable = NULL;	/* å†é…ç½®ãƒ†ãƒ¼ãƒ–ãƒ«ã®é ­ */
+static int Relnum;			/* å†é…ç½®ãƒ†ãƒ¼ãƒ–ãƒ«ã®è¦ç´ æ•° */
 
 
-#ifdef	DEBUG
+#ifdef DEBUG
 private void
 disp_reltable (void)
 {
-    int i;
+	int i;
 
-    for (i = 0; i < Relnum; i++)
+	for (i = 0; i < Relnum; i++)
 	printf ("%5x\n", Reltable[i]);
 }
 #endif
 
-
 /*
 
-  Ä”z’uƒe[ƒuƒ‹‚©‚çÄ”z’u‚·‚×‚«ƒAƒhƒŒƒX‚Ìƒe[ƒuƒ‹‚ğì‚é
+  å†é…ç½®ãƒ†ãƒ¼ãƒ–ãƒ«ã‹ã‚‰å†é…ç½®ã™ã¹ãã‚¢ãƒ‰ãƒ¬ã‚¹ã®ãƒ†ãƒ¼ãƒ–ãƒ«ã‚’ä½œã‚‹
 
 */
 extern void
 make_relocate_table (void)
 {
-    address destadrs = BeginTEXT;
-    UBYTE* ptr;		/* ƒIƒtƒZƒbƒg•\‚Ö‚Ìƒ|ƒCƒ“ƒ^ ( not always even !) */
+	address destadrs = BeginTEXT;
+	UBYTE* ptr;		/* ã‚ªãƒ•ã‚»ãƒƒãƒˆè¡¨ã¸ã®ãƒã‚¤ãƒ³ã‚¿ ( not always even !) */
 
-    if ((Reltable = (address *) Malloc (Head.offset * 2)) == NULL)
-	err ("ƒŠƒƒP[ƒgî•ñ‚Ì“WŠJƒoƒbƒtƒ@‚ğŠm•Ûo—ˆ‚Ü‚¹‚ñ‚Å‚µ‚½\n");
+	if ((Reltable = (address *) Malloc (Head.offset * sizeof(address))) == NULL)
+	err ("We could not secure the expansion buffer for relocate information\n");
 
-    Relnum = 0;
-    ptr = (UBYTE*) (Top + Head.text + Head.data);
+	Relnum = 0;
+	ptr = (UBYTE*) (Top + Head.text + Head.data);
 
-    while (ptr < (UBYTE*) (Top + Head.text + Head.data + Head.offset)) {
+	while (ptr < (UBYTE*) (Top + Head.text + Head.data + Head.offset)) {
 	if ((*ptr << 8) + *(ptr + 1) == 0x0001) {
-	    /* 0x0001 0x???? 0x???? : ƒƒ“ƒOƒ[ƒh‹——£ */
-	    ptr += 2;
-	    destadrs += (ULONG) ( (*(ptr + 0) << 24)
+		/* 0x0001 0x???? 0x???? : ãƒ­ãƒ³ã‚°ãƒ¯ãƒ¼ãƒ‰è·é›¢ */
+		ptr += 2;
+		destadrs += (ULONG) ( (*(ptr + 0) << 24)
 				+ (*(ptr + 1) << 16)
 				+ (*(ptr + 2) << 8)
 				+  *(ptr + 3));
-	    ptr += 4;
+		ptr += 4;
 	}
 	else {
-	    /* 0x???? ( != 0x0001 ) : ƒ[ƒh‹——£ */
-	    destadrs += (ULONG) (((*ptr << 8) + *(ptr + 1)) & 0xfffe);
-	    ptr += 2;
+		/* 0x???? ( != 0x0001 ) : ãƒ¯ãƒ¼ãƒ‰è·é›¢ */
+		destadrs += (ULONG) (((*ptr << 8) + *(ptr + 1)) & 0xfffe);
+		ptr += 2;
 	}
 	Reltable[Relnum++] = destadrs;
-    }
+	}
 
 #ifdef	DEBUG
-    disp_reltable ();
+	disp_reltable ();
 #endif
 }
 
 
 /*
 
-  Œãn––
+  å¾Œå§‹æœ«
 
 */
 extern void
 free_relocate_buffer (void)
 {
-    /* if (Reltable) */
+	/* if (Reltable) */
 	Mfree (Reltable);
 }
 
 
 /*
 
-  adrs ‚ªƒvƒƒOƒ‰ƒ€‚Ìƒ[ƒh‚³‚ê‚½ƒAƒhƒŒƒX‚ÉˆË‘¶‚µ‚Ä‚¢‚é‚È‚ç TRUE
+  adrs ãŒãƒ—ãƒ­ã‚°ãƒ©ãƒ ã®ãƒ­ãƒ¼ãƒ‰ã•ã‚ŒãŸã‚¢ãƒ‰ãƒ¬ã‚¹ã«ä¾å­˜ã—ã¦ã„ã‚‹ãªã‚‰ TRUE
   label1    pea.l   label2
-  ‚±‚Ì‚Æ‚« depend_address( label1 + 2 ) == TRUE	 ( label2‚ªˆË‘¶‚µ‚Ä‚¢‚é )
+  ã“ã®ã¨ã depend_address( label1 + 2 ) == TRUE	 ( label2ãŒä¾å­˜ã—ã¦ã„ã‚‹ )
 
 */
 extern boolean
 depend_address (address adrs)
 {
-    address* ptr = Reltable;
-    int step = Relnum >> 1;
+	address* ptr = Reltable;
+	int step = Relnum >> 1;
 
-    while (step > 4) {
+	while (step > 4) {
 	if (*(ptr + step) <= adrs)	/* binary search */
-	    ptr += step;
+		ptr += step;
 	step >>= 1;
-    }
-    for (; ptr < Reltable + Relnum; ptr++) {
+	}
+	for (; ptr < Reltable + Relnum; ptr++) {
 	if (*ptr == adrs) {
 #ifdef	DEBUG
-	    printf ("%6x is address-dependent\n", adrs);
+		printf ("%6x is address-dependent\n", adrs);
 #endif
-	    return TRUE;
+		return TRUE;
 	} else
-	    if (adrs < *ptr)
+		if (adrs < *ptr)
 		return FALSE;
-    }
-    return FALSE;
+	}
+	return FALSE;
 }
 
 
 /*
 
-  adrs ‚©‚»‚ê‚æ‚èŒã‚ÅAÅ‚à‹ß‚¢ƒAƒhƒŒƒXˆË‘¶‚ÌƒAƒhƒŒƒX‚ğ•Ô‚·
-  ‚»‚Ì‚æ‚¤‚È—Ìˆæ‚ª–³‚¯‚ê‚Î 0xffffffff = -1 ‚ğ•Ô‚·
+  adrs ã‹ãã‚Œã‚ˆã‚Šå¾Œã§ã€æœ€ã‚‚è¿‘ã„ã‚¢ãƒ‰ãƒ¬ã‚¹ä¾å­˜ã®ã‚¢ãƒ‰ãƒ¬ã‚¹ã‚’è¿”ã™
+  ãã®ã‚ˆã†ãªé ˜åŸŸãŒç„¡ã‘ã‚Œã° 0xffffffff = -1 ã‚’è¿”ã™
 
 */
 extern address
 nearadrs (address adrs)
 {
-    address rc = (address)-1;
-    int step = Relnum >> 1;
-    address* ptr = Reltable;
+	address rc = (address)-1;
+	int step = Relnum >> 1;
+	address* ptr = Reltable;
 
-    while (step > 4) {
+	while (step > 4) {
 	if (*(ptr + step) < adrs)	/* binary search */
-	    ptr += step;
+		ptr += step;
 	step >>= 1;
-    }
-
-    for (; ptr < Reltable + Relnum; ptr++) {
-	if (adrs <= *ptr) {
-	    rc = *ptr;
-	    break;
 	}
-    }
+
+	for (; ptr < Reltable + Relnum; ptr++) {
+	if (adrs <= *ptr) {
+		rc = *ptr;
+		break;
+	}
+	}
 
 #ifdef	DEBUG
-    printf ("nearadrs (%x) = %x\n", adrs, rc);
+	printf ("nearadrs (%x) = %x\n", adrs, rc);
 #endif
-    return rc;
+	return rc;
 }
 
 

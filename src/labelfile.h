@@ -1,7 +1,7 @@
-/* $Id: labelfile.h,v 1.1 1996/10/24 04:27:48 ryo freeze $
+ï»¿/* $Id: labelfile.h,v 1.1 1996/10/24 04:27:48 ryo freeze $
  *
- *	ƒ\[ƒXƒR[ƒhƒWƒFƒlƒŒ[ƒ^
- *	ƒ‰ƒxƒ‹ƒtƒ@ƒCƒ‹ƒŠ[ƒhƒ‚ƒWƒ…[ƒ‹ƒwƒbƒ_
+ *	ã‚½ãƒ¼ã‚¹ã‚³ãƒ¼ãƒ‰ã‚¸ã‚§ãƒãƒ¬ãƒ¼ã‚¿
+ *	ãƒ©ãƒ™ãƒ«ãƒ•ã‚¡ã‚¤ãƒ«ãƒªãƒ¼ãƒ‰ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ãƒ˜ãƒƒãƒ€
  *	Copyright (C) 1989,1990 K.Abe
  *	All rights reserved.
  *	Copyright (C) 1997-2010 Tachibana

@@ -1,7 +1,7 @@
-/*
+ï»¿/*
  *
- *	ƒ\[ƒXƒR[ƒhƒWƒFƒlƒŒ[ƒ^
- *	•‚“®¬”“_À”’l•¶š—ñ•ÏŠ·ƒ‚ƒWƒ…[ƒ‹ƒwƒbƒ_
+ *	ã‚½ãƒ¼ã‚¹ã‚³ãƒ¼ãƒ‰ã‚¸ã‚§ãƒãƒ¬ãƒ¼ã‚¿
+ *	æµ®å‹•å°æ•°ç‚¹å®Ÿæ•°å€¤æ–‡å­—åˆ—å¤‰æ›ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ãƒ˜ãƒƒãƒ€
  *	Copyright (C) 1997-2010 Tachibana
  *
  */
@@ -10,25 +10,26 @@
 #define	FPCONV_H
 
 #if !defined(__GNUC__) || (__GNUC__ < 2)
-#error You lose. This file can be compiled only by GNU-C compiler version 2.
+////#error You lose. This file can be compiled only by GNU-C compiler version 2.
 #endif
 
+#include <stdint.h>
 
 typedef union {
-    struct {
-	unsigned long hi;
-	unsigned long lo;
-    } ul;
-    double d;
+	struct {
+	uint32_t hi;
+	uint32_t lo;
+	} ul;
+	double d;
 } quadword;
 
 typedef union {
-    struct {
-	unsigned long hi;
-	unsigned long mi;
-	unsigned long lo;
-    } ul;
-    unsigned char uc[12];
+	struct {
+	uint32_t hi;
+	uint32_t mi;
+	uint32_t lo;
+	} ul;
+	unsigned char uc[12];
 } packed_decimal;
 
 

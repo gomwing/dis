@@ -1,7 +1,7 @@
-/* $Id: option.h,v 1.1 1996/10/24 04:27:48 ryo freeze $
+ï»¿/* $Id: option.h,v 1.1 1996/10/24 04:27:48 ryo freeze $
  *
- *	ƒ\[ƒXƒR[ƒhƒWƒFƒlƒŒ[ƒ^
- *	ƒIƒvƒVƒ‡ƒ“ƒwƒbƒ_
+ *	ã‚½ãƒ¼ã‚¹ã‚³ãƒ¼ãƒ‰ã‚¸ã‚§ãƒãƒ¬ãƒ¼ã‚¿
+ *	ã‚ªãƒ—ã‚·ãƒ§ãƒ³ãƒ˜ãƒƒãƒ€
  *	Copyright (C) 1989,1990 K.Abe
  *	All rights reserved.
  *	Copyright (C) 1997-2010 Tachibana

@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  * PROJECT C Library, X68000 PROGRAMMING INTERFACE DEFINITION
  * --------------------------------------------------------------------
  * This file is written by the Project C Library Group,	 and completely
@@ -14,40 +14,40 @@
 
 #include "getopt.h"
 
-char *optarg;					/* ˆø”‚ğw‚·ƒ|ƒCƒ“ƒ^ */
-int optind = -1;				/* ARGV ‚ÌŒ»İ‚ÌƒCƒ“ƒfƒbƒNƒX */
-static int opterr = 1;				/* ƒGƒ‰[•\¦ƒtƒ‰ƒO */
-static int _getopt_no_ordering;			/* ORDER ƒtƒ‰ƒO */
+char *optarg;					/* å¼•æ•°ã‚’æŒ‡ã™ãƒã‚¤ãƒ³ã‚¿ */
+int optind = -1;				/* ARGV ã®ç¾åœ¨ã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ */
+static int opterr = 1;				/* ã‚¨ãƒ©ãƒ¼è¡¨ç¤ºãƒ•ãƒ©ã‚° */
+static int _getopt_no_ordering;			/* ORDER ãƒ•ãƒ©ã‚° */
 
 /* File scope functions */
 static void rotate_right (char *vector[], int size)
 {
-    char *temp;
+	char *temp;
 
-    /* ÅŒã”ö‚ğ•Û‘¶ */
-    temp = vector[size - 1];
+	/* æœ€å¾Œå°¾ã‚’ä¿å­˜ */
+	temp = vector[size - 1];
 
-    /* size •ªƒ[ƒe[ƒg */
-    while (size--)
+	/* size åˆ†ãƒ­ãƒ¼ãƒ†ãƒ¼ãƒˆ */
+	while (size--)
 	vector[size] = vector[size - 1];
 
-    /* æ“ª‚É•Û‘¶‚µ‚Ä‚¢‚½‚à‚Ì‚ğ... */
-    vector[0] = temp;
+	/* å…ˆé ­ã«ä¿å­˜ã—ã¦ã„ãŸã‚‚ã®ã‚’... */
+	vector[0] = temp;
 }
 
 /* Functions */
 int dis_getopt (int argc, char *argv[], const char *options)
 {
-    int index;					/* Œ»İ‚ÌƒCƒ“ƒfƒbƒNƒX */
-    int next;					/* Ÿ‚ÌƒCƒ“ƒfƒbƒNƒX */
-    int optchar;				/* ƒIƒvƒVƒ‡ƒ“•¶š */
-    char *string;				/* ƒIƒvƒVƒ‡ƒ“•¶š—ñ */
-    const char *ptr;				/* options ’T¸—p */
+	int index;					/* ç¾åœ¨ã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ */
+	int next;					/* æ¬¡ã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ */
+	int optchar;				/* ã‚ªãƒ—ã‚·ãƒ§ãƒ³æ–‡å­— */
+	char *string;				/* ã‚ªãƒ—ã‚·ãƒ§ãƒ³æ–‡å­—åˆ— */
+	const char *ptr;				/* options æ¢æŸ»ç”¨ */
 
-    static int init;				/* Ÿ‰ñ‰Šú‰»‚·‚é•K—v‚ ‚è */
-    static int savepoint;			/* “ü‚êŠ·‚¦—p‚Ì‹L‰¯ƒ|ƒCƒ“ƒg */
-    static int rotated;				/* ŒğŠ·ƒtƒ‰ƒO */
-    static int comidx;				/* •¡‡ƒCƒ“ƒfƒbƒNƒX */
+	static int init;				/* æ¬¡å›åˆæœŸåŒ–ã™ã‚‹å¿…è¦ã‚ã‚Š */
+	static int savepoint;			/* å…¥ã‚Œæ›ãˆç”¨ã®è¨˜æ†¶ãƒã‚¤ãƒ³ãƒˆ */
+	static int rotated;				/* äº¤æ›ãƒ•ãƒ©ã‚° */
+	static int comidx;				/* è¤‡åˆã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ */
 
 #ifdef __LIBC__
 #define ERR(fmt,arg1,arg2)	if (opterr) eprintf(fmt,arg1,arg2)
@@ -55,147 +55,147 @@ int dis_getopt (int argc, char *argv[], const char *options)
 #define ERR(fmt,arg1,arg2)	if (opterr) fprintf(stderr,fmt,arg1,arg2)
 #endif
 
-    /* ‰Šú‰»‚Ì•K—v‚ª‚ ‚ê‚Î‰Šú‰»‚·‚é */
-    if (init || optind < 0) {
+	/* åˆæœŸåŒ–ã®å¿…è¦ãŒã‚ã‚Œã°åˆæœŸåŒ–ã™ã‚‹ */
+	if (init || optind < 0) {
 	optind = 1;
 	optarg = 0;
 	rotated = 0;
 	init = 0;
 	comidx = 1;
 	savepoint = 0;
-    }
+	}
 
-    /* ‘{¸ŠJnˆÊ’u‚ğİ’è */
-    index = optind;
+	/* æœæŸ»é–‹å§‹ä½ç½®ã‚’è¨­å®š */
+	index = optind;
 
   again:
 
-    /* ˆø”‚ğæ‚èo‚· */
-    string = argv[index];
-    next = index + 1;
+	/* å¼•æ•°ã‚’å–ã‚Šå‡ºã™ */
+	string = argv[index];
+	next = index + 1;
 
-    /* ‚·‚Å‚ÉI‚è‚©H */
-    if (string == 0) {
+	/* ã™ã§ã«çµ‚ã‚Šã‹ï¼Ÿ */
+	if (string == 0) {
 	if (savepoint > 0)
-	    optind = savepoint;
+		optind = savepoint;
 	init = 1;
 	return EOF;
-    }
+	}
 
-    /* '-' ‚Ån‚Ü‚é‚©H */
-    if (*string == '-') {
+	/* '-' ã§å§‹ã¾ã‚‹ã‹ï¼Ÿ */
+	if (*string == '-') {
 
-	/* ƒtƒ‰ƒO•ªƒ|ƒCƒ“ƒ^‚ği‚ß‚é */
+	/* ãƒ•ãƒ©ã‚°åˆ†ãƒã‚¤ãƒ³ã‚¿ã‚’é€²ã‚ã‚‹ */
 	string += comidx;
 
-	/* ³Šm‚É "-" ‚©H‚È‚ç‚Î•’Ê‚Ìˆø” */
+	/* æ­£ç¢ºã« "-" ã‹ï¼Ÿãªã‚‰ã°æ™®é€šã®å¼•æ•° */
 	if ((optchar = *string++) == '\0')
-	    goto normal_arg;
+		goto normal_arg;
 
-	/* ORDERING ‚Ì•K—v‚ª‚ ‚ê‚Îˆø”—ñ‚ğ•”•ª“I‚Éƒ[ƒe[ƒg */
+	/* ORDERING ã®å¿…è¦ãŒã‚ã‚Œã°å¼•æ•°åˆ—ã‚’éƒ¨åˆ†çš„ã«ãƒ­ãƒ¼ãƒ†ãƒ¼ãƒˆ */
 	if (savepoint > 0) {
-	    rotate_right (&argv[savepoint], index - savepoint + 1);
-	    rotated = 1;
-	    index = savepoint;
-	    savepoint++;
+		rotate_right (&argv[savepoint], index - savepoint + 1);
+		rotated = 1;
+		index = savepoint;
+		savepoint++;
 	}
 
-	/* ³Šm‚É "--" ‚È‚ç‚Î‹­§“I‚É‘{¸‚ğI‚è‚É‚·‚é */
+	/* æ­£ç¢ºã« "--" ãªã‚‰ã°å¼·åˆ¶çš„ã«æœæŸ»ã‚’çµ‚ã‚Šã«ã™ã‚‹ */
 	if (optchar == '-' && *string == '\0' && comidx == 1){
-	    init = 1;
-	    optchar = EOF;
-	    goto goback;
+		init = 1;
+		optchar = EOF;
+		goto goback;
 	}
 
-	/* ƒIƒvƒVƒ‡ƒ“•¶šŒQ‚Ì’†‚©‚çŠY“–‚·‚é‚à‚Ì‚ª‚ ‚é‚©’²‚×‚é */
+	/* ã‚ªãƒ—ã‚·ãƒ§ãƒ³æ–‡å­—ç¾¤ã®ä¸­ã‹ã‚‰è©²å½“ã™ã‚‹ã‚‚ã®ãŒã‚ã‚‹ã‹èª¿ã¹ã‚‹ */
 	for (ptr = options; *ptr; ptr++)
-	    if (*ptr != ':' && *ptr == optchar)
+		if (*ptr != ':' && *ptr == optchar)
 		break;
 
-	/* ˆø”‚ğ”º‚¤ê‡‚È‚ç‚ÎƒCƒ“ƒfƒbƒNƒX‚Í‰Šú‰» */
+	/* å¼•æ•°ã‚’ä¼´ã†å ´åˆãªã‚‰ã°ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã¯åˆæœŸåŒ– */
 	if (*string == '\0' || ptr[1] == ':')
-	    comidx = 1;
+		comidx = 1;
 
-	/* ‚³‚à‚È‚¯‚ê‚Î•¡‡ƒIƒvƒVƒ‡ƒ“ƒCƒ“ƒfƒbƒNƒX‚ğ‰ÁZ */
+	/* ã•ã‚‚ãªã‘ã‚Œã°è¤‡åˆã‚ªãƒ—ã‚·ãƒ§ãƒ³ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã‚’åŠ ç®— */
 	else {
-	    comidx++;
-	    index--;
+		comidx++;
+		index--;
 	}
 
-	/* Œ‹‹ÇŒ©‚Â‚©‚ç‚È‚©‚Á‚½‚È‚ç... */
+	/* çµå±€è¦‹ã¤ã‹ã‚‰ãªã‹ã£ãŸãªã‚‰... */
 	if (*ptr == '\0') {
-	    ERR ("%s: unrecognized option '-%c'\n", argv[0], optchar);
-	    optchar = '?';
+		ERR ("%s: unrecognized option '-%c'\n", argv[0], optchar);
+		optchar = '?';
 	}
 
-	/* Œ©‚Â‚©‚Á‚½‚ªƒIƒvƒVƒ‡ƒ“w’è‚É ':' ‚ª‚ ‚é‚È‚ç... */
+	/* è¦‹ã¤ã‹ã£ãŸãŒã‚ªãƒ—ã‚·ãƒ§ãƒ³æŒ‡å®šã« ':' ãŒã‚ã‚‹ãªã‚‰... */
 	else if (ptr[1] == ':') {
 
-	    /* “¯‚¶ argv “à‚Éˆø”‚ª‚ ‚é‚© */
-	    if (*string)
+		/* åŒã˜ argv å†…ã«å¼•æ•°ãŒã‚ã‚‹ã‹ */
+		if (*string)
 		optarg = string;
 
-	    /* optionsw’è‚ª ?:: ‚È‚ç‚ÎA“¯‚¶ argv “à‚©‚ç‚µ‚©Œ©‚È‚¢ */
-	    else if (ptr[2] == ':')
+		/* optionsæŒ‡å®šãŒ ?:: ãªã‚‰ã°ã€åŒã˜ argv å†…ã‹ã‚‰ã—ã‹è¦‹ãªã„ */
+		else if (ptr[2] == ':')
 		optarg = NULL;
 
-	    /* Ÿ‚Ìˆø”‚É‚ ‚é‚© */
-	    else if (argv[next]) {
+		/* æ¬¡ã®å¼•æ•°ã«ã‚ã‚‹ã‹ */
+		else if (argv[next]) {
 
-		/* ORDERING ‚Ì•K—v‚ª‚ ‚ê‚Î•”•ª“I‚É“ü‚êŠ·‚¦‚é */
+		/* ORDERING ã®å¿…è¦ãŒã‚ã‚Œã°éƒ¨åˆ†çš„ã«å…¥ã‚Œæ›ãˆã‚‹ */
 		if (rotated) {
-		    rotate_right (&argv[savepoint], next - savepoint + 1);
-		    index = savepoint;
+			rotate_right (&argv[savepoint], next - savepoint + 1);
+			index = savepoint;
 		}
 
-		/* ‚È‚¯‚ê‚Î... */
+		/* ãªã‘ã‚Œã°... */
 		else
-		    index++;
+			index++;
 
-		/* Ÿ‚Ìˆø”‚ğ•Ô‚· */
+		/* æ¬¡ã®å¼•æ•°ã‚’è¿”ã™ */
 		optarg = argv[index];
 
-	    }
+		}
 
-	    /* ‚È‚¯‚ê‚Î... */
-	    else {
+		/* ãªã‘ã‚Œã°... */
+		else {
 		ERR ("%s: option '-%c' requires an argument\n", argv[0], optchar);
 		optchar = '?';
-	    }
+		}
 
 	}
 
-      goback:
+	  goback:
 
-	/* ’l‚ğİ’è‚µ‚Ä–ß‚é */
+	/* å€¤ã‚’è¨­å®šã—ã¦æˆ»ã‚‹ */
 	rotated = 0;
 	savepoint = 0;
 	optind = index + 1;
 	return optchar;
 
-    }
-
-    /* •’Ê‚Ìˆø” */
-    else {
-
-      normal_arg:
-
-	/* ORDERING ‚·‚é•K—v‚ª‚ ‚é‚©H */
-	if (_getopt_no_ordering) {
-	    init = 1;
-	    optind = index;
-	    return EOF;
 	}
 
-	/* ˆø”‚ÌˆÊ’u‚ğ‹L‰¯‚µAŸ‚ÌƒIƒvƒVƒ‡ƒ“‚ğ’²‚×‚é */
+	/* æ™®é€šã®å¼•æ•° */
 	else {
-	    if (savepoint == 0)
-		savepoint = index;
-	    index++;
-	    goto again;
+
+	  normal_arg:
+
+	/* ORDERING ã™ã‚‹å¿…è¦ãŒã‚ã‚‹ã‹ï¼Ÿ */
+	if (_getopt_no_ordering) {
+		init = 1;
+		optind = index;
+		return EOF;
 	}
 
-    }
+	/* å¼•æ•°ã®ä½ç½®ã‚’è¨˜æ†¶ã—ã€æ¬¡ã®ã‚ªãƒ—ã‚·ãƒ§ãƒ³ã‚’èª¿ã¹ã‚‹ */
+	else {
+		if (savepoint == 0)
+		savepoint = index;
+		index++;
+		goto again;
+	}
+
+	}
 }
 
 /* EOF */

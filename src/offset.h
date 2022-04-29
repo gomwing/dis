@@ -1,7 +1,7 @@
-/* $Id: offset.h,v 1.1 1996/10/24 04:27:48 ryo freeze $
+ï»¿/* $Id: offset.h,v 1.1 1996/10/24 04:27:48 ryo freeze $
  *
- *	ƒ\[ƒXƒR[ƒhƒWƒFƒlƒŒ[ƒ^
- *	Ä”z’uƒe[ƒuƒ‹ŠÇ—ƒwƒbƒ_
+ *	ã‚½ãƒ¼ã‚¹ã‚³ãƒ¼ãƒ‰ã‚¸ã‚§ãƒãƒ¬ãƒ¼ã‚¿
+ *	å†é…ç½®ãƒ†ãƒ¼ãƒ–ãƒ«ç®¡ç†ãƒ˜ãƒƒãƒ€
  *	Copyright (C) 1989,1990 K.Abe
  *	All rights reserved.
  *	Copyright (C) 1997-2010 Tachibana
@@ -18,9 +18,9 @@ extern boolean	depend_address (address);
 extern address	nearadrs (address);
 
 #define INPROG(opval, eaadrs) \
-    (depend_address (eaadrs) || \
-    (Absolute == ABSOLUTE_ZFILE && Head.base - 0x100 <= opval) || \
-    (Absolute == ABSOLUTE_ZOPT && Head.base <= opval && opval <= Last))
+	(depend_address (eaadrs) || \
+	(Absolute == ABSOLUTE_ZFILE && Head.base - 0x100 <= opval) || \
+	(Absolute == ABSOLUTE_ZOPT && Head.base <= opval && opval <= Last))
 
 
 #endif	/* OFFSET_H */

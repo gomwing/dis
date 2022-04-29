@@ -1,6 +1,6 @@
-/* $Id: version.c,v 2.76 1995/01/07 11:21:00 ryo Exp $
+Ôªø/* $Id: version.c,v 2.76 1995/01/07 11:21:00 ryo Exp $
  *
- *	É\Å[ÉXÉRÅ[ÉhÉWÉFÉlÉåÅ[É^
+ *	„ÇΩ„Éº„Çπ„Ç≥„Éº„Éâ„Ç∏„Çß„Éç„É¨„Éº„Çø
  *	Version#
  *	Copyright (C) 1989,1990 K.Abe, 1994 R.ShimiZu
  *	All rights reserved.

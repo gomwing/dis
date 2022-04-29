@@ -1,7 +1,7 @@
-/* $Id: analyze.h,v 1.1 1996/10/24 04:27:42 ryo freeze $
+ï»¿/* $Id: analyze.h,v 1.1 1996/10/24 04:27:42 ryo freeze $
  *
- *	ƒ\[ƒXƒR[ƒhƒWƒFƒlƒŒ[ƒ^
- *	©“®‰ğÍƒ‚ƒWƒ…[ƒ‹ƒwƒbƒ_
+ *	ã‚½ãƒ¼ã‚¹ã‚³ãƒ¼ãƒ‰ã‚¸ã‚§ãƒãƒ¬ãƒ¼ã‚¿
+ *	è‡ªå‹•è§£æãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ãƒ˜ãƒƒãƒ€
  *	Copyright (C) 1989,1990 K.Abe
  *	All rights reserved.
  *	Copyright (C) 1997-2010 Tachibana
@@ -16,8 +16,8 @@
 
 
 typedef enum {
-    ANALYZE_IGNOREFAULT,
-    ANALYZE_NORMAL
+	ANALYZE_IGNOREFAULT,
+	ANALYZE_NORMAL
 } analyze_mode;
 
 extern boolean	analyze (address, analyze_mode);

@@ -1,7 +1,7 @@
-/* $Id: disasmonly.c,v 1.1 1996/11/07 08:03:30 ryo freeze $
+ï»¿/* $Id: disasmonly.c,v 1.1 1996/11/07 08:03:30 ryo freeze $
  *
- *	ƒ\[ƒXƒR[ƒhƒWƒFƒlƒŒ[ƒ^
- *	’P‚È‚é‹tƒAƒZƒ“ƒuƒ‹ƒ‚ƒWƒ…[ƒ‹
+ *	ã‚½ãƒ¼ã‚¹ã‚³ãƒ¼ãƒ‰ã‚¸ã‚§ãƒãƒ¬ãƒ¼ã‚¿
+ *	å˜ãªã‚‹é€†ã‚¢ã‚»ãƒ³ãƒ–ãƒ«ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«
  *	Copyright (C) 1989,1990 K.Abe, 1994 R.ShimiZu
  *	All rights reserved.
  *	Copyright (C) 1997-2010 Tachibana
@@ -27,125 +27,125 @@ USEOPTION   option_x, option_B;
 static INLINE char*
 strcpy2 (char* dst, char* src)
 {
-    while ((*dst++ = *src++) != 0)
+	while ((*dst++ = *src++) != 0)
 	;
-    return --dst;
+	return --dst;
 }
 
 
 private int
 disasm1line (address pc, address pcend)
 {
-    char    buffer[256];
-    address pc0 = pc, store0 = pc + Ofst;
-    disasm  code;
-    int   bytes;
-    char* ptr;
-    char* l;
+	char    buffer[256];
+	address pc0 = pc, store0 = pc + Ofst;
+	disasm  code;
+	int   bytes;
+	char* ptr;
+	char* l;
 
-    bytes = dis (store0, &code, &pc);
-    modify_operand (&code);
+	bytes = dis (store0, &code, &pc);
+	modify_operand (&code);
 
-    ptr = buffer;
-    *ptr++ = '\t';
+	ptr = buffer;
+	*ptr++ = '\t';
 
 #ifdef	OSKDIS
 #define OS9CALL(n, v, t)  (peekw (store0) == (n) && (v) < 0x100 && (l = (t)[(v)]))
-    if (OS9CALL (0x4e40, code.op1.opval, OS9label))
+	if (OS9CALL (0x4e40, code.op1.opval, OS9label))
 	strcat (strcpy (ptr, "OS9\t"), l);
-    else if (OS9CALL (0x4e4d, code.op2.opval, CIOlabel))
+	else if (OS9CALL (0x4e4d, code.op2.opval, CIOlabel))
 	strcat (strcpy (ptr, "TCALL\tCIO$Trap,"), l);
-    else if (OS9CALL (0x4e4f, code.op2.opval, MATHlabel))
+	else if (OS9CALL (0x4e4f, code.op2.opval, MATHlabel))
 	strcat (strcpy (ptr, "TCALL\tT$Math,"), l);
 #else
-    if (*(UBYTE*)store0 == 0x70		/* moveq #imm,d0 + trap #15 ‚È‚ç */
-     && peekw (store0 + 2) == 0x4e4f	/* IOCS ƒR[ƒ‹‚É‚·‚é		 */
-     && IOCSlabel && (l = IOCSlabel[*(UBYTE*)(store0 + 1)]) != NULL
-     && (pc < pcend)) {
+	if (*(UBYTE*)store0 == 0x70		/* moveq #imm,d0 + trap #15 ãªã‚‰ */
+	 && peekw (store0 + 2) == 0x4e4f	/* IOCS ã‚³ãƒ¼ãƒ«ã«ã™ã‚‹		 */
+	 && IOCSlabel && (l = IOCSlabel[*(UBYTE*)(store0 + 1)]) != NULL
+	 && (pc < pcend)) {
 	ptr = strcpy2 (ptr, IOCSCallName);
 	*ptr++ = '\t';
 	strcpy2 (ptr, l);
 	bytes += 2;
 	/* pc += 2; */
-    }
+	}
 #endif	/* OSKDIS */
-    else {
+	else {
 	ptr = strcpy2 (ptr, code.opecode);
 	if (code.size < NOTHING) {
-	    *ptr++ = '.';
-	    *ptr++ = opsize[code.size];
+		*ptr++ = '.';
+		*ptr++ = opsize[code.size];
 	}
 
 	if (code.op1.operand[0]) {
-	    *ptr++ = '\t';
-	    ptr = strcpy2 (ptr, code.op1.operand);
+		*ptr++ = '\t';
+		ptr = strcpy2 (ptr, code.op1.operand);
 
-	    if (code.op2.operand[0]) {
+		if (code.op2.operand[0]) {
 		if ((code.op2.ea != BitField) && (code.op2.ea != KFactor))
-		    *ptr++ = ',';
+			*ptr++ = ',';
 		ptr = strcpy2 (ptr, code.op2.operand);
 
 		if (code.op3.operand[0]) {
-		    if ((code.op3.ea != BitField) && (code.op3.ea != KFactor))
+			if ((code.op3.ea != BitField) && (code.op3.ea != KFactor))
 			*ptr++ = ',';
-		    ptr = strcpy2 (ptr, code.op3.operand);
+			ptr = strcpy2 (ptr, code.op3.operand);
 
-		    if (code.op4.operand[0]) {
+			if (code.op4.operand[0]) {
 			if ((code.op4.ea != BitField) && (code.op4.ea != KFactor))
-			    *ptr++ = ',';
+				*ptr++ = ',';
 			strcpy2 (ptr, code.op4.operand);
-		    }
+			}
 		}
-	    }
+		}
 	}
-    }
+	}
 
-    if (option_x)
+	if (option_x)
 	byteout_for_xoption (pc0, bytes, buffer);
 
-    outputa (buffer);
-    newline (pc0);
+	outputa (buffer);
+	newline (pc0);
 
-    /* rtsAjmpAbra ‚Ì’¼Œã‚É‹ós‚ğo—Í‚·‚é	    */
-    /* ‚½‚¾‚µA-B ƒIƒvƒVƒ‡ƒ“‚ª–³w’è‚È‚ç bra ‚Íœ‚­ */
-    if ((code.opflags & FLAG_NEED_NULSTR)
+	/* rtsã€jmpã€bra ã®ç›´å¾Œã«ç©ºè¡Œã‚’å‡ºåŠ›ã™ã‚‹	    */
+	/* ãŸã ã—ã€-B ã‚ªãƒ—ã‚·ãƒ§ãƒ³ãŒç„¡æŒ‡å®šãªã‚‰ bra ã¯é™¤ã */
+	if ((code.opflags & FLAG_NEED_NULSTR)
 	 && (option_B || (code.opecode[0] != 'b' && code.opecode[0] != 'B')))
 	outputa (CR);
 
-    return bytes;
+	return bytes;
 }
 
 
 /*
 
- ’P‚È‚é‹tƒAƒZƒ“ƒuƒ‹
+ å˜ãªã‚‹é€†ã‚¢ã‚»ãƒ³ãƒ–ãƒ«
 
 */
 extern void
 disasmlist (char* xfilename, char* sfilename, time_t filedate)
 {
-    address pc = BeginTEXT;
+	address pc = BeginTEXT;
 #ifdef	OSKDIS
-    address pcend = BeginBSS;
+	address pcend = BeginBSS;
 #else
-    address pcend = BeginDATA;
+	address pcend = BeginDATA;
 #endif	/* OSKDIS */
 
-    if (option_x)
+	if (option_x)
 	Atab += 2;
 
-    init_output ();
-    output_file_open (sfilename, 0);
+	init_output ();
+	output_file_open (sfilename, 0);
 
-    PCEND = pcend;
-    while (pc < pcend) {
+	PCEND = pcend;
+	while (pc < pcend) {
 	char	adrs[8];
-	itox6 (adrs, (ULONG) pc);
+	itox6 (adrs, (UINTPTR) pc);
 	outputa (adrs);
 	pc += disasm1line (pc, pcend);
-    }
+	}
 
-    output_file_close ();
+	output_file_close ();
 }
 
 

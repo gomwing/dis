@@ -1,6 +1,6 @@
-/* $Id: include.h,v 1.1 1996/10/24 04:27:46 ryo freeze $
+Ôªø/* $Id: include.h,v 1.1 1996/10/24 04:27:46 ryo freeze $
  *
- *	É\Å[ÉXÉRÅ[ÉhÉWÉFÉlÉåÅ[É^
+ *	„ÇΩ„Éº„Çπ„Ç≥„Éº„Éâ„Ç∏„Çß„Éç„É¨„Éº„Çø
  *	file include header
  *	Copyright (C) 1989,1990 K.Abe
  *	All rights reserved.

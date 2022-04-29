@@ -1,7 +1,7 @@
-/* $Id: labelfile.c,v 1.1 1996/11/07 08:03:48 ryo freeze $
+ï»¿/* $Id: labelfile.c,v 1.1 1996/11/07 08:03:48 ryo freeze $
  *
- *	ƒ\[ƒXƒR[ƒhƒWƒFƒlƒŒ[ƒ^
- *	ƒ‰ƒxƒ‹ƒtƒ@ƒCƒ‹ƒ‚ƒWƒ…[ƒ‹
+ *	ã‚½ãƒ¼ã‚¹ã‚³ãƒ¼ãƒ‰ã‚¸ã‚§ãƒãƒ¬ãƒ¼ã‚¿
+ *	ãƒ©ãƒ™ãƒ«ãƒ•ã‚¡ã‚¤ãƒ«ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«
  *	Copyright (C) 1989,1990 K.Abe
  *	All rights reserved.
  *	Copyright (C) 1997-2010 Tachibana
@@ -20,18 +20,18 @@
 #include "symbol.h"
 
 
-/************************ ƒ‰ƒxƒ‹ƒtƒ@ƒCƒ‹‚Ö‚Ìo—Í ************************/
+/************************ ãƒ©ãƒ™ãƒ«ãƒ•ã‚¡ã‚¤ãƒ«ã¸ã®å‡ºåŠ› ************************/
 
 
 /*
 
-  ƒ‰ƒxƒ‹ƒtƒ@ƒCƒ‹‚Ìƒwƒbƒ_‚ğ‘‚­
+  ãƒ©ãƒ™ãƒ«ãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ˜ãƒƒãƒ€ã‚’æ›¸ã
 
 */
 static INLINE void
 make_header (FILE* fp, char* filename)
 {
-    fprintf (fp, "*********************************************\n"
+	fprintf (fp, "*********************************************\n"
 		 "*\n"
 		 "*  Label file for %s\n"
 		 "*\n"
@@ -44,255 +44,255 @@ make_header (FILE* fp, char* filename)
 
 /*
 
-  ƒ‰ƒxƒ‹ƒtƒ@ƒCƒ‹‚ğo—Í
+  ãƒ©ãƒ™ãƒ«ãƒ•ã‚¡ã‚¤ãƒ«ã‚’å‡ºåŠ›
 
 */
 extern void
 make_labelfile (char* xfilename, char* labelfilename)
 {
-    FILE*   fp;
-    lblbuf* nadrs;
+	FILE*   fp;
+	lblbuf* nadrs;
 
-    if ((fp = fopen (labelfilename, "w")) == NULL) {
-	eprintf ("%s ‚ğƒI[ƒvƒ“‚Å‚«‚Ü‚¹‚ñ‚Å‚µ‚½.\n", labelfilename);
+	if ((fp = fopen (labelfilename, "w")) == NULL) {
+	eprintf ("%s could not opened.\n", labelfilename);
 	return;
-    }
+	}
 
-    make_header (fp, xfilename);
-    nadrs = next (BeginTEXT);
+	make_header (fp, xfilename);
+	nadrs = next (BeginTEXT);
 
-    while (nadrs->label != (address)-1) {
+	while (nadrs->label != (address)-1) {
 	int mode = (nadrs->mode & 0xff);
 
-	fprintf (fp, "%06x\t", (unsigned int)nadrs->label);
+	fprintf (fp, "%06" PRI_UINTPTR "\t", (UINTPTR)nadrs->label);
 
 	if (isPROLABEL (nadrs->mode))
-	    fputc ('P', fp);
+		fputc ('P', fp);
 	else if (mode == RELTABLE || mode == RELLONGTABLE) {
-	    fputc ('R', fp);
-	    fputc (mode == RELTABLE ? 'W' : 'L', fp);
+		fputc ('R', fp);
+		fputc (mode == RELTABLE ? 'W' : 'L', fp);
 	} else {
-	    static const unsigned char labelchar[ZTABLE + 1] = {
-		'B', 'W', 'L', 'Q', 'U',	/* ®” */
-		'F', 'D', 'X', 'P', 'U',	/* ¬” */
-		'S', 'U', 'U', 'Z'		/* ‚»‚Ì‘¼ */
-	    };
+		static const unsigned char labelchar[ZTABLE + 1] = {
+		'B', 'W', 'L', 'Q', 'U',	/* æ•´æ•° */
+		'F', 'D', 'X', 'P', 'U',	/* å°æ•° */
+		'S', 'U', 'U', 'Z'		/* ãã®ä»– */
+		};
 
-	    fputc ('D', fp);
-	    fputc (mode > ZTABLE ? 'U' : labelchar[mode], fp);
+		fputc ('D', fp);
+		fputc (mode > ZTABLE ? 'U' : labelchar[mode], fp);
 	}
 	if (nadrs->mode & FORCE)
-	    fputc ('F', fp);
+		fputc ('F', fp);
 
 	{
-	    symbol* symbolptr = symbol_search (nadrs->label);
+		symbol* symbolptr = symbol_search (nadrs->label);
 
-	    if (symbolptr) {
+		if (symbolptr) {
 		symlist* sym = &symbolptr->first;
 		char space = '\t';
 
 		do {
-		    fprintf (fp, "%c%s", space, sym->sym);
-		    space = ' ';
-		    sym = sym->next;
+			fprintf (fp, "%c%s", space, sym->sym);
+			space = ' ';
+			sym = sym->next;
 		} while (sym);
-	    }
+		}
 	}
 
 	fputc ('\n', fp);
 	nadrs = Next (nadrs);		/* nadrs = next (nadrs->label + 1); */
-    }
+	}
 
-    fclose (fp);
+	fclose (fp);
 }
 
 
 
-/*********************** ƒ‰ƒxƒ‹ƒtƒ@ƒCƒ‹‚©‚ç‚Ì“ü—Í ***********************/
+/*********************** ãƒ©ãƒ™ãƒ«ãƒ•ã‚¡ã‚¤ãƒ«ã‹ã‚‰ã®å…¥åŠ› ***********************/
 
 
 /*
 
-  ƒ‰ƒxƒ‹ƒtƒ@ƒCƒ‹‚Ì‚Ps‚ğ‰ğÍ‚·‚é
+  ãƒ©ãƒ™ãƒ«ãƒ•ã‚¡ã‚¤ãƒ«ã®ï¼‘è¡Œã‚’è§£æã™ã‚‹
 
-  pass = 0, ‘å•¶š‚Ì‚İ”»’è
-	 1, ¬•¶š‚Ì‚İ”»’è
+  pass = 0, å¤§æ–‡å­—ã®ã¿åˆ¤å®š
+	 1, å°æ–‡å­—ã®ã¿åˆ¤å®š
 
 */
 
 static INLINE unsigned char*
 skipspace (unsigned char* ptr)
 {
-    while (*ptr == ' ' || *ptr == '\t')
+	while (*ptr == ' ' || *ptr == '\t')
 	ptr++;
-    return ptr;
+	return ptr;
 }
 
 static INLINE unsigned char*
 untilspace (unsigned char* ptr)
 {
-    while (*ptr && *ptr != ' ' && *ptr != '\t')
+	while (*ptr && *ptr != ' ' && *ptr != '\t')
 	ptr++;
-    return ptr;
+	return ptr;
 }
 
 static INLINE int
 get_line (char* linebuf, int line, int pass, address* adrs, char** symptrptr)
 {
-    address ad = (address) atox (linebuf);
-    unsigned char* ptr = skipspace (untilspace ((unsigned char*) linebuf));
-    opesize attr;
+	address ad = (address) (UINTPTR) atox (linebuf);
+	unsigned char* ptr = skipspace (untilspace ((unsigned char*) linebuf));
+	opesize attr;
 
-    if (Debug & BDEBUG)
-	printf ("%x, %c\n", (unsigned int) ad, *ptr);
+	if (Debug & BDEBUG)
+	printf ("%" PRI_UINTPTR ", %c\n", (UINTPTR) ad, *ptr);
 
-    if ((pass == 0 && islower (*ptr)) ||
+	if ((pass == 0 && islower (*ptr)) ||
 	(pass == 1 && isupper (*ptr)))
 	attr = -1;
-    else {
+	else {
 	unsigned char c = *ptr++;
 
 	attr = DATLABEL;
 	switch (toupper (c)) {
-	    case 'P':
+		case 'P':
 		attr = PROLABEL;
 		break;
-	    case 'R':
+		case 'R':
 		c = *ptr++;
 		switch (toupper (c)) {
-		    case 'W':
+			case 'W':
 			attr |= RELTABLE;
 			break;
-		    case 'L':
+			case 'L':
 			attr |= RELLONGTABLE;
 			break;
-		    default:
+			default:
 			goto er;
 		}
 		break;
-	    case 'D':
+		case 'D':
 		c = *ptr++;
 		switch (toupper (c)) {
-		    case 'B':	attr |= BYTESIZE;	break;
-		    case 'W':	attr |= WORDSIZE;	break;
-		    case 'L':	attr |= LONGSIZE;	break;
-		    case 'Q':	attr |= QUADSIZE;	break;
-		    case 'F':	attr |= SINGLESIZE;	break;
-		    case 'D':	attr |= DOUBLESIZE;	break;
-		    case 'X':	attr |= EXTENDSIZE;	break;
-		    case 'P':	attr |= PACKEDSIZE;	break;
-		    case 'S':	attr |= STRING;		break;
-		    case 'Z':	attr |= ZTABLE;		break;
-		    case 'U':	attr |= UNKNOWN;	break;
+			case 'B':	attr |= BYTESIZE;	break;
+			case 'W':	attr |= WORDSIZE;	break;
+			case 'L':	attr |= LONGSIZE;	break;
+			case 'Q':	attr |= QUADSIZE;	break;
+			case 'F':	attr |= SINGLESIZE;	break;
+			case 'D':	attr |= DOUBLESIZE;	break;
+			case 'X':	attr |= EXTENDSIZE;	break;
+			case 'P':	attr |= PACKEDSIZE;	break;
+			case 'S':	attr |= STRING;		break;
+			case 'Z':	attr |= ZTABLE;		break;
+			case 'U':	attr |= UNKNOWN;	break;
 
-		    case 'R':
+			case 'R':
 			attr |= RELTABLE;
 			if (toupper (*ptr) == 'L') {
-			    ptr++;
-			    attr ^= (RELTABLE ^ RELLONGTABLE);
+				ptr++;
+				attr ^= (RELTABLE ^ RELLONGTABLE);
 			}
 			break;
 
-		    default:
+			default:
 			goto er;
 		}
 		break;
-	    default:
-	    er:
-		err ("\nlabelfile %ds address %x : •s³‚È•¶š‚Å‚·.\n", line, ad);
+		default:
+		er:
+		err ("\nlabelfile %dè¡Œ address %x : ä¸æ­£ãªæ–‡å­—ã§ã™.\n", line, ad);
 	}
 	if (toupper (*ptr) == 'F')
-	    attr |= FORCE;
-    }
+		attr |= FORCE;
+	}
 
-    *symptrptr = (char*) skipspace (untilspace (ptr));
-    *adrs = ad;
-    return attr;
+	*symptrptr = (char*) skipspace (untilspace (ptr));
+	*adrs = ad;
+	return attr;
 }
 
 
 static INLINE void
 work (address adrs, int attr, int pass, int line)
 {
-    if (pass == 0) {
+	if (pass == 0) {
 	if (!regist_label (adrs, attr))
-	    eprintf ("??? %ds address %x\n", line, adrs);
-    }
-    else {
+		eprintf ("??? line %d address %x\n", line, adrs);
+	}
+	else {
 	if (isPROLABEL (attr)) {
-	    if (Debug & BDEBUG)
-		printf ("work:prog %x\n", (unsigned int) adrs);
-	    if (!analyze (adrs, ANALYZE_IGNOREFAULT))
-		eprintf ("\nAddress %x(labelfile Line %d)‚©‚ç‚ÍƒvƒƒOƒ‰ƒ€‚ÆŒ©‚È‚¹‚Ü‚¹‚ñ.",
+		if (Debug & BDEBUG)
+		printf ("work:prog %"PRI_UINTPTR"\n", (UINTPTR) adrs);
+		if (!analyze (adrs, ANALYZE_IGNOREFAULT))
+		eprintf ("\nAddress %x(labelfile line %d) can not be regarded as a program.",
 				adrs, line);
 	}
 	else {
-	    switch (attr & 0xff) {
-	    case RELTABLE :
+		switch (attr & 0xff) {
+		case RELTABLE :
 		relative_table (adrs);
 		break;
-	    case RELLONGTABLE :
+		case RELLONGTABLE :
 		relative_longtable (adrs);
 		break;
-	    case ZTABLE :
+		case ZTABLE :
 		z_table (adrs);
 		break;
-	    default:
+		default:
 		if (!regist_label (adrs, attr))
-		    eprintf ("\n??? labelfile %ds address %x", line, adrs);
+			eprintf ("\n??? labelfile line %d address %x", line, adrs);
 		break;
-	    }
+		}
 	}
-    }
+	}
 }
 
 
 /*
 
-  ƒ‰ƒxƒ‹ƒtƒ@ƒCƒ‹‚ğ“Ç‚İ‚Ş
+  ãƒ©ãƒ™ãƒ«ãƒ•ã‚¡ã‚¤ãƒ«ã‚’èª­ã¿è¾¼ã‚€
 
 */
 extern void
 read_labelfile (char* filename)
 {
-    FILE* fp;
-    int pass;
+	FILE* fp;
+	int pass;
 
-    if ((fp = fopen (filename, "rt")) == NULL) {
-	err ("\n%s ‚ğƒI[ƒvƒ“‚Å‚«‚Ü‚¹‚ñ‚Å‚µ‚½.\n", filename);
+	if ((fp = fopen (filename, "rt")) == NULL) {
+	err ("\n%s could not opened.\n", filename);
 	return;
-    }
+	}
 
-    for (pass = 0; pass < 2; pass++) {
+	for (pass = 0; pass < 2; pass++) {
 	int line;
 
 	if (Debug & BDEBUG)
-	    eprintf ("pass %d\n", pass);
+		eprintf ("pass %d\n", pass);
 	for (line = 1;; line++) {
-	    char  linebuf[1024];
-	    char* p;
+		char  linebuf[1024];
+		char* p;
 
-	    if (fgets (linebuf, sizeof (linebuf), fp) == NULL)
+		if (fgets (linebuf, sizeof (linebuf), fp) == NULL)
 		break;
 
-	    /* ––”ö‚Ì CRALF ‚ğíœ‚·‚é */
-	    for (p = linebuf + strlen (linebuf); linebuf < p; p--)
+		/* æœ«å°¾ã® CRã€LF ã‚’å‰Šé™¤ã™ã‚‹ */
+		for (p = linebuf + strlen (linebuf); linebuf < p; p--)
 		if (p[-1] != (char)'\n' && p[-1] != (char)'\r')
-		    break;
-	    *p = '\0';
+			break;
+		*p = '\0';
 
-	    if (isxdigit ((unsigned char)linebuf[0])) {
+		if (isxdigit ((unsigned char)linebuf[0])) {
 		address adrs;
 		char* symptr;
 		int attr = get_line (linebuf, line, pass, &adrs, &symptr);
 
 		if (attr != -1)
-		    work (adrs, attr, pass, line);
+			work (adrs, attr, pass, line);
 		if (pass == 0) {
 #if 0
-		    del_symbol (adrs);
+			del_symbol (adrs);
 #endif
-		    while (*symptr && *symptr != '*') {
+			while (*symptr && *symptr != '*') {
 			char* symend = (char*) untilspace ((unsigned char*) symptr);
 			char* nextsym = (char*) skipspace ((unsigned char*) symend);
 			char* label;
@@ -302,14 +302,14 @@ read_labelfile (char* filename)
 			strcpy (label, symptr);
 			add_symbol (adrs, 0, label);
 			symptr = nextsym;
-		    }
+			}
 		}
-	    }
+		}
 	}
 	if (pass == 0)
-	    rewind (fp);
-    }
-    fclose (fp);
+		rewind (fp);
+	}
+	fclose (fp);
 }
 
 

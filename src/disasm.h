@@ -1,7 +1,7 @@
-/* $Id: disasm.h,v 1.1 1996/10/24 04:27:42 ryo freeze $
+ï»¿/* $Id: disasm.h,v 1.1 1996/10/24 04:27:42 ryo freeze $
  *
- *	ƒ\[ƒXƒR[ƒhƒWƒFƒlƒŒ[ƒ^
- *	‹tƒAƒZƒ“ƒuƒ‹ƒ‚ƒWƒ…[ƒ‹ƒwƒbƒ_
+ *	ã‚½ãƒ¼ã‚¹ã‚³ãƒ¼ãƒ‰ã‚¸ã‚§ãƒãƒ¬ãƒ¼ã‚¿
+ *	é€†ã‚¢ã‚»ãƒ³ãƒ–ãƒ«ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ãƒ˜ãƒƒãƒ€
  *	Copyright (C) 1989,1990 K.Abe, 1994 R.ShimiZu
  *	All rights reserved.
  *	Copyright (C) 1997-2010 Tachibana
@@ -47,84 +47,84 @@ typedef unsigned char mputypes;
 
 
 typedef enum {
-    OTHER ,		/* •’Ê‚Ì–½—ß */
-    JMPOP ,		/* •ªŠò–½—ß */
-    JSROP ,		/* ƒTƒuƒ‹[ƒ`ƒ“ƒR[ƒ‹–½—ß */
-    RTSOP ,		/* ƒŠƒ^[ƒ“–½—ß */
-    BCCOP ,		/* ğŒ•ªŠò–½—ß */
-    UNDEF = 15 ,	/* –¢’è‹` */
+	OTHER ,		/* æ™®é€šã®å‘½ä»¤ */
+	JMPOP ,		/* åˆ†å²å‘½ä»¤ */
+	JSROP ,		/* ã‚µãƒ–ãƒ«ãƒ¼ãƒãƒ³ã‚³ãƒ¼ãƒ«å‘½ä»¤ */
+	RTSOP ,		/* ãƒªã‚¿ãƒ¼ãƒ³å‘½ä»¤ */
+	BCCOP ,		/* æ¡ä»¶åˆ†å²å‘½ä»¤ */
+	UNDEF = 15 ,	/* æœªå®šç¾© */
 } opetype;
 
 
 typedef enum {
-    DregD ,		/* ƒf[ƒ^ƒŒƒWƒXƒ^’¼Ú */
-    AregD ,		/* ƒAƒhƒŒƒXƒŒƒWƒXƒ^’¼Ú */
-    AregID ,		/* ƒAƒhƒŒƒXƒŒƒWƒXƒ^ŠÔÚ */
-    AregIDPI ,		/* ƒ|ƒXƒgƒCƒ“ƒNƒŠƒƒ“ƒgƒAƒhƒŒƒXƒŒƒWƒXƒ^ŠÔÚ */
-    AregIDPD ,		/* ƒvƒŠƒfƒNƒŠƒƒ“ƒgƒAƒhƒŒƒXƒŒƒWƒXƒ^ŠÔÚ */
-    AregDISP ,		/* ƒfƒBƒXƒvƒŒ[ƒXƒƒ“ƒg•tƒAƒhƒŒƒXƒŒƒWƒXƒ^ŠÔÚ */
-    AregIDX ,		/* ƒCƒ“ƒfƒbƒNƒX•tƒAƒhƒŒƒXƒŒƒWƒXƒ^ŠÔÚ */
-    AbShort = 8 ,	/* â‘ÎƒVƒ‡[ƒgƒAƒhƒŒƒX */
-    AbLong ,		/* â‘Îƒƒ“ƒOƒAƒhƒŒƒX */
-    PCDISP ,		/* ƒfƒBƒXƒvƒŒ[ƒXƒƒ“ƒg•tƒvƒƒOƒ‰ƒ€ƒJƒEƒ“ƒ^‘Š‘Î */
-    PCIDX ,		/* ƒCƒ“ƒfƒbƒNƒX•tƒvƒƒOƒ‰ƒ€ƒJƒEƒ“ƒ^‘Š‘Î */
-    IMMED ,		/* ƒCƒ~ƒfƒBƒGƒCƒgƒf[ƒ^ */
-    SRCCR = 16 ,	/* CCR / SR Œ`® */
+	DregD ,		/* ãƒ‡ãƒ¼ã‚¿ãƒ¬ã‚¸ã‚¹ã‚¿ç›´æ¥ */
+	AregD ,		/* ã‚¢ãƒ‰ãƒ¬ã‚¹ãƒ¬ã‚¸ã‚¹ã‚¿ç›´æ¥ */
+	AregID ,		/* ã‚¢ãƒ‰ãƒ¬ã‚¹ãƒ¬ã‚¸ã‚¹ã‚¿é–“æ¥ */
+	AregIDPI ,		/* ãƒã‚¹ãƒˆã‚¤ãƒ³ã‚¯ãƒªãƒ¡ãƒ³ãƒˆã‚¢ãƒ‰ãƒ¬ã‚¹ãƒ¬ã‚¸ã‚¹ã‚¿é–“æ¥ */
+	AregIDPD ,		/* ãƒ—ãƒªãƒ‡ã‚¯ãƒªãƒ¡ãƒ³ãƒˆã‚¢ãƒ‰ãƒ¬ã‚¹ãƒ¬ã‚¸ã‚¹ã‚¿é–“æ¥ */
+	AregDISP ,		/* ãƒ‡ã‚£ã‚¹ãƒ—ãƒ¬ãƒ¼ã‚¹ãƒ¡ãƒ³ãƒˆä»˜ã‚¢ãƒ‰ãƒ¬ã‚¹ãƒ¬ã‚¸ã‚¹ã‚¿é–“æ¥ */
+	AregIDX ,		/* ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ä»˜ã‚¢ãƒ‰ãƒ¬ã‚¹ãƒ¬ã‚¸ã‚¹ã‚¿é–“æ¥ */
+	AbShort = 8 ,	/* çµ¶å¯¾ã‚·ãƒ§ãƒ¼ãƒˆã‚¢ãƒ‰ãƒ¬ã‚¹ */
+	AbLong ,		/* çµ¶å¯¾ãƒ­ãƒ³ã‚°ã‚¢ãƒ‰ãƒ¬ã‚¹ */
+	PCDISP ,		/* ãƒ‡ã‚£ã‚¹ãƒ—ãƒ¬ãƒ¼ã‚¹ãƒ¡ãƒ³ãƒˆä»˜ãƒ—ãƒ­ã‚°ãƒ©ãƒ ã‚«ã‚¦ãƒ³ã‚¿ç›¸å¯¾ */
+	PCIDX ,		/* ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ä»˜ãƒ—ãƒ­ã‚°ãƒ©ãƒ ã‚«ã‚¦ãƒ³ã‚¿ç›¸å¯¾ */
+	IMMED ,		/* ã‚¤ãƒŸãƒ‡ã‚£ã‚¨ã‚¤ãƒˆãƒ‡ãƒ¼ã‚¿ */
+	SRCCR = 16 ,	/* CCR / SR å½¢å¼ */
 
-    AregIDXB,		/* ƒCƒ“ƒfƒbƒNƒX&ƒx[ƒXƒfƒBƒXƒvƒŒ[ƒXƒƒ“ƒg•t‚«ƒAƒhƒŒƒXƒŒƒWƒXƒ^ŠÔÚ */
-    AregPOSTIDX,	/* ƒ|ƒXƒgƒCƒ“ƒfƒbƒNƒX•t‚«ƒƒ‚ƒŠŠÔÚ */
-    AregPREIDX,		/* ƒvƒŠƒCƒ“ƒfƒbƒNƒX•t‚«ƒƒ‚ƒŠŠÔÚ */
-    PCIDXB,		/* ƒCƒ“ƒfƒbƒNƒX&ƒx[ƒXƒfƒBƒXƒvƒŒ[ƒXƒƒ“ƒg•t‚«ƒvƒƒOƒ‰ƒ€ƒJƒEƒ“ƒ^ŠÔÚ */
-    PCPOSTIDX,		/* ƒ|ƒXƒgƒCƒ“ƒfƒbƒNƒX•t‚«PCƒƒ‚ƒŠŠÔÚ */
-    PCPREIDX,		/* ƒvƒŠƒCƒ“ƒfƒbƒNƒX•t‚«PCƒƒ‚ƒŠŠÔÚ */
+	AregIDXB,		/* ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹&ãƒ™ãƒ¼ã‚¹ãƒ‡ã‚£ã‚¹ãƒ—ãƒ¬ãƒ¼ã‚¹ãƒ¡ãƒ³ãƒˆä»˜ãã‚¢ãƒ‰ãƒ¬ã‚¹ãƒ¬ã‚¸ã‚¹ã‚¿é–“æ¥ */
+	AregPOSTIDX,	/* ãƒã‚¹ãƒˆã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ä»˜ããƒ¡ãƒ¢ãƒªé–“æ¥ */
+	AregPREIDX,		/* ãƒ—ãƒªã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ä»˜ããƒ¡ãƒ¢ãƒªé–“æ¥ */
+	PCIDXB,		/* ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹&ãƒ™ãƒ¼ã‚¹ãƒ‡ã‚£ã‚¹ãƒ—ãƒ¬ãƒ¼ã‚¹ãƒ¡ãƒ³ãƒˆä»˜ããƒ—ãƒ­ã‚°ãƒ©ãƒ ã‚«ã‚¦ãƒ³ã‚¿é–“æ¥ */
+	PCPOSTIDX,		/* ãƒã‚¹ãƒˆã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ä»˜ãPCãƒ¡ãƒ¢ãƒªé–“æ¥ */
+	PCPREIDX,		/* ãƒ—ãƒªã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ä»˜ãPCãƒ¡ãƒ¢ãƒªé–“æ¥ */
 
-    CtrlReg,		/* §ŒäƒŒƒWƒXƒ^ */
+	CtrlReg,		/* åˆ¶å¾¡ãƒ¬ã‚¸ã‚¹ã‚¿ */
 
-    RegPairD,		/* ƒŒƒWƒXƒ^ƒyƒA(’¼Ú) dx:dy */
-    RegPairID,		/* ƒŒƒWƒXƒ^ƒyƒA(ŠÔÚ) (rx):(ry) */
-    BitField,		/* ƒrƒbƒgƒtƒB[ƒ‹ƒh‚Ì {offset:width} */
+	RegPairD,		/* ãƒ¬ã‚¸ã‚¹ã‚¿ãƒšã‚¢(ç›´æ¥) dx:dy */
+	RegPairID,		/* ãƒ¬ã‚¸ã‚¹ã‚¿ãƒšã‚¢(é–“æ¥) (rx):(ry) */
+	BitField,		/* ãƒ“ãƒƒãƒˆãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã® {offset:width} */
 
-    MMUreg,		/* MMUƒŒƒWƒXƒ^ */
+	MMUreg,		/* MMUãƒ¬ã‚¸ã‚¹ã‚¿ */
 
-    FPregD,		/* FPn */
-    FPCRSR,		/* FPSR,FPCR,FPIAR */
-    FPPairD,		/* ƒŒƒWƒXƒ^ƒyƒA(’¼Ú) FPx:FPy */
-    KFactor,		/* K-Factor {offset:width} */
+	FPregD,		/* FPn */
+	FPCRSR,		/* FPSR,FPCR,FPIAR */
+	FPPairD,		/* ãƒ¬ã‚¸ã‚¹ã‚¿ãƒšã‚¢(ç›´æ¥) FPx:FPy */
+	KFactor,		/* K-Factor {offset:width} */
 
 } adrmode;
 
 
 typedef struct {
-    char	    operand[ 64 ];	/* ƒIƒyƒ‰ƒ“ƒh•¶š—ñ */
-    adrmode	    ea;			/* ÀŒøƒAƒhƒŒƒXƒ‚[ƒh */
-    address	    opval;		/* ƒIƒyƒ‰ƒ“ƒh‚Ì’l */
-    address	    opval2;		/* ƒIƒyƒ‰ƒ“ƒh‚Ì’l(od—p) */
-    address	    eaadrs;		/* ƒIƒyƒ‰ƒ“ƒh‚Ì‘¶İƒAƒhƒŒƒX */
-    address	    eaadrs2;		/* ƒIƒyƒ‰ƒ“ƒh‚Ì‘¶İƒAƒhƒŒƒX(od—p) */
-    unsigned char   labelchange1;	/* ƒ‰ƒxƒ‹‰»‰Â”\ -1‚È‚ç()‚È‚µ(bsr—p) */
-    unsigned char   labelchange2;	/* ƒ‰ƒxƒ‹‰»‰Â”\ */
-    unsigned char   exbd;		/* bd ‚ÌƒTƒCƒY(0,2,4)  0‚È‚çƒTƒvƒŒƒX */
-    unsigned char   exod;		/* od ‚ÌƒTƒCƒY(0,2,4)  0‚È‚çƒTƒvƒŒƒX */
+	char	    operand[ 64 ];	/* ã‚ªãƒšãƒ©ãƒ³ãƒ‰æ–‡å­—åˆ— */
+	adrmode	    ea;			/* å®ŸåŠ¹ã‚¢ãƒ‰ãƒ¬ã‚¹ãƒ¢ãƒ¼ãƒ‰ */
+	address	    opval;		/* ã‚ªãƒšãƒ©ãƒ³ãƒ‰ã®å€¤ */
+	address	    opval2;		/* ã‚ªãƒšãƒ©ãƒ³ãƒ‰ã®å€¤(odç”¨) */
+	address	    eaadrs;		/* ã‚ªãƒšãƒ©ãƒ³ãƒ‰ã®å­˜åœ¨ã‚¢ãƒ‰ãƒ¬ã‚¹ */
+	address	    eaadrs2;		/* ã‚ªãƒšãƒ©ãƒ³ãƒ‰ã®å­˜åœ¨ã‚¢ãƒ‰ãƒ¬ã‚¹(odç”¨) */
+	unsigned char   labelchange1;	/* ãƒ©ãƒ™ãƒ«åŒ–å¯èƒ½ -1ãªã‚‰()ãªã—(bsrç”¨) */
+	unsigned char   labelchange2;	/* ãƒ©ãƒ™ãƒ«åŒ–å¯èƒ½ */
+	unsigned char   exbd;		/* bd ã®ã‚µã‚¤ã‚º(0,2,4)  0ãªã‚‰ã‚µãƒ—ãƒ¬ã‚¹ */
+	unsigned char   exod;		/* od ã®ã‚µã‚¤ã‚º(0,2,4)  0ãªã‚‰ã‚µãƒ—ãƒ¬ã‚¹ */
 } operand;
 
 
 typedef struct {
-    char    opecode[ 32 ];  /* –½—ß */
-    opesize size;	    /* ƒTƒCƒY ( lea , pea ‚Í long ) ( 0 = .b .w .l .s nothing ) */
-    opesize size2;	    /* ƒTƒCƒY ( lea, pea, moveq, bset, ... ‚Í UNKNOWN ) */
-    opesize default_size;   /* ‚»‚Ì–½—ß‚ÌƒfƒtƒHƒ‹ƒg‚ÌƒTƒCƒY */
-    int     bytes;	    /* –½—ß‚ÌƒoƒCƒg” */
-    opetype flag;	    /* –½—ß‚Ìí—Ş ( 0 = other jmp jsr rts bcc undef ) */
-    mputypes mputypes;	    /* ‚±‚Ì–½—ß‚ğÀs‰Â”\‚ÈMPU‚Ìí—Ş(M000|M010|...) */
-    char    fpuid;	    /* •‚“®¬”“_–½—ß‚ÌƒRƒvƒƒZƒbƒTID(0-7,-1‚È‚ç’Êí–½—ß) */
-    char    opflags;	    /* FLAGS_xxx */
-    char    reserved;	    /* —\–ñ */
-    address jmp;	    /* ƒWƒƒƒ“ƒvæƒAƒhƒŒƒX ( •ªŠò–½—ß‚È‚ç ) */
-    adrmode jmpea;	    /* ÀŒøƒAƒhƒŒƒXƒ‚[ƒh ( •ªŠò–½—ß‚È‚ç ) */
-    operand op1;
-    operand op2;
-    operand op3;
-    operand op4;
+	char    opecode[ 32 ];  /* å‘½ä»¤ */
+	opesize size;	    /* ã‚µã‚¤ã‚º ( lea , pea ã¯ long ) ( 0 = .b .w .l .s nothing ) */
+	opesize size2;	    /* ã‚µã‚¤ã‚º ( lea, pea, moveq, bset, ... ã¯ UNKNOWN ) */
+	opesize default_size;   /* ãã®å‘½ä»¤ã®ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã®ã‚µã‚¤ã‚º */
+	int     bytes;	    /* å‘½ä»¤ã®ãƒã‚¤ãƒˆæ•° */
+	opetype flag;	    /* å‘½ä»¤ã®ç¨®é¡ ( 0 = other jmp jsr rts bcc undef ) */
+	mputypes mputypes;	    /* ã“ã®å‘½ä»¤ã‚’å®Ÿè¡Œå¯èƒ½ãªMPUã®ç¨®é¡(M000|M010|...) */
+	char    fpuid;	    /* æµ®å‹•å°æ•°ç‚¹å‘½ä»¤ã®ã‚³ãƒ—ãƒ­ã‚»ãƒƒã‚µID(0-7,-1ãªã‚‰é€šå¸¸å‘½ä»¤) */
+	char    opflags;	    /* FLAGS_xxx */
+	char    reserved;	    /* äºˆç´„ */
+	address jmp;	    /* ã‚¸ãƒ£ãƒ³ãƒ—å…ˆã‚¢ãƒ‰ãƒ¬ã‚¹ ( åˆ†å²å‘½ä»¤ãªã‚‰ ) */
+	adrmode jmpea;	    /* å®ŸåŠ¹ã‚¢ãƒ‰ãƒ¬ã‚¹ãƒ¢ãƒ¼ãƒ‰ ( åˆ†å²å‘½ä»¤ãªã‚‰ ) */
+	operand op1;
+	operand op2;
+	operand op3;
+	operand op4;
 } disasm;
 
 #define FLAG_CANNOT_UPPER	0x01

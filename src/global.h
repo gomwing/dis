@@ -1,7 +1,7 @@
-/* $Id: global.h,v 1.1 1996/10/24 04:27:46 ryo freeze $
+ï»¿/* $Id: global.h,v 1.1 1996/10/24 04:27:46 ryo freeze $
  *
- *	ƒ\[ƒXƒR[ƒhƒWƒFƒlƒŒ[ƒ^
- *	‘åˆæ•Ï”ƒwƒbƒ_
+ *	ã‚½ãƒ¼ã‚¹ã‚³ãƒ¼ãƒ‰ã‚¸ã‚§ãƒãƒ¬ãƒ¼ã‚¿
+ *	å¤§åŸŸå¤‰æ•°ãƒ˜ãƒƒãƒ€
  *	Copyright (C) 1989,1990 K.Abe
  *	All rights reserved.
  *	Copyright (C) 1997-2010 Tachibana
@@ -19,11 +19,11 @@
 #endif
 
 #ifdef	__GNUC__
-    #define INLINE inline
-    #undef  alloca
-    #define alloca __builtin_alloca
+	#define INLINE inline
+	#undef  alloca
+	#define alloca __builtin_alloca
 #else
-    #define INLINE
+	#define INLINE
 #endif
 
 
@@ -38,8 +38,8 @@ extern xheader	Head;
 extern os9header HeadOSK;
 #endif
 
-extern ULONG	Top;		/* ƒ|ƒCƒ“ƒ^[“¯m‚Ì‰ÁZ‚Ío—ˆ‚È‚¢‚Ì‚Å unsigned int */
-extern ULONG	Ofst;
+extern UINTPTR	Top;		/* ãƒã‚¤ãƒ³ã‚¿ãƒ¼åŒå£«ã®åŠ ç®—ã¯å‡ºæ¥ãªã„ã®ã§ unsigned int */
+extern UINTPTR	Ofst;
 extern address	BeginTEXT,	/* = Head.base */
 		BeginDATA,	/* = Head.base + Head.text */
 		BeginBSS,	/* = Head.base + Head.text + Head.data */
@@ -63,7 +63,7 @@ extern const char OSKEdition[];
 #endif
 
 #define USEOPTION	extern boolean	/* useful expression */
-#define DIS_ENVNAME	"dis_opt"	/* ŠÂ‹«•Ï”–¼ */
+#define DIS_ENVNAME	"dis_opt"	/* ç’°å¢ƒå¤‰æ•°å */
 
 extern int  Debug;		/* Debug mode */
 #define BDEBUG	1
@@ -71,6 +71,11 @@ extern int  Debug;		/* Debug mode */
 #define BREASON	4
 #define BLABEL	8
 
+#ifdef _MSC_VER 
+//not #if defined(_WIN32) || defined(_WIN64) because we have strncasecmp in mingw
+#define strncasecmp _strnicmp
+#define strcasecmp _stricmp
+#endif
 
 #endif	/* GLOBAL_H */
 

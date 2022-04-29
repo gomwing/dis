@@ -1,7 +1,7 @@
-/* $Id: table.h,v 1.1 1996/10/24 04:27:50 ryo freeze $
+ï»¿/* $Id: table.h,v 1.1 1996/10/24 04:27:50 ryo freeze $
  *
- *	ƒ\[ƒXƒR[ƒhƒWƒFƒlƒŒ[ƒ^
- *	ƒe[ƒuƒ‹ˆ—ƒ‚ƒWƒ…[ƒ‹ƒwƒbƒ_
+ *	ã‚½ãƒ¼ã‚¹ã‚³ãƒ¼ãƒ‰ã‚¸ã‚§ãƒãƒ¬ãƒ¼ã‚¿
+ *	ãƒ†ãƒ¼ãƒ–ãƒ«å‡¦ç†ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ãƒ˜ãƒƒãƒ€
  *	Copyright (C) 1989,1990 K.Abe
  *	All rights reserved.
  *	Copyright (C) 1997-2010 Tachibana
@@ -14,47 +14,47 @@
 #include "etc.h"	/* peekl */
 
 
-/* p ‚É‚Í Ofst ‚ğ‘«‚µ‚Ä‚¢‚È‚¢’l‚ğ“n‚· */
+/* p ã«ã¯ Ofst ã‚’è¶³ã—ã¦ã„ãªã„å€¤ã‚’æ¸¡ã™ */
 #define PEEK_BYTE(p) ((UBYTE)(BeginBSS <= (p) ? 0 : *((p) + Ofst)))
 #define PEEK_WORD(p) ((UWORD)(BeginBSS <= (p) ? 0 : (((p) + Ofst)[0] << 8) \
-						   + ((p) + Ofst)[1]))
+							 + ((p) + Ofst)[1]))
 #if defined (__mc68020__) || defined (__i386__)
 #define PEEK_LONG(p) ((ULONG)(BeginBSS <= (p) ? 0 : peekl ((p) + Ofst)))
 #else
-#define PEEK_LONG(p) ((ULONG)(BeginBSS <= (p) ? 0 : ((int)(p) & 1) ? \
+#define PEEK_LONG(p) ((ULONG)(BeginBSS <= (p) ? 0 : ((UINTPTR)(p) & 1) ? \
 		(peekl ((p) + Ofst - 1) << 8) + ((p) + Ofst)[3] : peekl ((p) + Ofst)))
 #endif
 
 
 /*
-  ƒe[ƒuƒ‹‚Ì\‘¢
-  ‚PƒAƒhƒŒƒX‚É‚P‚Â‚Ì table ‚ª‚ ‚é
-  table.formulaptr[ 0 ... table.lines - 1 ] ‚ªƒe[ƒuƒ‹‚Ìƒƒ“ƒo‚ğ•Û‚µ‚Ä‚¢‚é
+	ãƒ†ãƒ¼ãƒ–ãƒ«ã®æ§‹é€ 
+	ï¼‘ã‚¢ãƒ‰ãƒ¬ã‚¹ã«ï¼‘ã¤ã® table ãŒã‚ã‚‹
+	table.formulaptr[ 0 ... table.lines - 1 ] ãŒãƒ†ãƒ¼ãƒ–ãƒ«ã®ãƒ¡ãƒ³ãƒã‚’ä¿æŒã—ã¦ã„ã‚‹
 */
 
 typedef struct {
 #if 0
-    int     count;	/* now, count is evaluated each time */
+		int     count;	/* now, count is evaluated each time */
 #endif
-    opesize id;
-    boolean hidden;
-    int     line;
-    char*   expr;
+		opesize id;
+		boolean hidden;
+		int     line;
+		char*   expr;
 } formula;
 
 typedef struct {
-    address tabletop;
-    int     loop;
-    int     lines;
-    formula *formulaptr;	/* formula ‚Ì”z—ñ‚Ö‚Ìƒ|ƒCƒ“ƒ^ */
+		address tabletop;
+		int     loop;
+		int     lines;
+		formula *formulaptr;	/* formula ã®é…åˆ—ã¸ã®ãƒã‚¤ãƒ³ã‚¿ */
 } table;
 
 extern void	read_tablefile (char*);
 extern table*	search_table (address);
 
 typedef enum {
-    PARSE_ANALYZING ,
-    PARSE_GENERATING ,
+		PARSE_ANALYZING ,
+		PARSE_GENERATING ,
 } parse_mode;
 
 

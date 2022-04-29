@@ -1,7 +1,7 @@
-/* $Id: output.c,v 1.1 1996/11/07 08:03:56 ryo freeze $
+ï»¿/* $Id: output.c,v 1.1 1996/11/07 08:03:56 ryo freeze $
  *
- *	ƒ\[ƒXƒR[ƒhƒWƒFƒlƒŒ[ƒ^
- *	o—Íƒ‹[ƒ`ƒ“‰º¿‚¯
+ *	ã‚½ãƒ¼ã‚¹ã‚³ãƒ¼ãƒ‰ã‚¸ã‚§ãƒãƒ¬ãƒ¼ã‚¿
+ *	å‡ºåŠ›ãƒ«ãƒ¼ãƒãƒ³ä¸‹è«‹ã‘
  *	Copyright (C) 1989,1990 K.Abe
  *	All rights reserved.
  *	Copyright (C) 1997-2010 Tachibana
@@ -12,7 +12,8 @@
 #include <stdarg.h>
 #include <string.h>
 #include <unistd.h>
-#include <sys/fcntl.h>
+////#include <sys/fcntl.h>	GOMWING
+#include <fcntl.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 
@@ -56,7 +57,7 @@ static boolean	SplitMode;
 #define OUTPUT_BUFFER_SIZE	(64*1024)
 
 
-/* private ŠÖ”ƒvƒƒgƒ^ƒCƒv */
+/* private é–¢æ•°ãƒ—ãƒ­ãƒˆã‚¿ã‚¤ãƒ— */
 #ifndef STREAM
 private void	flush_buffer (void);
 #endif
@@ -67,81 +68,81 @@ private void	flush_buffer (void);
 static INLINE char*
 strcpy2 (char* dst, char* src)
 {
-    while ((*dst++ = *src++) != 0)
+	while ((*dst++ = *src++) != 0)
 	;
-    return --dst;
+	return --dst;
 }
 
 
 /*
 
-  ‰Šú‰»
+  åˆæœŸåŒ–
 
 */
 extern void
 init_output (void)
 {
 #ifndef STREAM
-    if ((OutputLargeBuffer = Malloc (OUTPUT_BUFFER_SIZE)) == NULL)
-	err ("o—Íƒoƒbƒtƒ@—pƒƒ‚ƒŠ‚ğŠm•Ûo—ˆ‚Ü‚¹‚ñ\n");
-    OutputLargeBufferPtr = OutputLargeBuffer;
+	if ((OutputLargeBuffer = Malloc (OUTPUT_BUFFER_SIZE)) == NULL)
+	err ("Unable to \'malloc\' memory for output buffer\n");
+	OutputLargeBufferPtr = OutputLargeBuffer;
 #endif
 }
 
 
 /*
 
-  o—Íƒtƒ@ƒCƒ‹‚ğƒI[ƒvƒ“
+  å‡ºåŠ›ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ã‚ªãƒ¼ãƒ—ãƒ³
 
-  char* filename == NULL‚È‚ç‘O‰ñw’è‚³‚ê‚½ƒtƒ@ƒCƒ‹–¼‚ğˆø‚«‘±‚«g—p‚·‚é.
-  ’Êí‚Í
+  char* filename == NULLãªã‚‰å‰å›æŒ‡å®šã•ã‚ŒãŸãƒ•ã‚¡ã‚¤ãƒ«åã‚’å¼•ãç¶šãä½¿ç”¨ã™ã‚‹.
+  é€šå¸¸ã¯
 	output_file_open ("foo", 0);	 // foo.000
 	output_file_open (NULL, 1);	 // foo.001
 		...
 	output_file_open (NULL, -1);	 // foo.dat
 	output_file_open (NULL, -2);	 // foo.bss
-  ‚Æ‚µ‚ÄŒÄ‚Ño‚·.
+  ã¨ã—ã¦å‘¼ã³å‡ºã™.
 
 */
 
 extern void
 output_file_open (char* filename, int file_block_num)
 {
-    static char* basename;
+	static char* basename;
 
-    if (filename)
+	if (filename)
 	basename = filename;
 
-    if (basename == NULL)
+	if (basename == NULL)
 	err ("dis: internal error!\n");
 
-    if (strcmp ("-", basename) == 0) {
+	if (strcmp ("-", basename) == 0) {
 #ifdef STREAM
 	Output_fp = stdout;
 #else
 	Output_handle = STDOUT_FILENO;
 #endif
-    } else {
+	} else {
 	char* buf = Malloc (strlen (basename) + 4 + 1);
 	strcpy (buf, basename);
 
 	if (option_S) {
-	    switch (file_block_num) {
-	    case 0:
+		switch (file_block_num) {
+		case 0:
 		SplitMode = TRUE;
 		/* fall through */
-	    default:
+		default:
 		sprintf (strend (buf), ".%03x", file_block_num);
 		break;
-	    case -1:
+		case -1:
 		strcat (buf, ".dat");
 		SplitMode = FALSE;
 		break;
-	    case -2:
+		case -2:
 		strcat (buf, ".bss");
 		SplitMode = FALSE;
 		break;
-	    }
+		}
 	}
 
 #ifdef	STREAM
@@ -151,13 +152,13 @@ output_file_open (char* filename, int file_block_num)
 	if ((Output_handle = creat (buf, S_IREAD|S_IWRITE)) < 0)
 #else
 	if ((Output_handle = open (buf,
-		O_CREAT | O_WRONLY | O_TRUNC | O_BINARY, S_IRUSR | S_IWUSR)) < 0)
+		O_CREAT | O_WRONLY | O_TRUNC | O_BINARY, _S_IREAD | _S_IWRITE)) < 0)
 #endif	/* OSK */
-	    err ("%s ‚ğƒI[ƒvƒ“o—ˆ‚Ü‚¹‚ñ.\n", buf);
+		err ("%s cannot be opened.\n", buf);
 #endif
 
 	Mfree (buf);
-    }
+	}
 }
 
 
@@ -165,28 +166,28 @@ extern void
 output_file_close (void)
 {
 #ifdef STREAM
-    fclose (Output_fp);
+	fclose (Output_fp);
 #else
-    flush_buffer ();
-    close (Output_handle);
+	flush_buffer ();
+	close (Output_handle);
 #endif
 }
 
 
 /*
 
-  ‘‚«‚İƒGƒ‰[
+  æ›¸ãè¾¼ã¿ã‚¨ãƒ©ãƒ¼
 
 */
 private void
 diskfull (void)
 {
 #ifdef STREAM
-    fclose (Output_fp);
+	fclose (Output_fp);
 #else
-    close (Output_handle);
+	close (Output_handle);
 #endif
-    err ("\nƒfƒBƒXƒN‚ªˆê”t‚Å‚·\n");
+	err ("\nãƒ‡ã‚£ã‚¹ã‚¯ãŒä¸€æ¯ã§ã™\n");
 }
 
 
@@ -194,37 +195,37 @@ diskfull (void)
 private void
 output_through_buffer (char* str)
 {
-    
-    OutputLargeBufferPtr = strcpy2 (OutputLargeBufferPtr, str);
 
-    if (OutputLargeBufferPtr - OutputLargeBuffer > OUTPUT_BUFFER_SIZE - 1024)
+	OutputLargeBufferPtr = strcpy2 (OutputLargeBufferPtr, str);
+
+	if (OutputLargeBufferPtr - OutputLargeBuffer > OUTPUT_BUFFER_SIZE - 1024)
 	flush_buffer ();
 }
 
 
 /*
 
-  ƒtƒ@ƒCƒ‹‚Öo—Í
+  ãƒ•ã‚¡ã‚¤ãƒ«ã¸å‡ºåŠ›
 
 */
 extern void
 outputf (char* fmt, ...)
 {
 #ifndef STREAM
-    char tmp[256];
+	char tmp[256];
 #endif
-    va_list ap;
-    va_start (ap, fmt);
+	va_list ap;
+	va_start (ap, fmt);
 
 #ifdef STREAM
-    vfprintf (Output_fp, fmt, ap);
-    va_end (ap);
-    if (ferror (Output_fp))
+	vfprintf (Output_fp, fmt, ap);
+	va_end (ap);
+	if (ferror (Output_fp))
 	diskfull ();
 #else
-    vsprintf (tmp, fmt, ap);
-    va_end (ap);
-    output_through_buffer (tmp);
+	vsprintf (tmp, fmt, ap);
+	va_end (ap);
+	output_through_buffer (tmp);
 #endif
 }
 
@@ -232,27 +233,27 @@ outputf (char* fmt, ...)
 extern void
 outputa (char* str)
 {
-    OutputBufferEnd = strcpy2 (OutputBufferEnd, str);
+	OutputBufferEnd = strcpy2 (OutputBufferEnd, str);
 }
 
 
 extern void
 outputca (int ch)
 {
-    *OutputBufferEnd++ = ch;
-    *OutputBufferEnd   = '\0';
+	*OutputBufferEnd++ = ch;
+	*OutputBufferEnd   = '\0';
 }
 
 
 extern void
 outputfa (char* fmt, ...)
 {
-    va_list ap;
+	va_list ap;
 
-    va_start (ap, fmt);
-    vsprintf (OutputBufferEnd, fmt, ap);
-    OutputBufferEnd = strend (OutputBufferEnd);
-    va_end (ap);
+	va_start (ap, fmt);
+	vsprintf (OutputBufferEnd, fmt, ap);
+	OutputBufferEnd = strend (OutputBufferEnd);
+	va_end (ap);
 }
 
 
@@ -260,35 +261,35 @@ outputfa (char* fmt, ...)
 extern void
 outputax (ULONG n, int width)
 {
-    OutputBufferEnd = itox (OutputBufferEnd, n, width);
+	OutputBufferEnd = itox (OutputBufferEnd, n, width);
 }
 #endif
 
 extern void
 outputaxd (ULONG n, int width)
 {
-    OutputBufferEnd = itoxd (OutputBufferEnd, n, width);
+	OutputBufferEnd = itoxd (OutputBufferEnd, n, width);
 }
 
 extern void
 outputax2_without_0supress (ULONG n)
 {
-    *OutputBufferEnd++ = '$';
-    OutputBufferEnd = itox2_without_0supress (OutputBufferEnd, n);
+	*OutputBufferEnd++ = '$';
+	OutputBufferEnd = itox2_without_0supress (OutputBufferEnd, n);
 }
 
 extern void
 outputax4_without_0supress (ULONG n)
 {
-    *OutputBufferEnd++ = '$';
-    OutputBufferEnd = itox4_without_0supress (OutputBufferEnd, n);
+	*OutputBufferEnd++ = '$';
+	OutputBufferEnd = itox4_without_0supress (OutputBufferEnd, n);
 }
 
 extern void
 outputax8_without_0supress (ULONG n)
 {
-    *OutputBufferEnd++ = '$';
-    OutputBufferEnd = itox8_without_0supress (OutputBufferEnd, n);
+	*OutputBufferEnd++ = '$';
+	OutputBufferEnd = itox8_without_0supress (OutputBufferEnd, n);
 }
 
 
@@ -296,118 +297,118 @@ extern void
 newline (address lineadrs)
 {
 
-    if (option_S && SplitMode) {
+	if (option_S && SplitMode) {
 	static int file_block_num = 0;
 
 	if (Output_SplitByte <=
 		((long)lineadrs - (long)BeginTEXT - Output_SplitByte * file_block_num)
 		&& OutputBuffer[0] == '\n') {
-	    output_file_close ();
-	    output_file_open (NULL, ++file_block_num);
+		output_file_close ();
+		output_file_open (NULL, ++file_block_num);
 	}
-    }
+	}
 
-    if (option_a) {
+	if (option_a) {
 	static int linecount = 1;
 
 	if (linecount >= Output_AddressCommentLine) {
-	    char* ptr;
-	    int i, len = 0;
+		char* ptr;
+		int i, len = 0;
 
-	    /* Œ…”‚ğ”‚¦‚é */
-	    for (ptr = OutputBuffer; *ptr; ptr++) {
+		/* æ¡æ•°ã‚’æ•°ãˆã‚‹ */
+		for (ptr = OutputBuffer; *ptr; ptr++) {
 		if (*ptr == '\t') {
-		    len |= 7;
-		    len++;
+			len |= 7;
+			len++;
 		}
 		else if (*ptr == '\n')
-		    len = 0;
+			len = 0;
 		else
-		    len++;
-	    }
+			len++;
+		}
 
-	    /* ‹K’èˆÊ’u‚Ü‚Åƒ^ƒu‚ğo—Í‚·‚é */
-	    for (i = Atab - len / 8 - 1; i > 0; i--)
+		/* è¦å®šä½ç½®ã¾ã§ã‚¿ãƒ–ã‚’å‡ºåŠ›ã™ã‚‹ */
+		for (i = Atab - len / 8 - 1; i > 0; i--)
 		*OutputBufferEnd++ = '\t';
 
-	    *OutputBufferEnd++ = '\t';
-	    *OutputBufferEnd++ = CommentChar;
+		*OutputBufferEnd++ = '\t';
+		*OutputBufferEnd++ = CommentChar;
 
-	    OutputBufferEnd = itox6 (OutputBufferEnd, (ULONG)lineadrs);
-	    linecount = 1;
+		OutputBufferEnd = itox6 (OutputBufferEnd, (UINTPTR)lineadrs);
+		linecount = 1;
 	}
 	else
-	    linecount++;
-    }
+		linecount++;
+	}
 
-    *OutputBufferEnd++ = '\n';
-    *OutputBufferEnd   = '\0';
+	*OutputBufferEnd++ = '\n';
+	*OutputBufferEnd   = '\0';
 
 #ifdef STREAM
-    fputs (OutputBuffer, Output_fp);
-    if (ferror (Output_fp))
+	fputs (OutputBuffer, Output_fp);
+	if (ferror (Output_fp))
 	diskfull ();
 #else
-    output_through_buffer (OutputBuffer);
+	output_through_buffer (OutputBuffer);
 #endif
-    OutputBufferEnd = OutputBuffer;
+	OutputBufferEnd = OutputBuffer;
 }
 
 
 private void
 flush_buffer (void)
 {
-    long length = OutputLargeBufferPtr - OutputLargeBuffer;
+	long length = OutputLargeBufferPtr - OutputLargeBuffer;
 
-    if (write (Output_handle, OutputLargeBuffer, length) < length)
+	if (write (Output_handle, OutputLargeBuffer, length) < length)
 	diskfull ();
 
-    OutputLargeBufferPtr = OutputLargeBuffer;
+	OutputLargeBufferPtr = OutputLargeBuffer;
 }
 #endif /* STREAM */
 
 
 /*
-	ƒ\[ƒXƒtƒ@ƒCƒ‹‚Ìo—Íæ‚ÆA•W€ƒGƒ‰[o—Í‚ª“¯‚¶‚È‚ç^‚ğ•Ô‚·.
+	ã‚½ãƒ¼ã‚¹ãƒ•ã‚¡ã‚¤ãƒ«ã®å‡ºåŠ›å…ˆã¨ã€æ¨™æº–ã‚¨ãƒ©ãƒ¼å‡ºåŠ›ãŒåŒã˜ãªã‚‰çœŸã‚’è¿”ã™.
 
 	dis foo.x
-		‚Ç‚¿‚ç‚à’[––‚È‚Ì‚ÅA^.
+		ã©ã¡ã‚‰ã‚‚ç«¯æœ«ãªã®ã§ã€çœŸ.
 
 	dis foo.x >& list
-		‚Ç‚¿‚ç‚à list ‚È‚Ì‚ÅA^
+		ã©ã¡ã‚‰ã‚‚ list ãªã®ã§ã€çœŸ
 
 	dis foo.x foo.s
-		foo.s ‚Æ’[––‚È‚Ì‚ÅA‹U.
+		foo.s ã¨ç«¯æœ«ãªã®ã§ã€å½.
 */
 
 extern boolean
 is_confuse_output (void)
 {
 #ifdef	STREAM
-    int src_no = fileno (Output_fp);
+	int src_no = fileno (Output_fp);
 #else
-    int src_no = Output_handle;
+	int src_no = Output_handle;
 #endif
 
-    if (isatty (src_no) && isatty (STDERR_FILENO))
+	if (isatty (src_no) && isatty (STDERR_FILENO))
 	return TRUE;
 
 #ifdef __LIBC__
-    if (_dos_getfcb (src_no) == _dos_getfcb (STDERR_FILENO))
+	if (_dos_getfcb (src_no) == _dos_getfcb (STDERR_FILENO))
 	return TRUE;
 #else
-    {
+	{
 	struct stat src_st, err_st;
 
 	if (fstat (src_no, &src_st) == 0
 	 && fstat (STDERR_FILENO, &err_st) == 0
 	 && src_st.st_dev == err_st.st_dev
 	 && src_st.st_ino == err_st.st_ino)
-	    return TRUE;
-    }
+		return TRUE;
+	}
 #endif
 
-    return FALSE;
+	return FALSE;
 }
 
 
@@ -417,15 +418,15 @@ is_confuse_output (void)
 extern void
 output (char* str)
 {
-    fputs (str, Output_fp);
-    if (ferror (Output_fp))
+	fputs (str, Output_fp);
+	if (ferror (Output_fp))
 	diskfull ();
 }
 
 extern void
 outputc (int ch)
 {
-    fputc (ch, Output_fp);
+	fputc (ch, Output_fp);
 }
 #endif
 

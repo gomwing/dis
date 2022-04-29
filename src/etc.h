@@ -1,7 +1,7 @@
-/* $Id: etc.h,v 1.1 1996/10/24 04:27:44 ryo freeze $
+Ôªø/* $Id: etc.h,v 1.1 1996/10/24 04:27:44 ryo freeze $
  *
- *	É\Å[ÉXÉRÅ[ÉhÉWÉFÉlÉåÅ[É^
- *	éGópÉãÅ[É`ÉìÉwÉbÉ_ÉtÉ@ÉCÉã
+ *	„ÇΩ„Éº„Çπ„Ç≥„Éº„Éâ„Ç∏„Çß„Éç„É¨„Éº„Çø
+ *	ÈõëÁî®„É´„Éº„ÉÅ„É≥„Éò„ÉÉ„ÉÄ„Éï„Ç°„Ç§„É´
  *	Copyright (C) 1989,1990 K.Abe
  *	All rights reserved.
  *	Copyright (C) 1997-2010 Tachibana
@@ -12,6 +12,7 @@
 #define	ETC_H
 
 #include <stdio.h>		/* for __byte_swap_* */
+#include <stdint.h>
 
 #include "global.h"
 
@@ -26,7 +27,7 @@ extern int		eprintf (const char*, ...);
 extern int		eputc (int);
 
 extern ULONG		atox (char*);
-extern void		err (const char*, ...) __attribute__ ((noreturn));
+extern void		err (const char*, ...) /*__attribute__ ((noreturn))*/;
 extern void*		Malloc (ULONG);
 extern void*		Realloc (void*, int);
 
@@ -42,7 +43,8 @@ char* strupr (char* str);
 #endif
 
 USEOPTION   option_q;
-#define charout(a) (void)({ if (!option_q) eputc (a); })
+#define charout(a) { if (!option_q) eputc (a); }
+//#define charout(a) if (!option_q) eputc(a);
 
 
 #ifdef min
@@ -56,8 +58,10 @@ USEOPTION   option_q;
 #define min(a, b)	({ typeof (a) _a = (a), _b = (b); (_a < _b) ? _a : _b; })
 #define max(a, b)	({ typeof (a) _a = (a), _b = (b); (_a > _b) ? _a : _b; })
 #else
-extern ULONG	min (ULONG, ULONG);
-extern ULONG	max (ULONG, ULONG);
+//extern ULONG	min (ULONG, ULONG);
+//extern ULONG	max (ULONG, ULONG);
+#define min(a,b) (((a)<(b))?(a):(b))
+#define max(a,b) (((a)>(b))?(a):(b))
 #endif
 
 
@@ -75,32 +79,32 @@ extern ULONG	max (ULONG, ULONG);
 
 
 #ifdef __BIG_ENDIAN__
-#define peekw(p) (*(unsigned short*) (p))
-#define peekl(p) (*(unsigned long *) (p))
+#define peekw(p) (*(uint16_t *) (p))
+#define peekl(p) (*(uint32_t *) (p))
 
 #else /* __LITTLE_ENDIAN__ */
 
 #ifdef __byte_swap_word
-#define peekw(p) ((unsigned short) __byte_swap_word (*(unsigned short*) (p)))
+#define peekw(p) ((uint16_t) __byte_swap_word (*(uint16_t*) (p)))
 #else
-static INLINE unsigned short
+static INLINE uint16_t
 peekw (const void* ptr)
 {
-    const unsigned char* p = ptr;
+	const uint8_t* p = ptr;
 
-    return (p[0] << 8) + p[1];
+	return (p[0] << 8) + p[1];
 }
 #endif
 
 #ifdef __byte_swap_long
-#define peekl(p) ((unsigned long) __byte_swap_long (*(unsigned long*) (p)))
+#define peekl(p) ((uint32_t) __byte_swap_long (*(uint32_t*) (p)))
 #else
-static INLINE unsigned long
+static INLINE uint32_t
 peekl (const void* ptr)
 {
-    const unsigned char* p = ptr;
+	const uint8_t* p = ptr;
 
-    return (p[0] << 24) + (p[1] << 16) + (p[2] << 8) + p[3];
+	return (p[0] << 24) + (p[1] << 16) + (p[2] << 8) + p[3];
 }
 #endif
 

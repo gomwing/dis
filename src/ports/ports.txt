@@ -1,16 +1,16 @@
-������������������������������������������������������������������������
+﻿━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-	X680x0/Human68k *�ȊO* �ł̍ăR���p�C�����@
+	X680x0/Human68k *以外* での再コンパイル方法
 
-������������������������������������������������������������������������
+────────────────────────────────────
 
-�@Cygwin�ALinux�AFreeBSD �p�� Makefile ��p�ӂ��Ă���܂��Bsrc/ �f�B���N
-�g���� Makefile �Ƃ����t�@�C�����ŃR�s�[���� make ���邩�A
+　Cygwin、Linux、FreeBSD 用の Makefile を用意してあります。src/ ディレク
+トリに Makefile というファイル名でコピーして make するか、
 	make -f ports/Makefile_Cyg_MinGW
-�̂悤�Ɏw�肵�ĉ������B
+のように指定して下さい。
 
 
-	��		Makefile
+	環境		Makefile
 	----		--------
 	Cygwin		Makefile_Cygwin
 	Cygwin (MinGW)	Makefile_Cyg_MinGW
@@ -18,149 +18,149 @@
 	FreeBSD		Makefile_FreeBSD
 
 
-�� Windows: Cygwin
+● Windows: Cygwin
 
-�@�����R�[�h�� gcc �ŕϊ�����悤�Ɏw�肵�Ă���̂ŁA�������� make ����
-�����Œʂ锤�ł��B
+　文字コードを gcc で変換するように指定しているので、何もせず make する
+だけで通る筈です。
 
-�@���s���� cygwin1.dll �Ȃǂ� Cygwin �̎��s�����K�v�ł��B
-
-
-�� Windows: Cygwin -mno-cygwin (WinGW)
-
-�@�����R�[�h�� gcc �ŕϊ�����悤�Ɏw�肵�Ă���̂ŁA�������� make ����
-�����Œʂ锤�ł��B
-
-�@DLL �͕s�v�Ȃ̂ŁA���s�t�@�C���̔z�z�Ɍ����Ă���Ǝv���܂��B
-
-�@�Ȃ��AMinGW ��ł̃R���p�C���͎����Ă��܂���B
+　実行時は cygwin1.dll などの Cygwin の実行環境が必要です。
 
 
-�� Linux
+● Windows: Cygwin -mno-cygwin (WinGW)
 
-�� Ubuntu 10.04 �Ŋm�F���Ă��܂��B
+　文字コードを gcc で変換するように指定しているので、何もせず make する
+だけで通る筈です。
 
-�@�����R�[�h�� gcc �ŕϊ�����悤�Ɏw�肵�Ă���̂ŁA�������� make ����
-�����Œʂ锤�ł��B
+　DLL は不要なので、実行ファイルの配布に向いていると思います。
 
-
-�� FreeBSD
-
-�� �T�|�[�g�S���҂̎茳�ɊJ�������Ȃ����߁Amake ���Ă܂���B���̂��߉�
-   ���s������邩���m��܂���B
-
-�@version 3.00 ���\��ɁAM.Suzuki ������ dis �� FreeBSD ��ŃR���p�C����
-��ׂ̍����� contribute ���Ă��������A������Q�l�ɂ��Đ����� FreeBSD ��
-�Ή����܂����B����ɂ��AFreeBSD ��� Human68k �p�̃o�C�i���t�@�C�����t
-�A�Z���u������A�N���X�J�������������Ă��܂��B
-
-�@FreeBSD �� make ����ɂ́A�\�� nkf �Ȃǂ��g�p���ă\�[�X�t�@�C���̕���
-�R�[�h����{�� EUC �ɕϊ����ĉ������B
-
-�\�[�X�R�[�h�ł� __HUMAN68K__�A__LIBC__�A__BIG_ENDIAN__ �Ȃǂ̒�`���Q��
-���Ă��܂��B���� NetBSD �ł��R���p�C���o����Ǝv���܂��B
-
-�@FreeBSD �N���X�ł̔��Ă� M.Suzuki ���ɂ����̂ł����A�����o�[�W������
-�̎�荞�݂͑S�Ď����g�ɂ��R�[�f�B���O�Ȃ̂ŁA�����s�������Ύ��̕�
-�ɘA���肢�܂��B
+　なお、MinGW 上でのコンパイルは試していません。
 
 
-�� ����ȊO�� OS �ւ̈ڐA
+● Linux
 
-�@�ȉ��̒��������ĉ������B
+※ Ubuntu 10.04 で確認しています。
 
-�EM68000 �̂悤�ȃr�b�O�G���f�B�A�����ŁA�}�N�� __BIG_ENDIAN__ ����`
-  ����Ȃ��ꍇ�� Makefile �Ŏ��O�Œ�`���܂��B
+　文字コードを gcc で変換するように指定しているので、何もせず make する
+だけで通る筈です。
 
-�E�\�[�X�t�@�C���̕����R�[�h�� SHIFT-JIS �Ȃ̂ŁA�Ⴄ�����R�[�h���g����
-���ł� nkf �Ȃǂŕϊ����邩�A�R���p�C���̃I�v�V�����Ŏw�肵�܂��B
 
-�Esrc/estruct.h �Œ�`���Ă���\���̂� GCC �g���@�\��
+● FreeBSD
+
+※ サポート担当者の手元に開発環境がないため、make してません。そのため何
+   か不具合があるかも知れません。
+
+　version 3.00 発表後に、M.Suzuki 氏から dis を FreeBSD 上でコンパイルす
+る為の差分を contribute していただき、それを参考にして正式に FreeBSD に
+対応しました。これにより、FreeBSD 上で Human68k 用のバイナリファイルを逆
+アセンブルする、クロス開発環境が実現しています。
+
+　FreeBSD で make するには、予め nkf などを使用してソースファイルの文字
+コードを日本語 EUC に変換して下さい。
+
+ソースコードでは __HUMAN68K__、__LIBC__、__BIG_ENDIAN__ などの定義を参照
+しています。多分 NetBSD でもコンパイル出来ると思います。
+
+　FreeBSD クロス版の発案は M.Suzuki 氏によるものですが、正式バージョンへ
+の取り込みは全て私自身によるコーディングなので、何か不具合があれば私の方
+に連絡願います。
+
+
+● それ以外の OS への移植
+
+　以下の調整をして下さい。
+
+・M68000 のようなビッグエンディアン環境で、マクロ __BIG_ENDIAN__ が定義
+  されない場合は Makefile で自前で定義します。
+
+・ソースファイルの文字コードが SHIFT-JIS なので、違う文字コードを使う環
+境では nkf などで変換するか、コンパイラのオプションで指定します。
+
+・src/estruct.h で定義している構造体で GCC 拡張機能の
 	__attribute__ ((packed))
-  ���g���Ă���̂ŁAGCC �ȊO�ł͓����̋@�\�ւ̒u���������K�v�ł��B
+  を使っているので、GCC 以外では同等の機能への置き換えが必要です。
 
-�Estrupr() �� strtox() �ȂǁA�W���I�łȂ��֐��̗L���� Makefile ��������
-  ���܂��B
-
-
-������������������������������������������������������������������������
-
-	X680x0/Human68k �ł̍ăR���p�C�����@
-
-������������������������������������������������������������������������
-
-�@���S�ȍăR���p�C���ɂ́Along double(12�o�C�g)�ɑΉ����Ă��� sprintf()
-�ƁA������� long double �ɕϊ����� strtox() ���K�v�ł��B
-
-�@strtox() �� HAS �� fexpr.s ����R�[�h�𔲂��o���Ɗy�ɍ��܂����A
-sprintf() �� long double �ɑΉ����Ă��Ȃ��ƈӖ�������܂���B
+・strupr() や strtox() など、標準的でない関数の有無で Makefile を書き換
+  えます。
 
 
-1) ���C�u�����̐ݒ�
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Makefile �� LIBFLAGS ���A�����Ă��Ȃ����C�u�����������N���Ȃ��悤�ɏC��
-���܂��B
-	libld.a ���Ȃ��ꍇ	-lld ���폜���܂�
-	libhdi.a �V		-lhdi �V
-	libhmem.a �V		-lhmem �V
+	X680x0/Human68k での再コンパイル方法
 
-�Ȃ��Alibioctl.a �������Ă���l�� -lioctl ��ǉ�����̂��ǂ��ł��傤�B
+────────────────────────────────────
 
-2) sprintf() �� long double �Ή��L��
+　完全な再コンパイルには、long double(12バイト)に対応している sprintf()
+と、文字列を long double に変換する strtox() が必要です。
 
-sprintf() �� long double �ɑΉ����Ă��Ȃ��ꍇ�́AMakefile �� FUNCCFLAGS
-�� -DNO_PRINTF_LDBL ��ǉ����܂��B
+　strtox() は HAS の fexpr.s からコードを抜き出すと楽に作れますが、
+sprintf() が long double に対応していないと意味がありません。
 
-LIBC �� libhdi �͑Ή����Ă��܂���B
 
-3) strtox() �̗L��
+1) ライブラリの設定
 
-strtox() ���Ȃ��ꍇ�� FUNCCFLAGS ���� -DHAVE_STRTOX ���폜���܂��B
+Makefile の LIBFLAGS を、持っていないライブラリをリンクしないように修正
+します。
+	libld.a がない場合	-lld を削除します
+	libhdi.a 〃		-lhdi 〃
+	libhmem.a 〃		-lhmem 〃
 
-�X�ɁAfpconv.c:fpconv_x() �̈ȉ��̕����𒲐����܂��B
+なお、libioctl.a を持っている人は -lioctl を追加するのも良いでしょう。
+
+2) sprintf() の long double 対応有無
+
+sprintf() が long double に対応していない場合は、Makefile の FUNCCFLAGS
+に -DNO_PRINTF_LDBL を追加します。
+
+LIBC や libhdi は対応していません。
+
+3) strtox() の有無
+
+strtox() がない場合は FUNCCFLAGS から -DHAVE_STRTOX を削除します。
+
+更に、fpconv.c:fpconv_x() の以下の部分を調整します。
 	#ifndef	HAVE_STRTOX
-	     || e <= 64		/* ���C�u�����Ɉˑ� */
+	     || e <= 64		/* ライブラリに依存 */
 	#endif
 
-�������A-DNO_PRINTF_LDBL ��ǉ������ꍇ�͎g��Ȃ��̂ŁA���̂܂܂ō\����
-����B
+ただし、-DNO_PRINTF_LDBL を追加した場合は使わないので、そのままで構いま
+せん。
 
-4) (�D�݂�) �t�@�C���㏑���m�F���̖₢����
+4) (好みで) ファイル上書き確認時の問い合せ
 
-�W���ł� Yes/No/Rename ���͌�Ƀ��^�[���L�[�������Ȃ��Ƒ��s����܂���B
-'y' �L�[�Ȃǂ������������ő��s�������ꍇ�́AMakefile �� DEFAULTCFLAGS
-�� -DQUICK_YES_NO ��ǉ����܂��B
+標準では Yes/No/Rename 入力後にリターンキーを押さないと続行されません。
+'y' キーなどを押しただけで続行したい場合は、Makefile の DEFAULTCFLAGS
+に -DQUICK_YES_NO を追加します。
 
-5) (�D�݂�) fefunc.h �̓ǂݍ���
+5) (好みで) fefunc.h の読み込み
 
-dis ���s���� fefunc.mac �ł͂Ȃ� fefunc.h ��ǂݍ��ނ悤�ɂ���ꍇ�́A��
-���� -DREAD_FEFUNC_H ��ǉ����܂��B
+dis 実行時に fefunc.mac ではなく fefunc.h を読み込むようにする場合は、同
+じく -DREAD_FEFUNC_H を追加します。
 
 6) make
 
-make �����s���܂��B
+make を実行します。
 
 
-�� �R���p�C�����̌x���\���ɂ���
+● コンパイル時の警告表示について
 
-1. analyze.c ��
+1. analyze.c の
 	register void* sp __asm ("sp");
-���̕����ŕϐ����������x�����o�܂��Bgcc �� asm ���̎�舵���ɗR�������
-���ł����A�o�Ȃ��悤�ɂ���Ƌ͂��ł��������������Ȃ�̂ŕ��u���Ă��܂��B
+この部分で変数未初期化警告が出ます。gcc の asm 文の取り扱いに由来するよ
+うですが、出ないようにすると僅かですが効率が悪くなるので放置しています。
 
-2. eval.y �� bison-1.28 �ŏ�������ƁAeval.c �̃R���p�C����10�i�萔����
-��������Ƃ����x������ʂɏo�܂��Bbison �� short �� int �ɕ����g�����Ă�
-��̂������̂悤�ł��Bbison �̃o�[�W�������Ⴆ�Όx���͏o�Ȃ��Ȃ邩���m��
-�܂���Bdis �̃\�[�X���őΏ��ł��Ȃ��Ǝv���̂ŁA���̂܂܂ɂ��Ă��܂��B
+2. eval.y を bison-1.28 で処理すると、eval.c のコンパイルで10進定数が大
+きすぎるという警告が大量に出ます。bison が short を int に符合拡張してい
+るのが原因のようです。bison のバージョンが違えば警告は出なくなるかも知れ
+ません。dis のソース側で対処できないと思うので、そのままにしています。
 
-3. X680x0/Human68k �ȊO�ł́Alabel.c �̃R���p�C������ avl.c ��
+3. X680x0/Human68k 以外では、label.c のコンパイル時に avl.c で
 	AVL_destroy_tree()
 	AVL_search_previous()
 	AVL_check_tree()
-���g���Ă��Ȃ��Ƃ����x�����o��ꍇ������܂����A���̒ʂ�̈Ӗ��ł��B
+が使われていないという警告が出る場合がありますが、その通りの意味です。
 
-���s�t�@�C���ɑ������ʂ������܂����Aavl.c �͂��܂肢���肽���Ȃ������̂�
-���̂܂܂ɂ��Ă���܂��B
+実行ファイルに多少無駄が生じますが、avl.c はあまりいじりたくなかったので
+そのままにしてあります。
 
 
-������������������������������������������������������������������������
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

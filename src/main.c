@@ -1,7 +1,7 @@
-/* $Id: main.c,v 2.76 1995/01/07 11:32:22 ryo Exp $
+ï»¿/* $Id: main.c,v 2.76 1995/01/07 11:32:22 ryo Exp $
  *
- *	ƒ\[ƒXƒR[ƒhƒWƒFƒlƒŒ[ƒ^
- *	ƒƒCƒ“ƒ‹[ƒ`ƒ“
+ *	ã‚½ãƒ¼ã‚¹ã‚³ãƒ¼ãƒ‰ã‚¸ã‚§ãƒãƒ¬ãƒ¼ã‚¿
+ *	ãƒ¡ã‚¤ãƒ³ãƒ«ãƒ¼ãƒãƒ³
  *	Copyright (C) 1989,1990 K.Abe, 1994 R.ShimiZu
  *	All rights reserved.
  *	Copyright (C) 1997-2010 Tachibana
@@ -17,7 +17,8 @@
 #include <time.h>	/* time difftime */
 #include <unistd.h>	/* access */
 #include <sys/stat.h>
-#include <sys/fcntl.h>	/* open */
+////#include <sys/fcntl.h>	/* open */ GOMWING
+#include <fcntl.h>
 #include <sys/types.h>
 
 #ifdef QUICK_YES_NO
@@ -54,7 +55,7 @@ USEOPTION	option_g, option_e, option_v, option_d, option_i,
 USEOPTION	option_overwrite;
 
 
-/* static ŠÖ”ƒvƒƒgƒ^ƒCƒv */
+/* static é–¢æ•°ãƒ—ãƒ­ãƒˆã‚¿ã‚¤ãƒ— */
 private void	analyze_and_generate (int, char*[]);
 private void	check_open_output_file (char*);
 private int	check_exist_output_file (char*);
@@ -65,21 +66,21 @@ xheader Head;
 #ifdef	OSKDIS
 os9header HeadOSK;
 #else
-char	FileType;	/* ƒtƒ@ƒCƒ‹Œ`®(0,'x','r','z') */
+char	FileType;	/* ãƒ•ã‚¡ã‚¤ãƒ«å½¢å¼(0,'x','r','z') */
 #endif
 
-ULONG	Top;		/* ÀÛ‚Éƒtƒ@ƒCƒ‹‚Ì‚ ‚éƒAƒhƒŒƒX  */
-ULONG	Ofst;		/* ÀÛ‚ÌƒAƒhƒŒƒX - ‰¼‘zƒAƒhƒŒƒX */
+UINTPTR	Top;		/* å®Ÿéš›ã«ãƒ•ã‚¡ã‚¤ãƒ«ã®ã‚ã‚‹ã‚¢ãƒ‰ãƒ¬ã‚¹  */
+UINTPTR	Ofst;		/* å®Ÿéš›ã®ã‚¢ãƒ‰ãƒ¬ã‚¹ - ä»®æƒ³ã‚¢ãƒ‰ãƒ¬ã‚¹ */
 
 /********************************************
-  Human68K —pi-DOSKDIS –³j‚Ìê‡‚ÍA
-    BeginTEXT = text section ‚Ìæ“ª
-    BeginDATA = data section ‚Ìæ“ª
-    BeginBSS  = bss section ‚Ìæ“ª
-  OS-9/680x0 —pi-DOSKDIS —Lj‚Ìê‡‚ÍA
-    BeginTEXT = psect æ“ª
-    BeginDATA = ‰Šú‰» vsect æ“ª
-    BeginBSS  = vsect æ“ª
+  Human68K ç”¨ï¼ˆ-DOSKDIS ç„¡ï¼‰ã®å ´åˆã¯ã€
+	BeginTEXT = text section ã®å…ˆé ­
+	BeginDATA = data section ã®å…ˆé ­
+	BeginBSS  = bss section ã®å…ˆé ­
+  OS-9/680x0 ç”¨ï¼ˆ-DOSKDIS æœ‰ï¼‰ã®å ´åˆã¯ã€
+	BeginTEXT = psect å…ˆé ­
+	BeginDATA = åˆæœŸåŒ– vsect å…ˆé ­
+	BeginBSS  = vsect å…ˆé ­
 *********************************************/
 
 address BeginTEXT,
@@ -91,20 +92,20 @@ address BeginTEXT,
 	Last;
 address Available_text_end;	/* = BeginDATA or BeginBSS */
 
-int Absolute  = NOT_ABSOLUTE;	/* â‘Î”Ô’nŒ`®ƒ‚[ƒh */
+int Absolute  = NOT_ABSOLUTE;	/* çµ¶å¯¾ç•ªåœ°å½¢å¼ãƒ¢ãƒ¼ãƒ‰ */
 				/* NOT_ABSOLUTE, ABSOLUTE_ZFILE, ABSOLUTE_ZOPT */
 
-int String_length_min = 3;  /* •¶š—ñ‚ÌÅ¬’·‚³ */
+int String_length_min = 3;  /* æ–‡å­—åˆ—ã®æœ€å°é•·ã• */
 
 int	Debug = 0;
 int	Verbose = 1;
 int	Quiet_mode = 0;
-short	Emulate_mode = 3;	/* bit0=1:fpsp bit1=1:isp emulation –½—ß‚ğ”F¯‚·‚é */
+short	Emulate_mode = 3;	/* bit0=1:fpsp bit1=1:isp emulation å‘½ä»¤ã‚’èªè­˜ã™ã‚‹ */
 char	CommentChar = ';';
 
-address Base;		/* ƒ[ƒhƒAƒhƒŒƒX */
-address Exec;		/* ÀsŠJnƒAƒhƒŒƒX */
-boolean Exist_symbol;	/* ƒVƒ“ƒ{ƒ‹ƒe[ƒuƒ‹‚Ì‘¶İƒtƒ‰ƒO */
+address Base;		/* ãƒ­ãƒ¼ãƒ‰ã‚¢ãƒ‰ãƒ¬ã‚¹ */
+address Exec;		/* å®Ÿè¡Œé–‹å§‹ã‚¢ãƒ‰ãƒ¬ã‚¹ */
+boolean Exist_symbol;	/* ã‚·ãƒ³ãƒœãƒ«ãƒ†ãƒ¼ãƒ–ãƒ«ã®å­˜åœ¨ãƒ•ãƒ©ã‚° */
 
 char*	Filename_in;
 char*	Filename_out;
@@ -116,12 +117,12 @@ char*	Tablefilename;
 extern void
 print_title (void)
 {
-    static char flag = 1;
+	static char flag = 1;
 
-    if (flag) {
+	if (flag) {
 	flag = 0;
 
-	eprintf ("ƒ\[ƒXƒR[ƒhƒWƒFƒlƒŒ[ƒ^ for X680x0"
+	eprintf ("Source Code Generator for X680x0"
 #ifdef __linux__
 						" (Linux cross)"
 #endif
@@ -141,40 +142,40 @@ print_title (void)
 #ifdef	OSKDIS
 	eprintf ("OS-9/68000 version %s by TEMPLE, 1994\n", OSKEdition);
 #endif
-    }
+	}
 }
 
 
 typedef struct {
-    short bit;
-    char* name;
+	short bit;
+	char* name;
 } target_table;
 
 private void
 print_target (char* str, int bits, const target_table* tbl, int size)
 {
-    if (bits) {
+	if (bits) {
 	int f = '\0';
 	eprintf (str);
 	do {
-	    if (bits & tbl->bit) {
+		if (bits & tbl->bit) {
 		if (f)
-		    eputc (f);
+			eputc (f);
 		eprintf (tbl->name);
 		f = ',';
-	    }
-	    tbl++;
+		}
+		tbl++;
 	} while (--size);
 	eputc ('\n');
-    }
+	}
 }
 
 
 /*
 
-  ƒtƒ@ƒCƒ‹‚ğ“Ç‚İ‚İAƒwƒbƒ_î•ñ‚ğ‘åˆæ•Ï” Head ‚ÉƒZƒbƒg
-  ƒtƒ@ƒCƒ‹‚Ì“ú•t‚ğ Filedate ‚ÉƒZƒbƒg
-  “Ç‚İ‚ñ‚¾æ“ªƒAƒhƒŒƒX‚ğ•Ô‚·
+  ãƒ•ã‚¡ã‚¤ãƒ«ã‚’èª­ã¿è¾¼ã¿ã€ãƒ˜ãƒƒãƒ€æƒ…å ±ã‚’å¤§åŸŸå¤‰æ•° Head ã«ã‚»ãƒƒãƒˆ
+  ãƒ•ã‚¡ã‚¤ãƒ«ã®æ—¥ä»˜ã‚’ Filedate ã«ã‚»ãƒƒãƒˆ
+  èª­ã¿è¾¼ã‚“ã å…ˆé ­ã‚¢ãƒ‰ãƒ¬ã‚¹ã‚’è¿”ã™
 
 */
 static time_t	Filedate;
@@ -182,20 +183,20 @@ static time_t	Filedate;
 static INLINE address
 loadfile (char* filename)
 {
-    int		handle;
-    address	top;
-    ULONG	bytes;
-    struct stat	statbuf;
+	int		handle;
+	address	top;
+	ULONG	bytes;
+	struct stat	statbuf;
 
-    if ((handle = open (filename, O_BINARY | O_RDONLY)) == -1)
-	err ("%s ‚ğƒI[ƒvƒ“o—ˆ‚Ü‚¹‚ñ.\n", filename);
+	if ((handle = open (filename, O_BINARY | O_RDONLY)) == -1)
+	err ("Could not open %s\n", filename);
 
-    if (fstat( handle , &statbuf) < 0)
+	if (fstat( handle , &statbuf) < 0)
 	err ("fstat failed.\n");
-    Filedate = statbuf.st_mtime;
+	Filedate = statbuf.st_mtime;
 
 #ifdef	OSKDIS
-    if (option_z) {
+	if (option_z) {
 	Head.base = Base;
 	Head.exec = Exec;
 	Head.text = statbuf.st_size;
@@ -203,35 +204,35 @@ loadfile (char* filename)
 	Head.bss = 0;
 	Head.symbol = 0;
 	Head.bindinfo = 0;
-    }
-    else {
+	}
+	else {
 	if (read (handle, (char *)&HeadOSK, sizeof (HeadOSK)) != sizeof (HeadOSK))
-	    goto os9head_error;
+		goto os9head_error;
 	if (HeadOSK.head != 0x4afc) {
-	    eprintf ("ID=%04X\n", HeadOSK.head);
+		eprintf ("ID=%04X\n", HeadOSK.head);
 os9head_error:
-	    close(handle);
-	    err ("OS-9/680x0 ‚Ìƒ‚ƒWƒ…[ƒ‹‚Å‚Í‚ ‚è‚Ü‚¹‚ñ.\n");
+		close(handle);
+		err ("It is not a module of OS-9/680x0.\n");
 	}
 	switch (HeadOSK.type & 0x0f00) {
-	    case 0x0100:	/* Program */
+		case 0x0100:	/* Program */
 		Head.base = 0x0048;
 		Head.bss = HeadOSK.mem;
 		break;
-	    case 0x0b00:	/* Trap */
+		case 0x0b00:	/* Trap */
 		Head.base = 0x0048;
 		Head.bss = HeadOSK.mem;
 		break;
-	    case 0x0200:	/* Subroutine */
-	    case 0x0c00:	/* System     */
-	    case 0x0d00:	/* FileMan    */
-	    case 0x0e00:	/* Driver     */
+		case 0x0200:	/* Subroutine */
+		case 0x0c00:	/* System     */
+		case 0x0d00:	/* FileMan    */
+		case 0x0e00:	/* Driver     */
 		Head.base = 0x003c;
 		Head.bss = HeadOSK.mem;
 		break;
-	    default:
+		default:
 		close(handle);
-		err ("‚±‚Ìƒ‚ƒWƒ…[ƒ‹ƒ^ƒCƒv‚ÍƒTƒ|[ƒg‚µ‚Ä‚¢‚Ü‚¹‚ñ.\n");
+		err ("This module type is not supported.\n");
 	}
 	lseek(handle, Head.base, 0);
 	Head.exec = HeadOSK.exec;
@@ -239,33 +240,33 @@ os9head_error:
 	Head.data = 0;
 	Head.symbol = 0;
 	Head.bindinfo = 0;
-    }
+	}
 #else
-    if (FileType == 0) {
+	if (FileType == 0) {
 	char*	ext = strrchr (filename, '.');
 
-	/* R Œ`®‚ÍŠg’£q‚Å”»•Ê‚·‚é */
+	/* R å½¢å¼ã¯æ‹¡å¼µå­ã§åˆ¤åˆ¥ã™ã‚‹ */
 	if (ext && strcasecmp (ext, ".r") == 0)
-	    FileType = 'r';
+		FileType = 'r';
 	else {
-	    char buf[2];
+		char buf[2];
 
-	    /* æ“ª 2 ƒoƒCƒg‚ğ“Ç‚İ‚Ş */
-	    if (read (handle, buf, 2) < 2)
-		goto filetype_error;		/* 2 ƒoƒCƒg–¢–‚È‚çÀsƒtƒ@ƒCƒ‹‚Å‚Í‚È‚¢ */
-	    lseek (handle, 0, SEEK_SET);
+		/* å…ˆé ­ 2 ãƒã‚¤ãƒˆã‚’èª­ã¿è¾¼ã‚€ */
+		if (read (handle, buf, 2) < 2)
+		goto filetype_error;		/* 2 ãƒã‚¤ãƒˆæœªæº€ãªã‚‰å®Ÿè¡Œãƒ•ã‚¡ã‚¤ãƒ«ã§ã¯ãªã„ */
+		lseek (handle, 0, SEEK_SET);
 
-	    /* ƒtƒ@ƒCƒ‹Œ`®‚ğ”»•Ê‚·‚é */
-	    if (buf[0] == (char)'H' && buf[1] == (char)'U')
+		/* ãƒ•ã‚¡ã‚¤ãƒ«å½¢å¼ã‚’åˆ¤åˆ¥ã™ã‚‹ */
+		if (buf[0] == (char)'H' && buf[1] == (char)'U')
 		FileType = 'x';
-	    else if (buf[0] == (char)0x60 && buf[1] == (char)0x1a)
+		else if (buf[0] == (char)0x60 && buf[1] == (char)0x1a)
 		FileType = 'z';
-	    else
+		else
 		goto filetype_error;
 	}
-    }
+	}
 
-    if (option_z || FileType == (char)'r') {
+	if (option_z || FileType == (char)'r') {
 	Head.base = Base;
 	Head.exec = Exec;
 	Head.text = statbuf.st_size;
@@ -273,134 +274,147 @@ os9head_error:
 	Head.bss = 0;
 	Head.symbol = 0;
 	Head.bindinfo = 0;
-    } else if (FileType == (char)'z') {
+	} else if (FileType == (char)'z') {
 	zheader zhead;
 
 	if (read (handle, (char*) &zhead, sizeof (zhead)) != sizeof (zhead))
-	    goto filetype_error;
-	Head.exec = Head.base = (address) peekl (&zhead.base);
+		goto filetype_error;
+	Head.exec = Head.base = (address) (UINTPTR) peekl (&zhead.base);
 	Head.text = peekl (&zhead.text);
 	Head.data = peekl (&zhead.data);
 	Head.bss  = peekl (&zhead.bss);
 	Head.symbol = 0;
 	Head.bindinfo = 0;
 	Absolute = ABSOLUTE_ZFILE;
-    } else {		/* if (FileType == (char)'x') */
-	if (read (handle, (char *)&Head, sizeof (Head)) != sizeof (Head)) {
+	} else {            /* if (FileType == (char)'x') */
+	xfileheader fh;
+	if (read (handle, (char *)&fh, sizeof (fh)) != sizeof (fh)) {
 filetype_error:
-	    close (handle);
-	    err ("‚±‚Ì‚æ‚¤‚Èƒtƒ@ƒCƒ‹‚Íæ‚èˆµ‚Á‚Ä‚¨‚è‚Ü‚¹‚ñ.\n");
+		close (handle);
+		err ("Such a file is not handled.\n");
 	}
+	Head.head = fh.head;
+	Head.reserve2 = fh.reserve2;
+	Head.mode = fh.mode;
+	Head.text = fh.text;
+	Head.data = fh.data;
+	Head.bss = fh.bss;
+	Head.offset = fh.offset;
+	Head.symbol = fh.symbol;
+	Head.bindinfo = fh.bindinfo;
 
 #ifndef __BIG_ENDIAN__
-	/* big-endian ‚ÅŠi”[‚³‚ê‚Ä‚¢‚éƒwƒbƒ_‚ğ little-endian ‚É•ÏX‚·‚é */
-	Head.base = (address) peekl (&Head.base);
-	Head.exec = (address) peekl (&Head.exec);
+	/* big-endian ã§æ ¼ç´ã•ã‚Œã¦ã„ã‚‹ãƒ˜ãƒƒãƒ€ã‚’ little-endian ã«å¤‰æ›´ã™ã‚‹ */
 	Head.text = peekl (&Head.text);
 	Head.data = peekl (&Head.data);
 	Head.bss  = peekl (&Head.bss);
 	Head.offset = peekl (&Head.offset);
 	Head.symbol = peekl (&Head.symbol);
-#endif
 
-    }
+	Head.base = (address) (UINTPTR) peekl (&fh.base);
+	Head.exec = (address) (UINTPTR) peekl (&fh.exec);
+#else
+	Head.base = (address)fh.base;
+	Head.exec = (address)fh.exec;
+#endif
+	}
 #endif	/* OSKDIS */
 
-    bytes = Head.text + Head.data + Head.offset + Head.symbol;
-    top = (address) Malloc (bytes + 16);
+	bytes = Head.text + Head.data + Head.offset + Head.symbol;
+	top = (address) Malloc (bytes + 16);
 
-    if (read (handle, (char*)top, bytes) != bytes) {
+	if (read (handle, (char*)top, bytes) != bytes) {
+		close (handle);
+		err ("The file size is abnormal.\n");
+	}
+
 	close (handle);
-	err ("ƒtƒ@ƒCƒ‹ƒTƒCƒY‚ªˆÙí‚Å‚·.\n");
-    }
-
-    close (handle);
-    return top;
+	return top;
 }
 
 /*
 
-  Œãn––
+  å¾Œå§‹æœ«
 
 */
 extern void
 free_load_buffer (void)
 {
-    Mfree ((void *) Top);
+	Mfree ((void *) Top);
 }
 
 
 int
 main (int argc, char* argv[])
 {
-    time_t start_time = time (NULL);
+	time_t start_time = time (NULL);
 
 #ifdef	OSK
-    setbuf (stdout, NULL);
+	setbuf (stdout, NULL);
 #endif
-    setbuf (stderr, NULL);
+	setbuf (stderr, NULL);
 
-    analyze_args (argc, argv);
-    print_title ();
+	analyze_args (argc, argv);
+	print_title ();
 
-    eprintf ("%s ‚ğ“Ç‚İ‚İ‚Ü‚·.\n", Filename_in);
+	eprintf ("Loading %s.\n", Filename_in);
 
-    /* ƒAƒhƒŒƒXŠÖŒW‚Ì‘åˆæ•Ï”‚ğ‰Šú‰» */
-    Top = (ULONG)loadfile (Filename_in);
-    Ofst = Top - (ULONG)Head.base;
-    BeginTEXT = Head.base;
+	/* ã‚¢ãƒ‰ãƒ¬ã‚¹é–¢ä¿‚ã®å¤§åŸŸå¤‰æ•°ã‚’åˆæœŸåŒ– */
+	Top = (UINTPTR)loadfile (Filename_in);
+	Ofst = Top - (UINTPTR)Head.base;
+	BeginTEXT = Head.base;
 
 #ifdef	OSKDIS
-    BeginBSS  = BeginTEXT + Head.text;
-    BeginDATA = BeginBSS  + Head.bss;
-    Last      = BeginDATA + Head.data;
-    Available_text_end = BeginBSS;
+	BeginBSS  = BeginTEXT + Head.text;
+	BeginDATA = BeginBSS  + Head.bss;
+	Last      = BeginDATA + Head.data;
+	Available_text_end = BeginBSS;
 
 #else
-    BeginDATA = BeginTEXT + Head.text;
-    BeginBSS  = BeginDATA + Head.data;
-    Last = BeginSTACK = BeginBSS  + Head.bss;
-    Available_text_end = (option_D ? BeginBSS : BeginDATA);
+	BeginDATA = BeginTEXT + Head.text;
+	BeginBSS  = BeginDATA + Head.data;
+	Last = BeginSTACK = BeginBSS  + Head.bss;
+	Available_text_end = (option_D ? BeginBSS : BeginDATA);
 
-    if (Head.bindinfo) {
-	eprintf ("‚±‚Ìƒtƒ@ƒCƒ‹‚Í bind ‚³‚ê‚Ä‚¢‚Ü‚·.\n"
-		 "unbind ƒRƒ}ƒ“ƒh“™‚Å“WŠJ‚µ‚Ä‚©‚çƒ\[ƒXƒWƒFƒlƒŒ[ƒg‚µ‚Ä‰º‚³‚¢.\n");
-	return 1;
-    }
+	if (Head.bindinfo) {
+		eprintf ("This file is bound.\n"
+			 "Please unbind and generate source.\n");
+		return 1;
+	}
 #endif	/* OSKDIS */
 
 
-    load_OS_sym();
-    init_labelbuf();
-    init_symtable();
+	load_OS_sym();
+	init_labelbuf();
+	init_symtable();
 
 
-    /* ‘ÎÛ MPU/MMU/FPU ‚Ì•\¦ */
-    {
+	/* å¯¾è±¡ MPU/MMU/FPU ã®è¡¨ç¤º */
+	{
 	static const target_table mpu_table[] = {
-	    { M000, "68000" },
-	    { M010, "68010" },
-	    { M020, "68020" },
-	    { M030, "68030" },
-	    { M040, "68040" },
-	    { M060, "68060" },
-	    { MISP, "060ISP" }
+		{ M000, "68000" },
+		{ M010, "68010" },
+		{ M020, "68020" },
+		{ M030, "68030" },
+		{ M040, "68040" },
+		{ M060, "68060" },
+		{ MISP, "060ISP" }
 	};
 
 	static const target_table mmu_table[] = {
-	    { MMU851, "68851" },
-	    { MMU030, "68030" },
-	    { MMU040, "68040" },
-	    { MMU060, "68060" }
+		{ MMU851, "68851" },
+		{ MMU030, "68030" },
+		{ MMU040, "68040" },
+		{ MMU060, "68060" }
 	};
 
 	static const target_table fpu_table[] = {
-	    { F881, "68881" },
-	    { F882, "68882" },
-	    { F040, "68040" },
-	    { F4SP, "040FPSP" },
-	    { F060, "68060" },
-	    { F6SP, "060FPSP" }
+		{ F881, "68881" },
+		{ F882, "68882" },
+		{ F040, "68040" },
+		{ F4SP, "040FPSP" },
+		{ F060, "68060" },
+		{ F6SP, "060FPSP" }
 	};
 
 	print_target ("Target MPU: ", MPU_types,
@@ -411,77 +425,77 @@ main (int argc, char* argv[])
 
 	print_target ("Target FPU: ", FPCP_type,
 		fpu_table, (sizeof fpu_table / sizeof fpu_table[0]));
-    }
+	}
 
 
 #ifndef OSKDIS
-    eprintf ("ƒŠƒƒP[ƒgî•ñ‚ğ“WŠJ‚µ‚Ü‚·.\n");
-    make_relocate_table ();
+	eprintf ("Deploy relocate information.\n");
+	make_relocate_table ();
 #endif	/* !OSKDIS */
 
 
-    while (check_exist_output_file (Filename_out))
+	while (check_exist_output_file (Filename_out))
 	change_filename (&Filename_out, "source");
 
-    if (option_e)
+	if (option_e)
 	while (check_exist_output_file (Labelfilename_out))
-	    change_filename (&Labelfilename_out, "label");
+		change_filename (&Labelfilename_out, "label");
 
-    check_open_output_file (Filename_out);
+	check_open_output_file (Filename_out);
 
-    if (option_g) {
-	eprintf ("ƒ‰ƒxƒ‹ƒtƒ@ƒCƒ‹‚ğ“Ç‚İ‚İ’†‚Å‚·.\n");
+	if (option_g) {
+	eprintf ("Label file is being loaded.\n");
 	read_labelfile (Labelfilename_in);
-    }
-    if (option_e)
+	}
+	if (option_e)
 	check_open_output_file (Labelfilename_out);
-    if (option_T) {
-	eprintf ("ƒe[ƒuƒ‹‹Lqƒtƒ@ƒCƒ‹‚ğ“Ç‚İ‚İ’†‚Å‚·.\n");
+	if (option_T) {
+	eprintf ("Loading table description file.\n");
 	read_tablefile (Tablefilename);
-    }
+	}
 
 #ifndef OSKDIS
-    if (Head.symbol) {
-	eprintf ("ƒVƒ“ƒ{ƒ‹ƒe[ƒuƒ‹‚ğ“WŠJ‚µ‚Ü‚·.\n");
+	if (Head.symbol) {
+	eprintf ("Expand the symbol table.\n");
 	make_symtable ();
-    } else
-	eprintf ("ƒVƒ“ƒ{ƒ‹ƒe[ƒuƒ‹‚Íc”O‚È‚ª‚ç‘¶İ‚µ‚Ü‚¹‚ñ.\n");
+	} else
+	eprintf ("Unfortunately the symbol table does not exist.\n");
 #endif
 
-    Exist_symbol = is_exist_symbol ();
+	Exist_symbol = is_exist_symbol ();
 
-    analyze_and_generate (argc, argv);
+	analyze_and_generate (argc, argv);
 
-    eprintf ("\nI—¹‚µ‚Ü‚µ‚½.\n");
-    free_labelbuf ();
-    free_relocate_buffer ();
-    free_symbuf ();
-    free_load_buffer ();
+	eprintf ("\nFinished.\n");
+	free_labelbuf ();
+	free_relocate_buffer ();
+	free_symbuf ();
+	free_load_buffer ();
 
-    {
+	{
 	time_t finish_time = time (NULL);
-	eprintf ("Š—vŠÔ: %d•b\n", (int) difftime (finish_time, start_time));
-    }
+	eprintf ("Time required: %ds\n", (int) difftime (finish_time, start_time));
+	}
 
-    return 0;
+	return 0;
 }
 
 
 
 /*
 
-  ƒfƒoƒCƒXƒhƒ‰ƒCƒo‚Ìˆ—
+  ãƒ‡ãƒã‚¤ã‚¹ãƒ‰ãƒ©ã‚¤ãƒã®å‡¦ç†
 
 */
 #ifndef OSKDIS
 private void
 analyze_device (void)
 {
-    ULONG ad = 0;
+	UINTPTR ad = 0;
 
-    Reason_verbose = (Verbose >= 1) ? TRUE : FALSE;
+	Reason_verbose = (Verbose >= 1) ? TRUE : FALSE;
 
-    do {
+	do {
 	regist_label (Head.base + ad       , DATLABEL | LONGSIZE | FORCE);
 	regist_label (Head.base + ad + 4   , DATLABEL | WORDSIZE | FORCE | HIDDEN);
 #if 0
@@ -493,82 +507,82 @@ analyze_device (void)
 
 	analyze (*(address*) (Ofst + ad + 6  ), ANALYZE_IGNOREFAULT);
 	analyze (*(address*) (Ofst + ad + 0xa), ANALYZE_IGNOREFAULT);
-	ad = *(ULONG*) (ad + Ofst);
-    } while (((long)ad & 1) == 0
+	ad = *(UINTPTR*) (ad + Ofst);
+	} while (((long)ad & 1) == 0
 #if 0
-		&& (ad != (address)-1)		/* •s—v */
+		&& (ad != (address)-1)		/* ä¸è¦ */
 #endif
-		&& (ad < (ULONG)BeginBSS));	/* SCSIDRV.SYS ‘Îô */
+		&& (ad < (UINTPTR)BeginBSS));	/* SCSIDRV.SYS å¯¾ç­– */
 }
 #endif	/* OSKDIS */
 
 
 /*
 
-  ‰ğÍ‚µ‚Ä¶¬
+  è§£æã—ã¦ç”Ÿæˆ
 
 */
 private void
 analyze_and_generate (int argc, char* argv[])
 {
 
-    if (option_v) {
-	eprintf ("‹tƒAƒZƒ“ƒuƒ‹ƒŠƒXƒg‚ğo—Í‚µ‚Ü‚·.\n");
+	if (option_v) {
+	eprintf ("Output disassemble list.\n");
 	disasmlist (Filename_in, Filename_out, Filedate);
 	return;
-    }
+	}
 
-    Disasm_String = FALSE;  /* ‰ğÍ’†‚Íƒj[ƒ‚ƒjƒbƒN‚Í•s—v */
+	Disasm_String = FALSE;  /* è§£æä¸­ã¯ãƒ‹ãƒ¼ãƒ¢ãƒ‹ãƒƒã‚¯ã¯ä¸è¦ */
 
-    if (!option_g) {
+	if (!option_g) {
 
 #ifdef	OSKDIS
 	switch (HeadOSK.type & 0x0f00) {
-	    case 0x0100:	/* Program */
-	    case 0x0b00:	/* Trap */
-		eprintf ("\n‰Šú‰»ƒf[ƒ^—Ìˆæ‰ğÍ’†‚Å‚·.");
-		analyze_idata ();	/* ‰Šúƒf[ƒ^ƒIƒtƒZƒbƒg‚ğ‰ğÍ   */
-		analyze_irefs ();	/* ‰Šúƒf[ƒ^QÆƒe[ƒuƒ‹‚ğ‰ğÍ */
+		case 0x0100:	/* Program */
+		case 0x0b00:	/* Trap */
+		eprintf ("\nåˆæœŸåŒ–ãƒ‡ãƒ¼ã‚¿é ˜åŸŸè§£æä¸­ã§ã™.");
+		analyze_idata ();	/* åˆæœŸãƒ‡ãƒ¼ã‚¿ã‚ªãƒ•ã‚»ãƒƒãƒˆã‚’è§£æ   */
+		analyze_irefs ();	/* åˆæœŸãƒ‡ãƒ¼ã‚¿å‚ç…§ãƒ†ãƒ¼ãƒ–ãƒ«ã‚’è§£æ */
 		eputc ('\n');
-	    default:
+		default:
 		break;
 	}
 	regist_label (Head.base + Head.text + Head.data + Head.bss, DATLABEL | UNKNOWN);
 #endif	/* OSKDIS */
 
-	eprintf ("ƒvƒƒOƒ‰ƒ€—Ìˆæ‰ğÍ’†‚Å‚·.");
+	eprintf ("Program area is being analyzed.");
 
-	/* ƒZƒNƒVƒ‡ƒ“‚ÌƒGƒ“ƒgƒŠƒAƒhƒŒƒX‚ğƒe[ƒuƒ‹‚É“o˜^ */
+	/* ã‚»ã‚¯ã‚·ãƒ§ãƒ³ã®ã‚¨ãƒ³ãƒˆãƒªã‚¢ãƒ‰ãƒ¬ã‚¹ã‚’ãƒ†ãƒ¼ãƒ–ãƒ«ã«ç™»éŒ² */
 	regist_label (BeginTEXT, DATLABEL | UNKNOWN);
 	regist_label (BeginDATA, DATLABEL | UNKNOWN);
 	regist_label (BeginBSS , DATLABEL | UNKNOWN);
 #if 0
 	regist_label (Last,	 DATLABEL | UNKNOWN);
-#else	/* ÅŒã‚Ìƒ‰ƒxƒ‹‚ª unregist ‚³‚ê‚é•s‹ï‡‚Ì‘Îˆ */
+#else	/* æœ€å¾Œã®ãƒ©ãƒ™ãƒ«ãŒ unregist ã•ã‚Œã‚‹ä¸å…·åˆã®å¯¾å‡¦ */
 	regist_label (Last,	 DATLABEL | UNKNOWN | SYMLABEL);
 #endif
 	Reason_verbose = (Verbose >= 1) ? TRUE : FALSE;
 
 #ifdef	OSKDIS
 	switch (HeadOSK.type & 0x0f00) {
-	    case 0x0b00:	/* Trap */
+		case 0x0b00:	/* Trap */
 		regist_label (HeadOSK.init, PROLABEL | WORDSIZE | FORCE);
 		regist_label (HeadOSK.term, PROLABEL | WORDSIZE | FORCE);
 		z_table(0x000048);
-	    case 0x0100:	/* Program */
-#if 1	/* ƒfƒoƒbƒO‚Ìˆ×‚ÌƒR[ƒh */
+		case 0x0100:	/* Program */
+#if 1	/* ãƒ‡ãƒãƒƒã‚°ã®ç‚ºã®ã‚³ãƒ¼ãƒ‰ */
 		regist_label (HeadOSK.idata, DATLABEL | LONGSIZE | FORCE);
 		regist_label (HeadOSK.irefs, DATLABEL | WORDSIZE | FORCE);
 #endif
 		break;
-	    case 0x0200:	/* Subroutine */
-	    case 0x0c00:	/* System */
+		case 0x0200:	/* Subroutine */
+		case 0x0c00:	/* System */
 		break;
-	    case 0x0d00:	/* FileMan */
+		case 0x0d00:	/* FileMan */
 		regist_label (HeadOSK.exec + 0, DATLABEL | WORDSIZE | FORCE);
 		relative_table (HeadOSK.exec);
 		break;
-	    case 0x0e00:
+		case 0x0e00:
 		regist_label (HeadOSK.exec + 0, DATLABEL | WORDSIZE | FORCE);
 		w_table (HeadOSK.exec);
 		break;
@@ -582,177 +596,179 @@ analyze_and_generate (int argc, char* argv[])
 
 #else	/* !OSKDIS */
 	if (option_d) {
-	    analyze_device ();
-	    if (Head.exec != Head.base)
+		analyze_device ();
+		if (Head.exec != Head.base)
 		analyze (Head.exec, option_i ? ANALYZE_IGNOREFAULT : ANALYZE_NORMAL);
 	} else
-	    analyze (Head.exec, ANALYZE_IGNOREFAULT);
+		analyze (Head.exec, ANALYZE_IGNOREFAULT);
 #endif	/* OSKDIS */
-    }
+	}
 
-    Reason_verbose = (Verbose == 2) ? TRUE : FALSE;
-    eprintf ("\nƒf[ƒ^—Ìˆæ‰ğÍ’†‚Å‚·.");
-    analyze_data ();
+	Reason_verbose = (Verbose == 2) ? TRUE : FALSE;
+	eprintf ("\nData area analysis in progress.");
+	analyze_data ();
 
 #if 0
-    if (!option_g) {
-	eprintf ("\nƒAƒhƒŒƒXƒe[ƒuƒ‹‚©‚ç‘{‚µ‚Ä‚¢‚Ü‚·.");
+	if (!option_g) {
+	eprintf ("\nã‚¢ãƒ‰ãƒ¬ã‚¹ãƒ†ãƒ¼ãƒ–ãƒ«ã‹ã‚‰æœã—ã¦ã„ã¾ã™.");
 	search_adrs_table ();
-    }
+	}
 #endif
 
-    if (!option_p)
+	if (!option_p)
 	do
-	    eprintf ("\nƒf[ƒ^—Ìˆæ‚Ì’†‚©‚çƒvƒƒOƒ‰ƒ€—Ìˆæ‚ğ‘{‚µ‚Ä‚¢‚Ü‚·(1).");
+		eprintf ("\nI am searching the program area from the data area (1).");
 	while (research_data () && !option_l);
 
-    if (String_length_min)
+	if (String_length_min)
 	do {
-	    eprintf ("\n•¶š—ñ‚ğ‘{‚µ‚Ä‚¢‚Ü‚·.");
-	    if (!search_string (String_length_min) || option_p)
+		eprintf ("\nI am looking for a string.");
+		if (!search_string (String_length_min) || option_p)
 		break;
-	    eprintf ("\nƒf[ƒ^—Ìˆæ‚Ì’†‚©‚çƒvƒƒOƒ‰ƒ€—Ìˆæ‚ğ‘{‚µ‚Ä‚¢‚Ü‚·(2).");
-	    if (!research_data ())
+		eprintf ("\nI am searching the program area from the data area (2).");
+		if (!research_data ())
 		break;
-	    do
-		eprintf ("\nƒf[ƒ^—Ìˆæ‚Ì’†‚©‚çƒvƒƒOƒ‰ƒ€—Ìˆæ‚ğ‘{‚µ‚Ä‚¢‚Ü‚·.");
-	    while (research_data () && !option_l);
+		do
+		eprintf ("\nI am looking for a program area from the data area.");
+		while (research_data () && !option_l);
 	} while (!option_l);
 
-    if (!option_c) {
-	eprintf ("\nƒ‰ƒxƒ‹ƒ`ƒFƒbƒN’†.");
+	if (!option_c) {
+	eprintf ("\nLabel is being checked.");
 	search_operand_label ();
-    }
+	}
 
-    if (option_e) {
-	eprintf ("ƒ‰ƒxƒ‹ƒtƒ@ƒCƒ‹‚ğì¬’†‚Å‚·.\n");
+	if (option_e) {
+	eprintf ("Label file is being created.\n");
 	make_labelfile (Filename_in, Labelfilename_out);
-    }
+	}
 
-    eprintf ("ƒ\[ƒX‚ğì¬’†‚Å‚·.");
-    generate (Filename_in, Filename_out, Filedate, argc, argv);
+	eprintf ("The source is being created.");
+	generate (Filename_in, Filename_out, Filedate, argc, argv);
 }
 
 
 /*
 
-  o—Íƒtƒ@ƒCƒ‹‚Ì‘¶İƒ`ƒFƒbƒN
+  å‡ºåŠ›ãƒ•ã‚¡ã‚¤ãƒ«ã®å­˜åœ¨ãƒã‚§ãƒƒã‚¯
 
-  •Ô’l: 0 = o—Í‰Â”\
-	1 = ƒtƒ@ƒCƒ‹–¼‚ğ•ÏX‚·‚é
+  è¿”å€¤: 0 = å‡ºåŠ›å¯èƒ½
+	1 = ãƒ•ã‚¡ã‚¤ãƒ«åã‚’å¤‰æ›´ã™ã‚‹
 
 */
 private int
 check_exist_output_file (char* filename)
 {
-    FILE* fp;
+	FILE* fp;
 
-    /* --overwrite w’è‚Í–³ğŒ‚Éã‘‚«. */
-    if (option_overwrite)
+	/* --overwrite æŒ‡å®šæ™‚ã¯ç„¡æ¡ä»¶ã«ä¸Šæ›¸ã. */
+	if (option_overwrite)
 	return 0;
 
-    /* •W€o—Í‚Éo—Í‚·‚é‚È‚çŒŸ¸•s—v. */
-    if (strcmp ("-", filename) == 0)
+	/* æ¨™æº–å‡ºåŠ›ã«å‡ºåŠ›ã™ã‚‹ãªã‚‰æ¤œæŸ»ä¸è¦. */
+	if (strcmp ("-", filename) == 0)
 	return 0;
 
-    /* ƒtƒ@ƒCƒ‹‚ª‘¶İ‚µ‚È‚¯‚ê‚ÎOK. */
-    if ((fp = fopen (filename, "r")) == NULL)
+	/* ãƒ•ã‚¡ã‚¤ãƒ«ãŒå­˜åœ¨ã—ãªã‘ã‚Œã°OK. */
+	if ((fp = fopen (filename, "r")) == NULL)
 	return 0;
 
-    /* ’[––ƒfƒoƒCƒX‚Ö‚Ìo—Í‚È‚çOK. */
-    if (isatty (fileno (fp))) {
+	/* ç«¯æœ«ãƒ‡ãƒã‚¤ã‚¹ã¸ã®å‡ºåŠ›ãªã‚‰OK. */
+	if (isatty (fileno (fp))) {
 	fclose (fp);
 	return 0;
-    }
+	}
 
-    /* ‚¢‚¸‚ê‚Å‚à‚È‚¯‚ê‚ÎƒL[“ü—Í. */
-    fclose (fp);
+	/* ã„ãšã‚Œã§ã‚‚ãªã‘ã‚Œã°ã‚­ãƒ¼å…¥åŠ›. */
+	fclose (fp);
 
-#ifdef	QUICK_YES_NO	/* version 2.79 ŒİŠ· */
-    {
+#ifdef	QUICK_YES_NO	/* version 2.79 äº’æ› */
+	{
 	int key;
-	eprintf ("%s ‚ªŠù‚É‘¶İ‚µ‚Ü‚·.\n"
+	eprintf ("%s ãŒæ—¢ã«å­˜åœ¨ã—ã¾ã™.\n"
 		 "Over Write ( Y or N )? ", filename);
 	do
-	    key = toupper (getch ());
+		key = toupper (getch ());
 	while (key != 'Y' && key != 'N');
 	eprintf ("%c\n", key);
 	if (key == 'Y')
-	    return 0;
-    }
-#else			/* ˆÀ‘S‚Ìˆ× "yes" ‚ğ“ü—Í‚³‚¹‚é. */
-    {
+		return 0;
+	}
+#else			/* å®‰å…¨ã®ç‚º "yes" ã‚’å…¥åŠ›ã•ã›ã‚‹. */
+	{
 	char buf[256];
-	eprintf ("%s ‚ªŠù‚É‘¶İ‚µ‚Ü‚·.\n"
-		 "ã‘‚«‚µ‚Ü‚·‚©H(Yes/No/Rename): ", filename);
+	eprintf ("%s Already exists.\n"
+		 "Do you want to overwriteï¼Ÿ(Yes/No/Rename): ", filename);
 
 	if (fgets (buf, sizeof buf, stdin)) {
-	    /* y, yes ‚È‚çã‘‚« */
-	    if (strcasecmp (buf, "y\n") == 0 || strcasecmp (buf, "yes\n") == 0)
+		/* y, yes ãªã‚‰ä¸Šæ›¸ã */
+		if (strcasecmp (buf, "y\n") == 0 || strcasecmp (buf, "yes\n") == 0)
 		return 0;
-	    /* r, rename ‚È‚çƒtƒ@ƒCƒ‹–¼•ÏX */
-	    if (strcasecmp (buf, "r\n") == 0 || strcasecmp (buf, "rename\n") == 0)
+		/* r, rename ãªã‚‰ãƒ•ã‚¡ã‚¤ãƒ«åå¤‰æ›´ */
+		if (strcasecmp (buf, "r\n") == 0 || strcasecmp (buf, "rename\n") == 0)
 		return 1;
 	}
-    }
+	}
 #endif	/* QUICK_YES_NO */
 
-    /* ã‘‚«‚µ‚È‚¢‚È‚çƒvƒƒOƒ‰ƒ€I—¹. */
-    exit (1);
+	/* ä¸Šæ›¸ãã—ãªã„ãªã‚‰ãƒ—ãƒ­ã‚°ãƒ©ãƒ çµ‚äº†. */
+	exit (1);
 }
 
 
 /*
 
-  o—Íƒtƒ@ƒCƒ‹–¼‚ğ•ÏX‚·‚é.
+  å‡ºåŠ›ãƒ•ã‚¡ã‚¤ãƒ«åã‚’å¤‰æ›´ã™ã‚‹.
 
 */
+#define MAX_PATH          260
 private void
 change_filename (char** nameptr, const char* file)
 {
-    char buf[PATH_MAX + 1];
-    int len;
+	//char buf[PATH_MAX + 1];
+	char buf[MAX_PATH + 1];
+	int len;
 
-    eprintf ("Input %s filename:", file);
+	eprintf ("Input %s filename:", file);
 #if 0
-    fflush (stderr);
+	fflush (stderr);
 #endif
-    if (fgets (buf, sizeof buf, stdin) && (len = strlen (buf)) > 1) {
+	if (fgets (buf, sizeof buf, stdin) && (len = strlen (buf)) > 1) {
 	buf[len - 1] = '\0';
 	*nameptr = strcpy (Malloc (len), buf);
 	return;
-    }
-    exit (1);
+	}
+	exit (1);
 }
 
 
 /*
 
-  o—Íƒtƒ@ƒCƒ‹‚É‘‚«‚ß‚é‚Ç‚¤‚©‚Ìƒ`ƒFƒbƒN
+  å‡ºåŠ›ãƒ•ã‚¡ã‚¤ãƒ«ã«æ›¸ãè¾¼ã‚ã‚‹ã©ã†ã‹ã®ãƒã‚§ãƒƒã‚¯
 
 */
 private void
 check_open_output_file (char* filename)
 {
-    int fd;
+	int fd;
 
-    if (!strcmp ("-", filename))
+	if (!strcmp ("-", filename))
 	return;
 
 #ifdef	OSK
-    if ((fd = open (filename, S_IREAD)) < 0)
+	if ((fd = open (filename, S_IREAD)) < 0)
 #else
-    if ((fd = open (filename, O_RDONLY)) < 0)
+	if ((fd = open (filename, O_RDONLY)) < 0)
 #endif	/* OSK */
 	return;
 
-    if (isatty (fd)) {
+	if (isatty (fd)) {
 	close (fd);
 	return;
-    }
-    close (fd);
-    if (access (filename, R_OK | W_OK) < 0)
-	err ("%s ‚ÉƒAƒNƒZƒX‚Å‚«‚Ü‚¹‚ñ(!)\n", filename);
+	}
+	close (fd);
+	if (access (filename, R_OK | W_OK) < 0)
+	err ("%s ã«ã‚¢ã‚¯ã‚»ã‚¹ã§ãã¾ã›ã‚“(!)\n", filename);
 }
 
 /* EOF */

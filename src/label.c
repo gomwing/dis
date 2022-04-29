@@ -1,7 +1,7 @@
-/* $Id: label.c,v 1.1 1996/11/07 08:03:44 ryo freeze $
+ï»¿/* $Id: label.c,v 1.1 1996/11/07 08:03:44 ryo freeze $
  *
- *	ƒ\[ƒXƒR[ƒhƒWƒFƒlƒŒ[ƒ^
- *	ƒ‰ƒxƒ‹ŠÇ—ƒ‚ƒWƒ…[ƒ‹
+ *	ã‚½ãƒ¼ã‚¹ã‚³ãƒ¼ãƒ‰ã‚¸ã‚§ãƒãƒ¬ãƒ¼ã‚¿
+ *	ãƒ©ãƒ™ãƒ«ç®¡ç†ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«
  *	Copyright (C) 1989,1990 K.Abe
  *	All rights reserved.
  *	Copyright (C) 1997-2010 Tachibana
@@ -22,332 +22,332 @@
 #include "./avl/avl.h"
 
 #define	AVL_COMPARE(label1, label2) \
-    (signed)((unsigned)(label1)->label - (unsigned)(label2)->label)
+	(signed)((UINTPTR)(label1)->label - (UINTPTR)(label2)->label)
 
 #include "./avl/avl.c"
 
 
 static avl_root_node* LabelRoot;
 static lblbuf Nomore = {
-    (address)-1, NULL, DATLABEL | UNKNOWN, 0, 1
+	(address)-1, NULL, DATLABEL | UNKNOWN, 0, 1
 };
 
 
 private int
 compare (lblbuf* label1, lblbuf* label2)
 {
-    return (unsigned long)label1->label - (unsigned long)label2->label;
+	return (unsigned long)label1->label - (unsigned long)label2->label;
 }
 
 
 private void
 print (lblbuf* label)
 {
-    printf ("%x", (unsigned int)label->label);
+	printf ("%"PRI_UINTPTR, (UINTPTR)label->label);
 }
 
 
 /*
 
-  ƒ‰ƒxƒ‹ƒoƒbƒtƒ@‚ğ‰Šú‰»‚·‚é
+  ãƒ©ãƒ™ãƒ«ãƒãƒƒãƒ•ã‚¡ã‚’åˆæœŸåŒ–ã™ã‚‹
 
 */
 extern void
 init_labelbuf (void)
 {
-    LabelRoot = AVL_create_tree (compare, (void (*)(AVL_USERDATA*))free, print);
+	LabelRoot = AVL_create_tree (compare, (void (*)(AVL_USERDATA*))free, print);
 }
 
 
 /*
 
-  Œãn––
+  å¾Œå§‹æœ«
 
 */
 extern void
 free_labelbuf (void)
 {
-    return;
+	return;
 }
 
 
 /*
 
-  adrs ‚ğ mode Œ^‚ÌƒGƒ“ƒgƒŠƒAƒhƒŒƒX‚Æ‚µ‚Ä“o˜^‚·‚é
-  Šù‚É“o˜^‚³‚ê‚Ä‚¢‚½‚çi“o˜^‚³‚ê‚Ä‚¢‚½ƒAƒhƒŒƒX‚ÌŒ^‚ğ oldmode ‚Æ‚·‚éj
-	mode‚ªƒvƒƒOƒ‰ƒ€ && oldmode‚ªƒvƒƒOƒ‰ƒ€	FALSE
-	mode‚ªƒvƒƒOƒ‰ƒ€ && oldmode‚ªƒf[ƒ^		“o˜^‚µ’¼‚µ TRUE
-	mode‚ªƒf[ƒ^     && oldmode‚ªƒvƒƒOƒ‰ƒ€	FALSE
-	mode‚ªƒf[ƒ^     && oldmode‚ªƒf[ƒ^
-	mode == KNOWN && oldmode == UNKNOWN		“o˜^‚µ’¼‚µ
-	oldmode != mode					“o˜^‚µ’¼‚µ
-	mode == UNKNOWN && oldmode == KNOWN		‚È‚É‚à‚µ‚È‚¢FALSE ‚ğ•Ô‚·
-	•Ô‚è’l‚Í adrs ‚©‚ç‰ğÍ‚·‚é•K—v‚ª‚ ‚é‚©‚ğ•\‚·( ƒvƒƒOƒ‰ƒ€‚Ìê‡ )
+  adrs ã‚’ mode å‹ã®ã‚¨ãƒ³ãƒˆãƒªã‚¢ãƒ‰ãƒ¬ã‚¹ã¨ã—ã¦ç™»éŒ²ã™ã‚‹
+  æ—¢ã«ç™»éŒ²ã•ã‚Œã¦ã„ãŸã‚‰ï¼ˆç™»éŒ²ã•ã‚Œã¦ã„ãŸã‚¢ãƒ‰ãƒ¬ã‚¹ã®å‹ã‚’ oldmode ã¨ã™ã‚‹ï¼‰
+	modeãŒãƒ—ãƒ­ã‚°ãƒ©ãƒ  && oldmodeãŒãƒ—ãƒ­ã‚°ãƒ©ãƒ 	FALSE
+	modeãŒãƒ—ãƒ­ã‚°ãƒ©ãƒ  && oldmodeãŒãƒ‡ãƒ¼ã‚¿		ç™»éŒ²ã—ç›´ã— TRUE
+	modeãŒãƒ‡ãƒ¼ã‚¿     && oldmodeãŒãƒ—ãƒ­ã‚°ãƒ©ãƒ 	FALSE
+	modeãŒãƒ‡ãƒ¼ã‚¿     && oldmodeãŒãƒ‡ãƒ¼ã‚¿
+	mode == KNOWN && oldmode == UNKNOWN		ç™»éŒ²ã—ç›´ã—
+	oldmode != mode					ç™»éŒ²ã—ç›´ã—
+	mode == UNKNOWN && oldmode == KNOWN		ãªã«ã‚‚ã—ãªã„FALSE ã‚’è¿”ã™
+	è¿”ã‚Šå€¤ã¯ adrs ã‹ã‚‰è§£æã™ã‚‹å¿…è¦ãŒã‚ã‚‹ã‹ã‚’è¡¨ã™( ãƒ—ãƒ­ã‚°ãƒ©ãƒ ã®å ´åˆ )
 
 */
 
 extern boolean
 regist_label (address adrs, lblmode mode)
 {
-    lblbuf* lptr;
-    lblbuf* ins_buf;
+	lblbuf* lptr;
+	lblbuf* ins_buf;
 
-    if (adrs < BeginTEXT || adrs > Last)
+	if (adrs < BeginTEXT || adrs > Last)
 	return FALSE;
 
-    if (isPROLABEL (mode)) {
+	if (isPROLABEL (mode)) {
 	if ((long)adrs & 1)
-	    return FALSE;
+		return FALSE;
 	else if (adrs > Available_text_end) {
-	    regist_label (adrs, DATLABEL | UNKNOWN);
-	    return FALSE;
+		regist_label (adrs, DATLABEL | UNKNOWN);
+		return FALSE;
 	}
-    }
+	}
 
-    if (Debug & BLABEL)
-	printf ("Regist 0x%.6x as %#x\n", (unsigned int) adrs, mode);
+	if (Debug & BLABEL)
+	printf ("Regist 0x%.6"PRI_UINTPTR" as %#x\n", (UINTPTR) adrs, mode);
 
-    if ((lptr = search_label (adrs)) != NULL) {
+	if ((lptr = search_label (adrs)) != NULL) {
 	lptr->count++;
 
 	if (mode & TABLE) {
-	    lptr->mode = (lptr->mode & (TABLE | ENDTABLE | SYMLABEL)) | mode;
-	    if (Debug & BLABEL)
+		lptr->mode = (lptr->mode & (TABLE | ENDTABLE | SYMLABEL)) | mode;
+		if (Debug & BLABEL)
 		printf ("registed(table) %x\n", lptr->mode);
-	    return FALSE;
+		return FALSE;
 	}
 	else if (mode & ENDTABLE) {
-	    lptr->mode |= ENDTABLE;
-	    if (Debug & BLABEL)
+		lptr->mode |= ENDTABLE;
+		if (Debug & BLABEL)
 		printf ("registed(endtable) %x\n", lptr->mode);
-	    return FALSE;
+		return FALSE;
 	}
 
 	if ((lptr->mode & FORCE) && !(isDATLABEL (lptr->mode) && isDATLABEL (mode))) {
-	    if (Debug & BLABEL)
+		if (Debug & BLABEL)
 		printf ("but denied\n");
-	    return FALSE;
+		return FALSE;
 	}
 	if (mode & FORCE) {
-	    lptr->mode = (lptr->mode & (TABLE | ENDTABLE | SYMLABEL)) | mode;
-	    if (Debug & BLABEL)
-		printf ("regist : %x(%d) was forced to %x\n",
-				(unsigned int) adrs, lptr->count, lptr->mode);
-	    return TRUE;
+		lptr->mode = (lptr->mode & (TABLE | ENDTABLE | SYMLABEL)) | mode;
+		if (Debug & BLABEL)
+		printf ("regist : %"PRI_UINTPTR"(%d) was forced to %x\n",
+				(UINTPTR) adrs, lptr->count, lptr->mode);
+		return TRUE;
 	}
 
 	lptr->mode &= ~HIDDEN;
 
 	if (isPROLABEL (mode)) {
-	    if (isDATLABEL (lptr->mode)) {
+		if (isDATLABEL (lptr->mode)) {
 		lptr->mode = (lptr->mode & (ENDTABLE | SYMLABEL)) | PROLABEL;
 		if (Debug & BLABEL)
-		    printf ("regist : %x(%d) was prog. %x\n",
-				(unsigned int) adrs, lptr->count, lptr->mode);
-	    }
-	    return TRUE;
+			printf ("regist : %"PRI_UINTPTR"(%d) was prog. %x\n",
+				(UINTPTR) adrs, lptr->count, lptr->mode);
+		}
+		return TRUE;
 	}
 	else {				/* if (isDATLABEL (mode)) */
-	    if (isPROLABEL (lptr->mode)) {
+		if (isPROLABEL (lptr->mode)) {
 		if (Debug & BLABEL)
-		    printf ("but denied\n");
+			printf ("but denied\n");
 		return FALSE;
-	    }
-	    else {			/* if (isDATLABEL (lptr->mode)) */
+		}
+		else {			/* if (isDATLABEL (lptr->mode)) */
 		if (!((mode & 0xff) == UNKNOWN && (lptr->mode & 0xff) != UNKNOWN))
-		    lptr->mode = (lptr->mode & (FORCE | TABLE | ENDTABLE | SYMLABEL))
+			lptr->mode = (lptr->mode & (FORCE | TABLE | ENDTABLE | SYMLABEL))
 				| mode;
 		if (Debug & BLABEL)
-		    printf ("changed surely(%x)\n", lptr->mode);
+			printf ("changed surely(%x)\n", lptr->mode);
 		return TRUE;
-	    }
+		}
 	}
 	/* NOT REACHED */
-    }
+	}
 
-    ins_buf = Malloc (sizeof (lblbuf));
-    ins_buf->label = adrs;
-    ins_buf->mode = mode;
-    ins_buf->shift = 0;
-    ins_buf->count = 1;
+	ins_buf = Malloc (sizeof (lblbuf));
+	ins_buf->label = adrs;
+	ins_buf->mode = mode;
+	ins_buf->shift = 0;
+	ins_buf->count = 1;
 
-    ins_buf->avl = AVL_insert (LabelRoot, ins_buf);
+	ins_buf->avl = AVL_insert (LabelRoot, ins_buf);
 #ifdef AVL_DEBUG
-    AVL_print_tree (LabelRoot);
-    printf ("\n");
+	AVL_print_tree (LabelRoot);
+	printf ("\n");
 #endif
-    return TRUE;
+	return TRUE;
 }
 
 
 private avl_node*
 search_label2 (address adrs)
 {
-    lblbuf search_data;
+	lblbuf search_data;
 
-    search_data.label = adrs;
-    return AVL_search (LabelRoot, &search_data);
+	search_data.label = adrs;
+	return AVL_search (LabelRoot, &search_data);
 }
 
 
 /*
 
-  ƒ‰ƒxƒ‹‚Ì“o˜^‚ğæ‚èÁ‚·
+  ãƒ©ãƒ™ãƒ«ã®ç™»éŒ²ã‚’å–ã‚Šæ¶ˆã™
 
 */
 extern void
 unregist_label (address adrs)
 {
-    avl_node* del;
+	avl_node* del;
 
-    if (Debug & BLABEL)
-	printf ("* unregist_label %x\n", (unsigned int) adrs);
-
-    if ((del = search_label2 (adrs)) == NULL) {
 	if (Debug & BLABEL)
-	    printf ("unregist_label : %x was not registed\n", (unsigned int) adrs);
-    }
-    else {
+	printf ("* unregist_label %"PRI_UINTPTR"\n", (UINTPTR) adrs);
+
+	if ((del = search_label2 (adrs)) == NULL) {
+	if (Debug & BLABEL)
+		printf ("unregist_label : %"PRI_UINTPTR" was not registed\n", (UINTPTR) adrs);
+	}
+	else {
 	lblbuf* ptr = (lblbuf*) AVL_get_data (del);
 
 	if (--(ptr->count) == 0 && !(ptr->mode & SYMLABEL))
-	    AVL_delete (LabelRoot, del);
-    }
+		AVL_delete (LabelRoot, del);
+	}
 }
 
 
 /*
 
-  ƒ‰ƒxƒ‹ƒoƒbƒtƒ@‚©‚çadrs‚ğ‘{‚·
-  ‚ ‚ê‚Îƒoƒbƒtƒ@‚É‘Î‚·‚éƒ|ƒCƒ“ƒ^
-  ‚È‚¯‚ê‚Î NULL ‚ğ•Ô‚·
+  ãƒ©ãƒ™ãƒ«ãƒãƒƒãƒ•ã‚¡ã‹ã‚‰adrsã‚’æœã™
+  ã‚ã‚Œã°ãƒãƒƒãƒ•ã‚¡ã«å¯¾ã™ã‚‹ãƒã‚¤ãƒ³ã‚¿
+  ãªã‘ã‚Œã° NULL ã‚’è¿”ã™
 
 */
 extern lblbuf*
 search_label (address adrs)
 {
-    lblbuf search_data;
+	lblbuf search_data;
 
-    search_data.label = adrs;
-    return AVL_get_data_safely (AVL_search (LabelRoot, &search_data));
+	search_data.label = adrs;
+	return AVL_get_data_safely (AVL_search (LabelRoot, &search_data));
 }
 
 
 /*
 
-  adrs ‚ÌŸ‚Ìƒ‰ƒxƒ‹ƒoƒbƒtƒ@‚Ö‚Ìƒ|ƒCƒ“ƒ^‚ğ•Ô‚·
-  •Ô‚è’l->label ‚ª -1 ‚È‚çƒoƒbƒtƒ@ƒGƒ“ƒvƒeƒB
-  adrs ‚Æ“™‚µ‚¢ƒ‰ƒxƒ‹‚ª‚ ‚ê‚Î‚»‚ê‚ª•Ô‚Á‚Ä‚­‚é‚Ì‚Å’ˆÓI
+  adrs ã®æ¬¡ã®ãƒ©ãƒ™ãƒ«ãƒãƒƒãƒ•ã‚¡ã¸ã®ãƒã‚¤ãƒ³ã‚¿ã‚’è¿”ã™
+  è¿”ã‚Šå€¤->label ãŒ -1 ãªã‚‰ãƒãƒƒãƒ•ã‚¡ã‚¨ãƒ³ãƒ—ãƒ†ã‚£
+  adrs ã¨ç­‰ã—ã„ãƒ©ãƒ™ãƒ«ãŒã‚ã‚Œã°ãã‚ŒãŒè¿”ã£ã¦ãã‚‹ã®ã§æ³¨æ„ï¼
 
 */
 extern lblbuf*
 next (address adrs)
 {
-    lblbuf search_data;
-    avl_node* node;
+	lblbuf search_data;
+	avl_node* node;
 
-    if (adrs == (address)-1)
+	if (adrs == (address)-1)
 	return &Nomore;
 
-    search_data.label = adrs;
+	search_data.label = adrs;
 
-    if ((node = AVL_search_next (LabelRoot, &search_data)) == NULL)
+	if ((node = AVL_search_next (LabelRoot, &search_data)) == NULL)
 	return &Nomore;
-    else
+	else
 	return AVL_get_data (node);
 }
 
 
 /*
 
-  lptr ‚ÌŸ‚Ìƒ‰ƒxƒ‹ƒoƒbƒtƒ@‚Ö‚Ìƒ|ƒCƒ“ƒ^‚ğ•Ô‚·
-  •Ô‚è’l->label ‚ª -1 ‚È‚çƒoƒbƒtƒ@ƒGƒ“ƒvƒeƒB
-  adrs ‚Æ“™‚µ‚¢ƒ‰ƒxƒ‹‚ª‚ ‚ê‚Î‚»‚ê‚ª•Ô‚Á‚Ä‚­‚é‚Ì‚Å’ˆÓI
+  lptr ã®æ¬¡ã®ãƒ©ãƒ™ãƒ«ãƒãƒƒãƒ•ã‚¡ã¸ã®ãƒã‚¤ãƒ³ã‚¿ã‚’è¿”ã™
+  è¿”ã‚Šå€¤->label ãŒ -1 ãªã‚‰ãƒãƒƒãƒ•ã‚¡ã‚¨ãƒ³ãƒ—ãƒ†ã‚£
+  adrs ã¨ç­‰ã—ã„ãƒ©ãƒ™ãƒ«ãŒã‚ã‚Œã°ãã‚ŒãŒè¿”ã£ã¦ãã‚‹ã®ã§æ³¨æ„ï¼
 
 */
 extern lblbuf*
 Next (lblbuf* lptr)
 {
-    lblbuf* rc = AVL_get_data_safely (AVL_next (lptr->avl));
+	lblbuf* rc = AVL_get_data_safely (AVL_next (lptr->avl));
 
-    return rc ? rc : &Nomore;
+	return rc ? rc : &Nomore;
 }
 
 
 /*
 
-  adrs ‚©‚ç PROLABEL ‚ğ’T‚·
-  adrs ‚ª PROLABEL ‚È‚ç‚»‚ê‚ª•Ô‚Á‚Ä‚­‚é
+  adrs ã‹ã‚‰ PROLABEL ã‚’æ¢ã™
+  adrs ãŒ PROLABEL ãªã‚‰ãã‚ŒãŒè¿”ã£ã¦ãã‚‹
 
 */
 extern lblbuf*
 next_prolabel (address adrs)
 {
-    avl_node* node_ptr;
-    lblbuf search_data;
+	avl_node* node_ptr;
+	lblbuf search_data;
 
 #ifdef	DEBUG
-    printf ("next_prolabel(%x)=", adrs);
+	printf ("next_prolabel(%x)=", adrs);
 #endif
 
-    if (adrs == (address)-1)
+	if (adrs == (address)-1)
 	return &Nomore;
 
-    search_data.label = adrs;
-    node_ptr = AVL_search_next (LabelRoot, &search_data);
-    while (node_ptr && !isPROLABEL (((lblbuf*) AVL_get_data (node_ptr))->mode))
+	search_data.label = adrs;
+	node_ptr = AVL_search_next (LabelRoot, &search_data);
+	while (node_ptr && !isPROLABEL (((lblbuf*) AVL_get_data (node_ptr))->mode))
 	node_ptr = AVL_next (node_ptr);
 
-    if (node_ptr == NULL)
+	if (node_ptr == NULL)
 	return &Nomore;
 
 #ifdef	DEBUG
-    printf ("%x\n", AVL_get_data (node_ptr));
+	printf ("%x\n", AVL_get_data (node_ptr));
 #endif
-    return (lblbuf*) AVL_get_data (node_ptr);
+	return (lblbuf*) AVL_get_data (node_ptr);
 }
 
 
 /*
 
-  adrs ‚©‚ç DATLABEL ‚ğ’T‚·
-  adrs ‚ª DATLABEL ‚È‚ç‚»‚ê‚ª•Ô‚Á‚Ä‚­‚é
+  adrs ã‹ã‚‰ DATLABEL ã‚’æ¢ã™
+  adrs ãŒ DATLABEL ãªã‚‰ãã‚ŒãŒè¿”ã£ã¦ãã‚‹
 
 */
 extern lblbuf*
 next_datlabel (address adrs)
 {
-    avl_node* node_ptr;
-    lblbuf  search_data;
-    lblbuf* lblptr = &Nomore;
+	avl_node* node_ptr;
+	lblbuf  search_data;
+	lblbuf* lblptr = &Nomore;
 
 #ifdef	DEBUG
-    printf ("next_datlabel(%x)=", adrs);
+	printf ("next_datlabel(%x)=", adrs);
 #endif
 
-    if (adrs == (address)-1)
+	if (adrs == (address)-1)
 	return &Nomore;
 
-    search_data.label = adrs;
-    node_ptr = AVL_search_next (LabelRoot, &search_data);
-    while (node_ptr && (!isDATLABEL ((lblptr = AVL_get_data (node_ptr))->mode)
+	search_data.label = adrs;
+	node_ptr = AVL_search_next (LabelRoot, &search_data);
+	while (node_ptr && (!isDATLABEL ((lblptr = AVL_get_data (node_ptr))->mode)
 			|| lblptr->shift))
 	node_ptr = AVL_next (node_ptr);
 
-    if (node_ptr == NULL)
+	if (node_ptr == NULL)
 	return &Nomore;
 
 #ifdef	DEBUG
-    printf ("%x(%x), %d\n", lblptr->label, lblptr->mode, lblptr->count);
+	printf ("%x(%x), %d\n", lblptr->label, lblptr->mode, lblptr->count);
 #endif
-    return lblptr;
+	return lblptr;
 }
 
 
 extern int
 get_Labelnum (void)
 {
-    return AVL_data_number (LabelRoot);
+	return AVL_data_number (LabelRoot);
 }
 
 /* EOF */

@@ -1,7 +1,7 @@
-/* $Id: table.c,v 1.1 1996/10/24 04:27:40 ryo freeze $
+ï»¿/* $Id: table.c,v 1.1 1996/10/24 04:27:40 ryo freeze $
  *
- *	ƒ\[ƒXƒR[ƒhƒWƒFƒlƒŒ[ƒ^
- *	ƒe[ƒuƒ‹ˆ—ƒ‚ƒWƒ…[ƒ‹
+ *	ã‚½ãƒ¼ã‚¹ã‚³ãƒ¼ãƒ‰ã‚¸ã‚§ãƒãƒ¬ãƒ¼ã‚¿
+ *	ãƒ†ãƒ¼ãƒ–ãƒ«å‡¦ç†ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«
  *	Copyright (C) 1989,1990 K.Abe
  *	All rights reserved.
  *	Copyright (C) 1997-2010 Tachibana
@@ -50,36 +50,36 @@ static int	Line_num;
 private void
 interpret (table* table_ptr)
 {
-    extern int	yyparse (void);
+	extern int	yyparse (void);
 
-    formula*	cur_expr = table_ptr->formulaptr;
-    address	pc0 = 0;
-    int		i, loop = 0;
-    lblbuf*	lblptr = NULL;
-    boolean	in_bss;
-    address	limit;
+	formula*	cur_expr = table_ptr->formulaptr;
+	address	pc0 = 0;
+	int		i, loop = 0;
+	lblbuf*	lblptr = NULL;
+	boolean	in_bss;
+	address	limit;
 
-    Eval_TableTop = Eval_PC = table_ptr->tabletop;
-    ParseMode = PARSE_ANALYZING;
+	Eval_TableTop = Eval_PC = table_ptr->tabletop;
+	ParseMode = PARSE_ANALYZING;
 
-    in_bss = (BeginBSS <= Eval_PC) ? TRUE : FALSE;
-    limit = in_bss ? Last : BeginBSS;
+	in_bss = (BeginBSS <= Eval_PC) ? TRUE : FALSE;
+	limit = in_bss ? Last : BeginBSS;
 
 #if 0
-    if (BeginBSS <= Eval_PC)
+	if (BeginBSS <= Eval_PC)
 #else
-    if (Last <= Eval_PC)	/* BSS ‚É‚àƒe[ƒuƒ‹‚ğ”F‚ß‚é */
+	if (Last <= Eval_PC)	/* BSS ã«ã‚‚ãƒ†ãƒ¼ãƒ–ãƒ«ã‚’èªã‚ã‚‹ */
 #endif
 	return;
 
-    do {
+	do {
 	for (i = 0; i < table_ptr->lines; i++) {
-	    Eval_Count = 0;		/* First, Eval_Count is set in yyparse() */
-	    do {
+		Eval_Count = 0;		/* First, Eval_Count is set in yyparse() */
+		do {
 		Lexptr = cur_expr[i].expr;
 		eprintfq ("[%d:%06x]:%s\n", loop + 1, Eval_PC, Lexptr);
 		if (yyparse() == 1)
-		    err ("Syntax error (%d s)\n", cur_expr[i].line);
+			err ("Syntax error (%d è¡Œ)\n", cur_expr[i].line);
 
 		cur_expr[i].id = Eval_ID;
 		pc0 = Eval_PC;
@@ -90,272 +90,272 @@ interpret (table* table_ptr)
 			&& Eval_ID != LONGID
 #endif
 			&& Eval_ID != BREAKID && Eval_ID != CRID) {
-		    if (table_ptr->loop == TIMES_AUTOMATIC) {
+			if (table_ptr->loop == TIMES_AUTOMATIC) {
 			debug ("depend chk");
 			goto tableend;
-		    }
-		    err ("ƒAƒhƒŒƒXˆË‘¶•”‚Åƒƒ“ƒOƒ[ƒhw’è‚³‚ê‚Ä‚¢‚Ü‚¹‚ñ(%x)\n", Eval_PC);
+			}
+			err ("Longword cannot specified in the address dependent part(%x)\n", Eval_PC);
 		}
 
-#define BSS_CHECK(idstr) ({ if (in_bss) goto bss_error; })
-#define ODD_CHECK(size) ({ \
-	if ((int)Eval_PC & 1) \
-	    eprintf ("Warning: Šï”ƒAƒhƒŒƒX(%x)‚Å%sw’è‚³‚ê‚Ä‚¢‚Ü‚·.\n", Eval_PC, size); \
-	})
+#define BSS_CHECK(idstr) { if (in_bss) goto bss_error; }
+#define ODD_CHECK(size) { \
+	if ((UINTPTR)Eval_PC & 1) \
+		eprintf ("Warning: odd address(%x) is specified in %s.\n", Eval_PC, size); \
+	}
 
 		switch (Eval_ID) {
 		case LONGSIZE:
-		    ODD_CHECK ("ƒƒ“ƒOƒ[ƒh");
-		    Eval_PC += 4;
-		    break;
+			ODD_CHECK ("long");
+			Eval_PC += 4;
+			break;
 		case WORDSIZE:
-		    ODD_CHECK ("ƒ[ƒh");
-		    Eval_PC += 2;
-		    break;
+			ODD_CHECK ("word");
+			Eval_PC += 2;
+			break;
 		case BYTESIZE:
-		    Eval_PC++;
-		    break;
+			Eval_PC++;
+			break;
 
 		case SINGLESIZE:
-		    ODD_CHECK ("’P¸“xÀ”");
-		    Eval_PC += 4;
-		    break;
+			ODD_CHECK ("float");
+			Eval_PC += 4;
+			break;
 		case DOUBLESIZE:
-		    ODD_CHECK ("”{¸“xÀ”");
-		    Eval_PC += 8;
-		    break;
+			ODD_CHECK ("double");
+			Eval_PC += 8;
+			break;
 		case EXTENDSIZE:
-		    ODD_CHECK ("Šg’£¸“xÀ”");
-		    Eval_PC += 12;
-		    break;
+			ODD_CHECK ("long double");
+			Eval_PC += 12;
+			break;
 		case PACKEDSIZE:
-		    ODD_CHECK ("ƒpƒbƒNƒhƒfƒVƒ}ƒ‹");
-		    Eval_PC += 12;
-		    break;
+			ODD_CHECK ("Packed decimal");
+			Eval_PC += 12;
+			break;
 #if 0
 		case LONGID:
-		    BSS_CHECK ("long");
-		    ODD_CHECK ("ƒƒ“ƒOƒ[ƒh");
-		    Eval_PC += Eval_Bytes*4;
-		    break;
+			BSS_CHECK ("long");
+			ODD_CHECK ("ãƒ­ãƒ³ã‚°ãƒ¯ãƒ¼ãƒ‰");
+			Eval_PC += Eval_Bytes*4;
+			break;
 		case WORDID:
-		    BSS_CHECK ("word");
-		    ODD_CHECK ("ƒ[ƒh");
-		    Eval_PC += Eval_Bytes*2;
-		    break;
+			BSS_CHECK ("word");
+			ODD_CHECK ("ãƒ¯ãƒ¼ãƒ‰");
+			Eval_PC += Eval_Bytes*2;
+			break;
 #endif
 		case BYTEID:
-		    BSS_CHECK ("byte");
-		    Eval_PC += Eval_Bytes;
-		    break;
+			BSS_CHECK ("byte");
+			Eval_PC += Eval_Bytes;
+			break;
 		case ASCIIID:
-		    BSS_CHECK ("ascii");
-		    Eval_PC += Eval_Bytes;
-		    break;
+			BSS_CHECK ("ascii");
+			Eval_PC += Eval_Bytes;
+			break;
 		case ASCIIZID:
-		    BSS_CHECK ("asciiz");
-		    while (PEEK_BYTE (Eval_PC))
+			BSS_CHECK ("asciiz");
+			while (PEEK_BYTE (Eval_PC))
 			Eval_PC++;
-		    break;
+			break;
 		case LASCIIID:
-		    BSS_CHECK ("lascii");
-		    Eval_PC += PEEK_BYTE (Eval_PC) + 1;
-		    break;
+			BSS_CHECK ("lascii");
+			Eval_PC += PEEK_BYTE (Eval_PC) + 1;
+			break;
 		case EVENID:
-		    if ((long)Eval_PC & 1)
+			if ((long)Eval_PC & 1)
 			Eval_PC++;
-		    break;
+			break;
 		case CRID:
-		    break;
+			break;
 		case BREAKID:
-		    if (Eval_Break) {
+			if (Eval_Break) {
 			debug ("break");
 			loop++;
 			goto tableend;
-		    }
-		    break;
+			}
+			break;
 		default:	/* reduce warning message */
-		    break;
+			break;
 		}
 #undef	ODD_CHECK
 #undef	BSS_CHECK
 
 		if (limit <= Eval_PC
 		 || (table_ptr->loop == TIMES_AUTOMATIC
-		     && ((lblptr = next (pc0 + 1)) == NULL
-		      || Eval_PC >= lblptr->label))) {
-		    loop++;
-		    /*  _________ ‚±‚ê‚Å‚¢‚¢H */
-		    if (lblptr && Eval_PC > lblptr->label)
+			 && ((lblptr = next (pc0 + 1)) == NULL
+			  || Eval_PC >= lblptr->label))) {
+			loop++;
+			/*  _________ ã“ã‚Œã§ã„ã„ï¼Ÿ */
+			if (lblptr && Eval_PC > lblptr->label)
 			Eval_PC = pc0;
-		    debug ("exceeded next label");
-		    goto tableend;
+			debug ("exceeded next label");
+			goto tableend;
 		}
 #if 0
 		if (Eval_ID != BREAKID && Eval_ID != CRID)
-		    if (!regist_label (pc0, DATLABEL | Eval_ID))
+			if (!regist_label (pc0, DATLABEL | Eval_ID))
 			   eprintf ("??? address %x", pc0);
 #endif
 		Eval_Count--;
-	    } while (Eval_Count > 0);
+		} while (Eval_Count > 0);
 	}
 	loop++;
-    } while ((Eval_PC < limit
+	} while ((Eval_PC < limit
 	&& (table_ptr->loop == TIMES_AUTOMATIC
 	 && (lblptr = next (pc0 + 1)) != NULL && Eval_PC < lblptr->label)
-	     )
-	     || table_ptr->loop == TIMES_DECIDE_BY_BREAK
-	     || (table_ptr->loop != TIMES_AUTOMATIC && loop < table_ptr->loop));
+		 )
+		 || table_ptr->loop == TIMES_DECIDE_BY_BREAK
+		 || (table_ptr->loop != TIMES_AUTOMATIC && loop < table_ptr->loop));
 
 tableend:
-    eprintfq ("Table ‚Í %x - %x (%dŒÂ)‚Æ”»’f‚µ‚Ü‚µ‚½\n",
+	eprintfq ("Table (%x-%x) determined (%d) items.\n",
 		Eval_TableTop, Eval_PC, loop);
 
-    if (!regist_label (Eval_PC, DATLABEL|ENDTABLE|UNKNOWN)) {
+	if (!regist_label (Eval_PC, DATLABEL|ENDTABLE|UNKNOWN)) {
 #if 0
 	printf ("??? address %x\n", Eval_PC);
 #endif
-    }
+	}
 
-    if (table_ptr->loop == TIMES_AUTOMATIC || table_ptr->loop == TIMES_DECIDE_BY_BREAK)
+	if (table_ptr->loop == TIMES_AUTOMATIC || table_ptr->loop == TIMES_DECIDE_BY_BREAK)
 	table_ptr->loop = loop;			/* set implicit loop times */
-    return;
+	return;
 
 bss_error:
-    err ("BSS “à‚Å‚Íg—p‚Å‚«‚È‚¢¯•Êq‚Å‚·(%d s)\n", cur_expr[i].line);
+	err ("An identifier that cannot be used in BSS (%d line)\n", cur_expr[i].line);
 }
 
 
 private void
 interpret_all (void)
 {
-    int i;
+	int i;
 
-    for (i = 0; i < TableCounter; i++)
+	for (i = 0; i < TableCounter; i++)
 	interpret (&Table[i]);
 }
 
 
 /*
 
-  ƒe[ƒuƒ‹‚Ìˆ—
+  ãƒ†ãƒ¼ãƒ–ãƒ«ã®å‡¦ç†
 
 */
 private void
 tablejob (address tabletop, FILE* fp)
 {
-    formula* cur_expr;
-    int formula_line;
+	formula* cur_expr;
+	int formula_line;
 
-    regist_label (tabletop, DATLABEL | TABLE | FORCE);
+	regist_label (tabletop, DATLABEL | TABLE | FORCE);
 
-    /* ƒe[ƒuƒ‹ƒoƒbƒtƒ@‚ğˆê‚Â•ªŠm•Û */
-    Table = Realloc (Table, sizeof (table) * (TableCounter + 1));
-    Table[TableCounter].tabletop = tabletop;
+	/* ãƒ†ãƒ¼ãƒ–ãƒ«ãƒãƒƒãƒ•ã‚¡ã‚’ä¸€ã¤åˆ†ç¢ºä¿ */
+	Table = Realloc (Table, sizeof (table) * (TableCounter + 1));
+	Table[TableCounter].tabletop = tabletop;
 
-    cur_expr = 0;		/* for Realloc() */
-    formula_line = 0;
+	cur_expr = 0;		/* for Realloc() */
+	formula_line = 0;
 
-    while (1) {
+	while (1) {
 	char linebuf[1024];
 
 	if (fgets (linebuf, sizeof linebuf, fp) == NULL)
-	    err ("Table ’†‚É EOF ‚É’B‚µ‚Ü‚µ‚½.\n");
+		err ("Table ä¸­ã« EOF ã«é”ã—ã¾ã—ãŸ.\n");
 
 	if (*(strend (linebuf) - 1) == '\n')
-	    *(strend (linebuf) - 1) = '\0';
+		*(strend (linebuf) - 1) = '\0';
 	Line_num++;
 	if (linebuf[0] == '#' || linebuf[0] == '*')	/* comment */
-	    continue;
+		continue;
 
 	if (strncasecmp (linebuf, "end", 3) == 0) {
-	    char* ptr;
+		char* ptr;
 
-	    for (ptr = linebuf + 3; *ptr == ' ' || *ptr == '\t'; ptr++)
+		for (ptr = linebuf + 3; *ptr == ' ' || *ptr == '\t'; ptr++)
 		;
-	    if (*ptr == '[') {
+		if (*ptr == '[') {
 		for (ptr++; *ptr == ' ' || *ptr == '\t'; ptr++)
-		    ;
+			;
 		if (isdigit (*(unsigned char*)ptr)) {
-		    Table[TableCounter].loop = atoi (ptr);
-		    break;
+			Table[TableCounter].loop = atoi (ptr);
+			break;
 		} else if (strncasecmp (ptr, "breakonly", 9) == 0) {
-		    /* ƒe[ƒuƒ‹”‚ğ break ‚Ì‚İ‚Å”»’f */
-		    Table[TableCounter].loop = TIMES_DECIDE_BY_BREAK;
-		    break;
+			/* ãƒ†ãƒ¼ãƒ–ãƒ«æ•°ã‚’ break ã®ã¿ã§åˆ¤æ–­ */
+			Table[TableCounter].loop = TIMES_DECIDE_BY_BREAK;
+			break;
 		} else if (*ptr == ']') {
-		    Table[TableCounter].loop = TIMES_AUTOMATIC;
-		    /* w’è‚³‚ê‚È‚¢ -> ©“® */
-		    break;
+			Table[TableCounter].loop = TIMES_AUTOMATIC;
+			/* æŒ‡å®šã•ã‚Œãªã„ -> è‡ªå‹• */
+			break;
 		}
-		err ("Syntax error at end(%d s)\n", Line_num);
-	    } else
+		err ("Syntax error at end(%d è¡Œ)\n", Line_num);
+		} else
 		Table[TableCounter].loop = 1;
-	    break;
+		break;
 	} else {	/* if (strncasecmp (linebuf, "end", 3) != 0) */
 
-	    /* sƒoƒbƒtƒ@‚ğˆê‚Â•ªŠm•Û‚µ‚ÄŠi”[‚·‚é */
-	    cur_expr = Realloc (cur_expr, sizeof (formula) * (formula_line + 1));
-	    cur_expr[formula_line].line = Line_num;
-	    cur_expr[formula_line].expr =
+		/* è¡Œãƒãƒƒãƒ•ã‚¡ã‚’ä¸€ã¤åˆ†ç¢ºä¿ã—ã¦æ ¼ç´ã™ã‚‹ */
+		cur_expr = Realloc (cur_expr, sizeof (formula) * (formula_line + 1));
+		cur_expr[formula_line].line = Line_num;
+		cur_expr[formula_line].expr =
 		strcpy (Malloc (strlen (linebuf) + 1), linebuf);
-	    formula_line++;
+		formula_line++;
 	}
-    }
+	}
 
-    Table[ TableCounter ].formulaptr = cur_expr;
-    Table[ TableCounter ].lines      = formula_line;
-    TableCounter++;
+	Table[ TableCounter ].formulaptr = cur_expr;
+	Table[ TableCounter ].lines      = formula_line;
+	TableCounter++;
 }
 
 
 /*
 
-  ƒe[ƒuƒ‹‹Lqƒtƒ@ƒCƒ‹‚ğ“Ç‚İ‚Ş
+  ãƒ†ãƒ¼ãƒ–ãƒ«è¨˜è¿°ãƒ•ã‚¡ã‚¤ãƒ«ã‚’èª­ã¿è¾¼ã‚€
 
 */
 extern void
 read_tablefile (char* filename)
 {
-    char linebuf[256];
-    FILE* fp = fopen (filename, "rt");
+	char linebuf[256];
+	FILE* fp = fopen (filename, "rt");
 
-    if (!fp)
-	err ("\n%s ‚ğƒI[ƒvƒ“‚Å‚«‚Ü‚¹‚ñ‚Å‚µ‚½.\n", filename);
+	if (!fp)
+	err ("\nCould not open %s.\n", filename);
 
-    while (fgets (linebuf, sizeof linebuf, fp)) {
+	while (fgets (linebuf, sizeof linebuf, fp)) {
 	unsigned char c = linebuf[0];
 
 	Line_num++;
 	if (c == '#' || c == '*' || c == ';')	/* comment */
-	    continue;
+		continue;
 	if (isxdigit (c)) {
-	    address tabletop = (address) atox (linebuf);
+		address tabletop = (address) (UINTPTR) atox (linebuf);
 
-	    eprintfq ("Table(%x)\n", tabletop);
-	    tablejob (tabletop, fp);
+		eprintfq ("Table(%x)\n", tabletop);
+		tablejob (tabletop, fp);
 	}
-    }
-    interpret_all ();
-    fclose (fp);
+	}
+	interpret_all ();
+	fclose (fp);
 }
 
 
 /*
 
-  ƒe[ƒuƒ‹‚ÌƒT[ƒ`
+  ãƒ†ãƒ¼ãƒ–ãƒ«ã®ã‚µãƒ¼ãƒ
 
 */
 extern table*
 search_table (address pc)
 {
-    int i;
+	int i;
 
-    for (i = 0; i < TableCounter; i++) {
+	for (i = 0; i < TableCounter; i++) {
 	if (Table[i].tabletop == pc)
-	    return &Table[i];
-    }
-    return NULL;
+		return &Table[i];
+	}
+	return NULL;
 }
 
 

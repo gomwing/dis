@@ -1,7 +1,7 @@
-/* $Id: symbol.c,v 1.1 1996/11/07 08:04:02 ryo freeze $
+ï»¿/* $Id: symbol.c,v 1.1 1996/11/07 08:04:02 ryo freeze $
  *
- *	ƒ\[ƒXƒR[ƒhƒWƒFƒlƒŒ[ƒ^
- *	ƒVƒ“ƒ{ƒ‹ƒl[ƒ€ŠÇ—ƒ‚ƒWƒ…[ƒ‹
+ *	ã‚½ãƒ¼ã‚¹ã‚³ãƒ¼ãƒ‰ã‚¸ã‚§ãƒãƒ¬ãƒ¼ã‚¿
+ *	ã‚·ãƒ³ãƒœãƒ«ãƒãƒ¼ãƒ ç®¡ç†ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«
  *	Copyright (C) 1989,1990 K.Abe
  *	All rights reserved.
  *	Copyright (C) 1997-2010 Tachibana
@@ -21,232 +21,232 @@
 
 
 USEOPTION	option_g;
-short	Output_Symbol = 1;	/* 0:‚µ‚È‚¢ 1:’è”‚Ì‚İ 2:.xdef ‚à */
+short	Output_Symbol = 1;	/* 0:ã—ãªã„ 1:å®šæ•°ã®ã¿ 2:.xdef ã‚‚ */
 
 
-#define	SYM_BUF_UNIT	16		/* ƒoƒbƒtƒ@Šg‘å‚Ì‘‰Á—v‘f” */
-static int	Symbolbufsize;		/* ƒVƒ“ƒ{ƒ‹ƒoƒbƒtƒ@‚Ì” */
-static symbol*	Symtable;		/* ƒVƒ“ƒ{ƒ‹ƒe[ƒuƒ‹‚Ì“ª */
-static int	Symnum;			/* ƒVƒ“ƒ{ƒ‹ƒe[ƒuƒ‹‚Ì—v‘f” */
+#define	SYM_BUF_UNIT	16		/* ãƒãƒƒãƒ•ã‚¡æ‹¡å¤§æ™‚ã®å¢—åŠ è¦ç´ æ•° */
+static int	Symbolbufsize;		/* ã‚·ãƒ³ãƒœãƒ«ãƒãƒƒãƒ•ã‚¡ã®æ•° */
+static symbol*	Symtable;		/* ã‚·ãƒ³ãƒœãƒ«ãƒ†ãƒ¼ãƒ–ãƒ«ã®é ­ */
+static int	Symnum;			/* ã‚·ãƒ³ãƒœãƒ«ãƒ†ãƒ¼ãƒ–ãƒ«ã®è¦ç´ æ•° */
 
 
 extern void
 init_symtable (void)
 {
-    return;
+	return;
 }
 
 /*
 
-  Œãn––
+  å¾Œå§‹æœ«
 
-  ƒVƒ“ƒ{ƒ‹–¼ƒŠƒXƒg‚ÆƒVƒ“ƒ{ƒ‹–¼ƒoƒbƒtƒ@‚à‰ğ•ú‚·‚é•K—v‚ª‚ ‚é‚¯‚Çè”²‚«.
+  ã‚·ãƒ³ãƒœãƒ«åãƒªã‚¹ãƒˆã¨ã‚·ãƒ³ãƒœãƒ«åãƒãƒƒãƒ•ã‚¡ã‚‚è§£æ”¾ã™ã‚‹å¿…è¦ãŒã‚ã‚‹ã‘ã©æ‰‹æŠœã.
 
 */
 extern void
 free_symbuf (void)
 {
-    Mfree (Symtable);
+	Mfree (Symtable);
 }
 
 extern boolean
 is_exist_symbol (void)
 {
-    return Symnum ? TRUE : FALSE;
+	return Symnum ? TRUE : FALSE;
 }
 
 
 #ifndef	OSKDIS
 
 /*
-	ƒ\[ƒXƒR[ƒh‚ÉƒVƒ“ƒ{ƒ‹’è‹`‚ğo—Í‚·‚é
+	ã‚½ãƒ¼ã‚¹ã‚³ãƒ¼ãƒ‰ã«ã‚·ãƒ³ãƒœãƒ«å®šç¾©ã‚’å‡ºåŠ›ã™ã‚‹
 
-	ˆø”:
-		op_equ	.equ ‹^—–½—ß("\t.equ\t")
-		colon	ƒRƒƒ“("::" -C ƒIƒvƒVƒ‡ƒ“‚É‚æ‚Á‚Ä•ÏX)
-	•Ô’l
-		o—Í‚µ‚½ƒVƒ“ƒ{ƒ‹”(s”)
+	å¼•æ•°:
+		op_equ	.equ ç–‘ä¼¼å‘½ä»¤("\t.equ\t")
+		colon	ã‚³ãƒ­ãƒ³("::" -C ã‚ªãƒ—ã‚·ãƒ§ãƒ³ã«ã‚ˆã£ã¦å¤‰æ›´)
+	è¿”å€¤
+		å‡ºåŠ›ã—ãŸã‚·ãƒ³ãƒœãƒ«æ•°(è¡Œæ•°)
 
-	Human68k ‚Ì .x Œ^Àsƒtƒ@ƒCƒ‹Œ`®‚ÉˆË‘¶.
+	Human68k ã® .x å‹å®Ÿè¡Œãƒ•ã‚¡ã‚¤ãƒ«å½¢å¼ã«ä¾å­˜.
 */
 extern int
 output_symbol_table (const char* op_equ, const char* op_xdef, const char* colon)
 {
-    char* ptr = (char*)(Top + Head.text + Head.data + Head.offset);
-    ULONG end = (ULONG)ptr + Head.symbol
-	      - (sizeof (UWORD) + sizeof (address) + 2);
-    int out_xdef = (Output_Symbol == 2);
-    int count = 0;
+	char* ptr = (char*)(Top + Head.text + Head.data + Head.offset);
+	UINTPTR end = (UINTPTR)ptr + Head.symbol
+		  - (sizeof (UWORD) + sizeof (address) + 2);
+	int out_xdef = (Output_Symbol == 2);
+	int count = 0;
 
-    if ((int)ptr & 1 || !Output_Symbol)
+	if ((UINTPTR)ptr & 1 || !Output_Symbol)
 	return count;
 
-    while ((ULONG)ptr <= end) {
+	while ((UINTPTR)ptr <= end) {
 	UWORD type;
 	address adrs;
 
 	type = peekw (ptr);
 	ptr += sizeof (UWORD);
-	adrs = (address) peekl (ptr);
+	adrs = (address) (UINTPTR) peekl (ptr);
 	ptr += sizeof (address);
 
 	if (*ptr && *ptr != (char)'*') {
-	    char buf[16];
-	    char* tab;
+		char buf[16];
+		char* tab;
 
-	    switch (type) {
-	    case XDEF_ABS:
-		/* uxxx:: .equ $nnv‚ÌŒ`®‚Åo—Í‚·‚é */
+		switch (type) {
+		case XDEF_ABS:
+		/* ã€Œxxx:: .equ $nnã€ã®å½¢å¼ã§å‡ºåŠ›ã™ã‚‹ */
 				  /* TAB-2 */
 		tab = (strlen (ptr) < (8-2)) ? "\t" : "";
-		itoxd (buf, (ULONG) adrs, 8);
+		itoxd (buf, (UINTPTR) adrs, 8);
 		outputf ("%s%s%s%s%s" CR, ptr, colon, tab, op_equ, buf);
 		count++;
 		break;
 
-	    case XDEF_COMMON:
-	    case XDEF_TEXT:
-	    case XDEF_DATA:
-	    case XDEF_BSS:
-	    case XDEF_STACK:
+		case XDEF_COMMON:
+		case XDEF_TEXT:
+		case XDEF_DATA:
+		case XDEF_BSS:
+		case XDEF_STACK:
 		if (out_xdef) {
-		    outputf ("%s%s" CR, op_xdef, ptr);
-		    count++;
+			outputf ("%s%s" CR, op_xdef, ptr);
+			count++;
 		}
 		break;
 
-	    default:
+		default:
 		break;
-	    }
+		}
 	}
 
-	/* ¡ˆ—‚µ‚½ƒVƒ“ƒ{ƒ‹‚ğ”ò‚Î‚· */
+	/* ä»Šå‡¦ç†ã—ãŸã‚·ãƒ³ãƒœãƒ«ã‚’é£›ã°ã™ */
 	while (*ptr++)
-	    ;
-	ptr += (int)ptr & 1;
-    }
+		;
+	ptr += (UINTPTR)ptr & 1;
+	}
 
-    return count;
+	return count;
 }
 
 
 /*
-	ƒ‰ƒxƒ‹ƒtƒ@ƒCƒ‹‚Å’è‹`‚³‚ê‚½ƒVƒ“ƒ{ƒ‹‚Ì‘®«‚ğ
-	ƒVƒ“ƒ{ƒ‹î•ñ‚Ì‘®«‚É•ÏX‚·‚é
+	ãƒ©ãƒ™ãƒ«ãƒ•ã‚¡ã‚¤ãƒ«ã§å®šç¾©ã•ã‚ŒãŸã‚·ãƒ³ãƒœãƒ«ã®å±æ€§ã‚’
+	ã‚·ãƒ³ãƒœãƒ«æƒ…å ±ã®å±æ€§ã«å¤‰æ›´ã™ã‚‹
 
-	Human68k ‚Ì .x Œ^Àsƒtƒ@ƒCƒ‹Œ`®‚ÉˆË‘¶.
+	Human68k ã® .x å‹å®Ÿè¡Œãƒ•ã‚¡ã‚¤ãƒ«å½¢å¼ã«ä¾å­˜.
 */
 static void
 change_sym_type (symbol* symbolptr, int type, char* ptr)
 {
-    symlist* sym = &symbolptr->first;
+	symlist* sym = &symbolptr->first;
 
-    do {
+	do {
 	if (strcmp (sym->sym, ptr) == 0) {
-	    sym->type = type;
-	    return;
+		sym->type = type;
+		return;
 	}
 	sym = sym->next;
-    } while (sym);
+	} while (sym);
 }
 
 /*
-	Àsƒtƒ@ƒCƒ‹‚É•t‘®‚·‚éƒVƒ“ƒ{ƒ‹ƒe[ƒuƒ‹‚ğ“o˜^‚·‚é
-	ƒ‰ƒxƒ‹ƒtƒ@ƒCƒ‹‚Ì“Ç‚İ‚İ‚æ‚èŒã‚ÉŒÄ‚Ño‚³‚ê‚é
+	å®Ÿè¡Œãƒ•ã‚¡ã‚¤ãƒ«ã«ä»˜å±ã™ã‚‹ã‚·ãƒ³ãƒœãƒ«ãƒ†ãƒ¼ãƒ–ãƒ«ã‚’ç™»éŒ²ã™ã‚‹
+	ãƒ©ãƒ™ãƒ«ãƒ•ã‚¡ã‚¤ãƒ«ã®èª­ã¿è¾¼ã¿ã‚ˆã‚Šå¾Œã«å‘¼ã³å‡ºã•ã‚Œã‚‹
 
-	Human68k ‚Ì .x Œ^Àsƒtƒ@ƒCƒ‹Œ`®‚ÉˆË‘¶.
+	Human68k ã® .x å‹å®Ÿè¡Œãƒ•ã‚¡ã‚¤ãƒ«å½¢å¼ã«ä¾å­˜.
 */
 extern void
 make_symtable (void)
 {
-    char* ptr = (char*)(Top + Head.text + Head.data + Head.offset);
-    ULONG end = (ULONG)ptr + Head.symbol
-	      - (sizeof (UWORD) + sizeof (address) + 2);
+	char* ptr = (char*)(Top + Head.text + Head.data + Head.offset);
+	UINTPTR end = (UINTPTR)ptr + Head.symbol
+		  - (sizeof (UWORD) + sizeof (address) + 2);
 
-    if ((int)ptr & 1)
+	if ((UINTPTR)ptr & 1)
 	return;
 
-    while ((ULONG)ptr <= end) {
+	while ((UINTPTR)ptr <= end) {
 	UWORD type;
 	address adrs;
 
 	type = peekw (ptr);
 	ptr += sizeof (UWORD);
-	adrs = (address) peekl (ptr);
+	adrs = (address) (UINTPTR) peekl (ptr);
 	ptr += sizeof (address);
 
 	if (!*ptr) {
 #if 0
-	    eprintf ("ƒVƒ“ƒ{ƒ‹–¼‚ª‹ó•¶š—ñ‚Å‚·(%#.6x %#.6x)", type, adrs);
+		eprintf ("ã‚·ãƒ³ãƒœãƒ«åãŒç©ºæ–‡å­—åˆ—ã§ã™(%#.6x %#.6x)", type, adrs);
 #endif
 	} else if (*ptr == (char)'*') {
-	    eprintf ("ƒAƒhƒŒƒX‹«ŠEî•ñ‚ÌƒVƒ“ƒ{ƒ‹‚Å‚·(%#.6x %#.6x %s)\n",
+		eprintf ("ã‚¢ãƒ‰ãƒ¬ã‚¹å¢ƒç•Œæƒ…å ±ã®ã‚·ãƒ³ãƒœãƒ«ã§ã™(%#.6x %#.6x %s)\n",
 							type, adrs, ptr);
 	}
 
 	else {
-	    symbol* sym;
+		symbol* sym;
 
-	    /* ƒXƒ^ƒbƒNƒTƒCƒY‚Ìû“¾ */
-	    if (type == XDEF_STACK && BeginBSS <= adrs && adrs < BeginSTACK)
+		/* ã‚¹ã‚¿ãƒƒã‚¯ã‚µã‚¤ã‚ºã®åå¾— */
+		if (type == XDEF_STACK && BeginBSS <= adrs && adrs < BeginSTACK)
 		BeginSTACK = adrs;
 
-	    switch (type) {
-	    case XDEF_ABS:
+		switch (type) {
+		case XDEF_ABS:
 		break;
 
-	    case XDEF_COMMON:
+		case XDEF_COMMON:
 		type = XDEF_BSS;
 		/* fall through */
-	    case XDEF_STACK:
-	    case XDEF_TEXT:
-	    case XDEF_DATA:
-	    case XDEF_BSS:
+		case XDEF_STACK:
+		case XDEF_TEXT:
+		case XDEF_DATA:
+		case XDEF_BSS:
 		sym = symbol_search (adrs);
 
 		if (!sym)
-		    regist_label (adrs, DATLABEL | UNKNOWN | SYMLABEL);
+			regist_label (adrs, DATLABEL | UNKNOWN | SYMLABEL);
 
-		/* -g w’è‚ÍƒVƒ“ƒ{ƒ‹ƒe[ƒuƒ‹‚©‚ç“o˜^‚µ‚È‚¢ */
-		/* ‚½‚¾‚µA‘®«‚¾‚¯‚Í—˜—p‚·‚é		     */
+		/* -g æŒ‡å®šæ™‚ã¯ã‚·ãƒ³ãƒœãƒ«ãƒ†ãƒ¼ãƒ–ãƒ«ã‹ã‚‰ç™»éŒ²ã—ãªã„ */
+		/* ãŸã ã—ã€å±æ€§ã ã‘ã¯åˆ©ç”¨ã™ã‚‹		     */
 		if (!option_g)
-		    add_symbol (adrs, type, ptr);
+			add_symbol (adrs, type, ptr);
 		else if (sym)
-		    change_sym_type (sym, type, ptr);
+			change_sym_type (sym, type, ptr);
 		break;
 
-	    default:
-		eprintf ("–¢‘Î‰‚ÌƒVƒ“ƒ{ƒ‹î•ñ‚Å‚·(%#.6x %#.6x %s)\n",
+		default:
+		eprintf ("unsupported symbol infomation(%#.6x %#.6x %s)\n",
 							type, adrs, ptr);
 		break;
 
-	    }
+		}
 	}
 
-	/* ¡ˆ—‚µ‚½ƒVƒ“ƒ{ƒ‹‚ğ”ò‚Î‚· */
+	/* ä»Šå‡¦ç†ã—ãŸã‚·ãƒ³ãƒœãƒ«ã‚’é£›ã°ã™ */
 	while (*ptr++)
-	    ;
-	ptr += (int)ptr & 1;
-    }
+		;
+	ptr += (UINTPTR)ptr & 1;
+	}
 }
 
 
 /*
-	w’è‚µ‚½‘®«‚ÌƒVƒ“ƒ{ƒ‹‚ğ’T‚·
+	æŒ‡å®šã—ãŸå±æ€§ã®ã‚·ãƒ³ãƒœãƒ«ã‚’æ¢ã™
 */
 extern symlist*
 symbol_search2 (address adrs, int type)
 {
-    symbol* symbolptr = symbol_search (adrs);
+	symbol* symbolptr = symbol_search (adrs);
 
-    if (symbolptr) {
+	if (symbolptr) {
 	symlist* sym = &symbolptr->first;
 
 	while (sym->type != (UWORD)type && (sym = sym->next))
-	    ;
+		;
 	return sym;
-    }
-    return (symlist*)NULL;
+	}
+	return (symlist*)NULL;
 }
 
 #endif	/* !OSKDIS */
@@ -254,106 +254,106 @@ symbol_search2 (address adrs, int type)
 
 extern void
 add_symbol (address adrs, int type, char *symstr)
-{			   /* type == 0 : labelfile‚Å‚Ì’è‹` */
-    int  i;
-    symbol* sym = symbol_search (adrs);
+{			   /* type == 0 : labelfileã§ã®å®šç¾© */
+	int  i;
+	symbol* sym = symbol_search (adrs);
 
-    /* Šù‚É“o˜^Ï‚İ‚È‚çƒVƒ“ƒ{ƒ‹–¼‚ğ’Ç‰Á‚·‚é */
-    if (sym) {
+	/* æ—¢ã«ç™»éŒ²æ¸ˆã¿ãªã‚‰ã‚·ãƒ³ãƒœãƒ«åã‚’è¿½åŠ ã™ã‚‹ */
+	if (sym) {
 	symlist* ptr = &sym->first;
 
 	while (ptr->next)
-	    ptr = ptr->next;
+		ptr = ptr->next;
 
-	/* symlist ‚ğŠm•Û‚µ‚ÄA––”ö‚ÉŒq‚°‚é */
+	/* symlist ã‚’ç¢ºä¿ã—ã¦ã€æœ«å°¾ã«ç¹‹ã’ã‚‹ */
 	ptr = ptr->next = Malloc (sizeof (symlist));
 
-	/* Šm•Û‚µ‚½ symlist ‚ğ‰Šú‰» */
+	/* ç¢ºä¿ã—ãŸ symlist ã‚’åˆæœŸåŒ– */
 	ptr->next = NULL;
 	ptr->type = (UWORD)type;
 	ptr->sym = symstr;
 
 	return;
-    }
+	}
 
-    if (Symnum == Symbolbufsize) {
-	/* ƒoƒbƒtƒ@‚ğŠg‘å‚·‚é */
+	if (Symnum == Symbolbufsize) {
+	/* ãƒãƒƒãƒ•ã‚¡ã‚’æ‹¡å¤§ã™ã‚‹ */
 	Symbolbufsize += SYM_BUF_UNIT;
 	Symtable = Realloc (Symtable, Symbolbufsize * sizeof (symbol));
-    }
+	}
 
-    for (i = Symnum - 1; (i >= 0) && (Symtable[ i ].adrs > adrs); i--)
+	for (i = Symnum - 1; (i >= 0) && (Symtable[ i ].adrs > adrs); i--)
 	Symtable[ i + 1 ] = Symtable[ i ];
 
-    Symnum++;
-    sym = &Symtable[ ++i ];
-    sym->adrs = adrs;
+	Symnum++;
+	sym = &Symtable[ ++i ];
+	sym->adrs = adrs;
 
-    /* Å‰‚ÌƒVƒ“ƒ{ƒ‹‚ğ‹L˜^ */
-    sym->first.next = NULL;
-    sym->first.type = (UWORD)type;
-    sym->first.sym  = symstr;
+	/* æœ€åˆã®ã‚·ãƒ³ãƒœãƒ«ã‚’è¨˜éŒ² */
+	sym->first.next = NULL;
+	sym->first.type = (UWORD)type;
+	sym->first.sym  = symstr;
 
 #ifdef	DEBUG
-    printf ("type %.4x adrs %.6x sym:%s\n", sym->first.type, sym->.adrs, sym->first.sym);
+	printf ("type %.4x adrs %.6x sym:%s\n", sym->first.type, sym->.adrs, sym->first.sym);
 #endif
 }
 
 
 /*
 
-  adrs ‚ğƒVƒ“ƒ{ƒ‹ƒe[ƒuƒ‹‚©‚ç‘{‚·
-  adrs ‚Í common text data bss ‚Ì‚¢‚¸‚ê‚©
-  Œ©‚Â‚©‚Á‚½‚çƒ|ƒCƒ“ƒ^A‚Å‚È‚¯‚ê‚Î NULL ‚ğ•Ô‚·
+  adrs ã‚’ã‚·ãƒ³ãƒœãƒ«ãƒ†ãƒ¼ãƒ–ãƒ«ã‹ã‚‰æœã™
+  adrs ã¯ common text data bss ã®ã„ãšã‚Œã‹
+  è¦‹ã¤ã‹ã£ãŸã‚‰ãƒã‚¤ãƒ³ã‚¿ã€ã§ãªã‘ã‚Œã° NULL ã‚’è¿”ã™
 
 */
 extern symbol*
 symbol_search (address adrs)
 {
-    int step;
-    symbol* ptr;
+	int step;
+	symbol* ptr;
 
-    /* ‘½­‚Í‘¬‚­‚È‚é? */
-    if (Symnum == 0)
+	/* å¤šå°‘ã¯é€Ÿããªã‚‹? */
+	if (Symnum == 0)
 	return NULL;
 
-    ptr = Symtable;
-    for (step = Symnum >> 1; step > 4; step >>= 1)
+	ptr = Symtable;
+	for (step = Symnum >> 1; step > 4; step >>= 1)
 	if ((ptr + step)->adrs <= adrs)		/* binary search */
-	    ptr += step;
+		ptr += step;
 
-    for (; ptr < Symtable + Symnum; ptr++) {
+	for (; ptr < Symtable + Symnum; ptr++) {
 	if (ptr->adrs == adrs)
-	    return ptr;
+		return ptr;
 	else
-	    if (adrs < ptr->adrs)
+		if (adrs < ptr->adrs)
 		return NULL;
-    }
-    return NULL;
+	}
+	return NULL;
 }
 
 
-/* ˆÈ‰º‚Í–¢g—pŠÖ” */
+/* ä»¥ä¸‹ã¯æœªä½¿ç”¨é–¢æ•° */
 
 #if 0
 extern void
 del_symbol (address adrs)
 {
-    symbol* sym = symbol_search (adrs);
+	symbol* sym = symbol_search (adrs);
 
-    if (sym) {
+	if (sym) {
 	symlist* ptr = sym->first.next;
 
 	while (ptr) {
-	    symlist* next = ptr->next;
-	    Mfree (ptr);
-	    ptr = next;
+		symlist* next = ptr->next;
+		Mfree (ptr);
+		ptr = next;
 	}
 
 	Symnum--;
 	for (; sym < &Symtable[ Symnum ]; sym++)
-	    *sym = *(sym + 1);
-    }
+		*sym = *(sym + 1);
+	}
 }
 #endif
 

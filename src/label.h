@@ -1,7 +1,7 @@
-/* $Id: label.h,v 1.1 1996/10/24 04:27:48 ryo freeze $
+ï»¿/* $Id: label.h,v 1.1 1996/10/24 04:27:48 ryo freeze $
  *
- *	ƒ\[ƒXƒR[ƒhƒWƒFƒlƒŒ[ƒ^
- *	ƒ‰ƒxƒ‹ŠÇ—ƒ‚ƒWƒ…[ƒ‹ƒwƒbƒ_
+ *	ã‚½ãƒ¼ã‚¹ã‚³ãƒ¼ãƒ‰ã‚¸ã‚§ãƒãƒ¬ãƒ¼ã‚¿
+ *	ãƒ©ãƒ™ãƒ«ç®¡ç†ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ãƒ˜ãƒƒãƒ€
  *	Copyright (C) 1989,1990 K.Abe
  *	All rights reserved.
  *	Copyright (C) 1997-2010 Tachibana
@@ -13,37 +13,37 @@
 
 
 typedef enum {
-    PROLABEL =	0,			/* ƒvƒƒOƒ‰ƒ€ */
-    DATLABEL =	0x010000,		/* ƒf[ƒ^ */
-    FORCE    =	0x020000,		/* ‹­§ƒtƒ‰ƒO */
-    HIDDEN   =	0x040000,		/* 1 ‚È‚ç‚»‚Ìƒ‰ƒxƒ‹‚Íƒ\[ƒX’†‚ÉŒ»‚ê‚È‚¢ */
-    TABLE    =	0x080000,		/* 1 ‚Åƒe[ƒuƒ‹ŠJŽn */
-    ENDTABLE =	0x100000,		/* 1 ‚Åƒe[ƒuƒ‹I—¹ */
-    SYMLABEL =	0x200000		/* 1 ‚ÅƒVƒ“ƒ{ƒ‹î•ñ‚ ‚è */
+	PROLABEL =	0,			/* ãƒ—ãƒ­ã‚°ãƒ©ãƒ  */
+	DATLABEL =	0x010000,		/* ãƒ‡ãƒ¼ã‚¿ */
+	FORCE    =	0x020000,		/* å¼·åˆ¶ãƒ•ãƒ©ã‚° */
+	HIDDEN   =	0x040000,		/* 1 ãªã‚‰ãã®ãƒ©ãƒ™ãƒ«ã¯ã‚½ãƒ¼ã‚¹ä¸­ã«ç¾ã‚Œãªã„ */
+	TABLE    =	0x080000,		/* 1 ã§ãƒ†ãƒ¼ãƒ–ãƒ«é–‹å§‹ */
+	ENDTABLE =	0x100000,		/* 1 ã§ãƒ†ãƒ¼ãƒ–ãƒ«çµ‚äº† */
+	SYMLABEL =	0x200000		/* 1 ã§ã‚·ãƒ³ãƒœãƒ«æƒ…å ±ã‚ã‚Š */
 #ifdef	OSKDIS
-    CODEPTR  =	0x400000,		/* 1 ‚ÅƒR[ƒhƒ|ƒCƒ“ƒ^ */
-    DATAPTR  =	0x800000,		/* 1 ‚Åƒf[ƒ^ƒ|ƒCƒ“ƒ^ */
+	CODEPTR  =	0x400000,		/* 1 ã§ã‚³ãƒ¼ãƒ‰ãƒã‚¤ãƒ³ã‚¿ */
+	DATAPTR  =	0x800000,		/* 1 ã§ãƒ‡ãƒ¼ã‚¿ãƒã‚¤ãƒ³ã‚¿ */
 #endif	/* OSKDIS */
 } lblmode;
 
 
 struct _avl_node;
 typedef struct {
-    address		label;		/* ƒAƒhƒŒƒX */
-    struct _avl_node	*avl;		/* AVL-tree-library side node */
-    lblmode		mode;		/* ‘®« */
-    short		shift;		/* ‚¸‚ê */
-    unsigned short	count;		/* “o˜^‰ñ” */
+	address		label;		/* ã‚¢ãƒ‰ãƒ¬ã‚¹ */
+	struct _avl_node	*avl;		/* AVL-tree-library side node */
+	lblmode		mode;		/* å±žæ€§ */
+	short		shift;		/* ãšã‚Œ */
+	unsigned short	count;		/* ç™»éŒ²å›žæ•° */
 } lblbuf;
 
 
 /*
 
-  lblmode	‰ºˆÊ‚Wƒrƒbƒg	ƒIƒyƒŒ[ƒVƒ‡ƒ“ƒTƒCƒY(ƒf[ƒ^ƒ‰ƒxƒ‹‚ÌŽž‚Ì‚ÝˆÓ–¡‚ðŽ‚Â)
-		‘æ16ƒrƒbƒg	0...PROLABEL	1...DATLABEL
-		‘æ17ƒrƒbƒg	0...•’Ê	1...‹­§
-  shift		ƒ‰ƒxƒ‹ƒAƒhƒŒƒX‚Æ‚Ì‚¸‚ê.’Êí‚O.
-		–½—ß‚ÌƒIƒyƒ‰ƒ“ƒh‚Éƒ‰ƒxƒ‹‚ª‚ ‚Á‚½‚è‚·‚é‚Æ...
+  lblmode	ä¸‹ä½ï¼˜ãƒ“ãƒƒãƒˆ	ã‚ªãƒšãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ã‚µã‚¤ã‚º(ãƒ‡ãƒ¼ã‚¿ãƒ©ãƒ™ãƒ«ã®æ™‚ã®ã¿æ„å‘³ã‚’æŒã¤)
+		ç¬¬16ãƒ“ãƒƒãƒˆ	0...PROLABEL	1...DATLABEL
+		ç¬¬17ãƒ“ãƒƒãƒˆ	0...æ™®é€š	1...å¼·åˆ¶
+  shift		ãƒ©ãƒ™ãƒ«ã‚¢ãƒ‰ãƒ¬ã‚¹ã¨ã®ãšã‚Œ.é€šå¸¸ï¼.
+		å‘½ä»¤ã®ã‚ªãƒšãƒ©ãƒ³ãƒ‰ã«ãƒ©ãƒ™ãƒ«ãŒã‚ã£ãŸã‚Šã™ã‚‹ã¨...
 
 */
 

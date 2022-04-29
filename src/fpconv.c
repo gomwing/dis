@@ -1,7 +1,7 @@
-/*
+ï»¿/*
  *
- *	ƒ\[ƒXƒR[ƒhƒWƒFƒlƒŒ[ƒ^
- *	•‚“®¬”“_À”’l•¶š—ñ•ÏŠ·ƒ‚ƒWƒ…[ƒ‹
+ *	ã‚½ãƒ¼ã‚¹ã‚³ãƒ¼ãƒ‰ã‚¸ã‚§ãƒãƒ¬ãƒ¼ã‚¿
+ *	æµ®å‹•å°æ•°ç‚¹å®Ÿæ•°å€¤æ–‡å­—åˆ—å¤‰æ›ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«
  *	Copyright (C) 1997-2010 Tachibana
  *
  */
@@ -29,21 +29,21 @@ short	Inreal_flag = FALSE;
 extern void
 fpconv_s (char* buf, float* valp)
 {
-    unsigned short e = *(unsigned short*)valp & 0x7f80;
-    unsigned long m = *(unsigned long*)valp & 0x007fffff;
+	unsigned short e = *(unsigned short*)valp & 0x7f80;
+	unsigned long m = *(unsigned long*)valp & 0x007fffff;
 
-    /* }0.0‚ğæ‚Éˆ— */
-    if (!Inreal_flag && e == 0 && m == 0) {
+	/* Â±0.0ã‚’å…ˆã«å‡¦ç† */
+	if (!Inreal_flag && e == 0 && m == 0) {
 	strcpy (buf, (*(char*)valp < 0) ? "0f-0" : "0f0");
 	return;
-    }
+	}
 
-    if (Inreal_flag || e == 0 || e == 0x7f80) {		/* ”ñ³‹K‰»”, –³ŒÀ‘åA”ñ” */
-	*buf++ = '!';					/* “Áê‚È’l‚È‚ç“à•”•\Œ»‚Åo—Í */
+	if (Inreal_flag || e == 0 || e == 0x7f80) {		/* éæ­£è¦åŒ–æ•°, ç„¡é™å¤§ã€éæ•° */
+	*buf++ = '!';					/* ç‰¹æ®Šãªå€¤ãªã‚‰å†…éƒ¨è¡¨ç¾ã§å‡ºåŠ› */
 	itox8_without_0supress (buf, *(long*)valp);
-    } else {
+	} else {
 	sprintf (buf, "0f%.30g", *valp);
-    }
+	}
 }
 
 
@@ -51,26 +51,26 @@ fpconv_s (char* buf, float* valp)
 extern void
 fpconv_d (char* buf, double* valp)
 {
-    unsigned short e = *(unsigned short*)valp & 0x7ff0;
-    unsigned long mh = *(unsigned long*)valp & 0x000fffff;
-    unsigned long ml = *(unsigned long*)valp;
+	unsigned short e = *(unsigned short*)valp & 0x7ff0;
+	unsigned long mh = *(unsigned long*)valp & 0x000fffff;
+	unsigned long ml = *(unsigned long*)valp;
 
-    /* }0.0‚ğæ‚Éˆ— */
-    if (!Inreal_flag && e == 0 && (mh | ml) == 0) {
+	/* Â±0.0ã‚’å…ˆã«å‡¦ç† */
+	if (!Inreal_flag && e == 0 && (mh | ml) == 0) {
 	strcpy (buf, (*(char*)valp < 0) ? "0f-0" : "0f0");
 	return;
-    }
+	}
 
-    if (Inreal_flag || e == 0 || e == 0x7ff0) {		/* ”ñ³‹K‰»”, –³ŒÀ‘åA”ñ” */
-	long* p = (long*)valp;				/* “Áê‚È’l‚È‚ç“à•”•\Œ»‚Åo—Í */
+	if (Inreal_flag || e == 0 || e == 0x7ff0) {		/* éæ­£è¦åŒ–æ•°, ç„¡é™å¤§ã€éæ•° */
+	long* p = (long*)valp;				/* ç‰¹æ®Šãªå€¤ãªã‚‰å†…éƒ¨è¡¨ç¾ã§å‡ºåŠ› */
 
 	*buf++ = '!';
 	buf = itox8_without_0supress (buf, *p++);
 	*buf++ = '_';
 	(void)itox8_without_0supress (buf, *p);
-    } else {
+	} else {
 	sprintf (buf, "0f%.30g", *valp);
-    }
+	}
 }
 
 
@@ -78,14 +78,14 @@ fpconv_d (char* buf, double* valp)
 static void
 fpconv_x_inreal (char* buf, long double* valp)
 {
-    unsigned long* p = (unsigned long*)valp;
+	unsigned long* p = (unsigned long*)valp;
 
-    *buf++ = '!';
-    buf = itox8_without_0supress (buf, *p++);
-    *buf++ = '_';
-    buf = itox8_without_0supress (buf, *p++);
-    *buf++ = '_';
-    (void)itox8_without_0supress (buf, *p++);
+	*buf++ = '!';
+	buf = itox8_without_0supress (buf, *p++);
+	*buf++ = '_';
+	buf = itox8_without_0supress (buf, *p++);
+	*buf++ = '_';
+	(void)itox8_without_0supress (buf, *p++);
 }
 
 /* Functions */
@@ -93,42 +93,42 @@ extern void
 fpconv_x (char* buf, long double* valp)
 #ifdef NO_PRINTF_LDBL
 {
-    /* í‚É“à•”•\Œ»‚Åo—Í */
-    fpconv_x_inreal (buf, valp);
+	/* å¸¸ã«å†…éƒ¨è¡¨ç¾ã§å‡ºåŠ› */
+	fpconv_x_inreal (buf, valp);
 }
 #else /* !NO_PRINTF_LDBL */
 {
-    unsigned short e = *(unsigned short*)valp & 0x7fff;
-    unsigned long mh = ((unsigned long*)valp)[0];
-    unsigned long ml = ((unsigned long*)valp)[1];
+	unsigned short e = *(unsigned short*)valp & 0x7fff;
+	unsigned long mh = ((unsigned long*)valp)[0];
+	unsigned long ml = ((unsigned long*)valp)[1];
 
-    /* }0.0‚ğæ‚Éˆ— */
-    if (!Inreal_flag && e == 0 && (mh | ml) == 0) {
+	/* Â±0.0ã‚’å…ˆã«å‡¦ç† */
+	if (!Inreal_flag && e == 0 && (mh | ml) == 0) {
 	strcpy (buf, (*(char*)valp < 0) ? "0f-0" : "0f0");
 	return;
-    }
+	}
 
-    if (Inreal_flag || e == 0 || e == 0x7fff		/* ”ñ³‹K‰»”, –³ŒÀ‘åA”ñ” */
-     || ((unsigned short*)valp)[1]			/* –¢g—pƒrƒbƒg‚ªƒZƒbƒg */
-     || ((char*)valp)[4] >= 0				/* ®”ƒrƒbƒg‚ª0 */
+	if (Inreal_flag || e == 0 || e == 0x7fff		/* éæ­£è¦åŒ–æ•°, ç„¡é™å¤§ã€éæ•° */
+	 || ((unsigned short*)valp)[1]			/* æœªä½¿ç”¨ãƒ“ãƒƒãƒˆãŒã‚»ãƒƒãƒˆ */
+	 || ((char*)valp)[4] >= 0				/* æ•´æ•°ãƒ“ãƒƒãƒˆãŒ0 */
 #ifndef	HAVE_STRTOX
-     || e <= 64						/* ƒ‰ƒCƒuƒ‰ƒŠ‚ÉˆË‘¶ */
+	 || e <= 64						/* ãƒ©ã‚¤ãƒ–ãƒ©ãƒªã«ä¾å­˜ */
 #endif
-    ) {
-	fpconv_x_inreal (buf, valp);			/* “Áê‚È’l‚È‚ç“à•”•\Œ»‚Åo—Í */
-    } else {
+	) {
+	fpconv_x_inreal (buf, valp);			/* ç‰¹æ®Šãªå€¤ãªã‚‰å†…éƒ¨è¡¨ç¾ã§å‡ºåŠ› */
+	} else {
 	sprintf (buf, "0f%.30Lg", *valp);
 
 #ifdef	HAVE_STRTOX
-	/* w”‚ª³‚È‚ç‘½•ª³‚µ‚­•ÏŠ·‚Å‚«‚Ä‚¢‚é”¤ */
+	/* æŒ‡æ•°ãŒæ­£ãªã‚‰å¤šåˆ†æ­£ã—ãå¤‰æ›ã§ãã¦ã„ã‚‹ç­ˆ */
 	if (e >= 0x3fff)
-	    return;
+		return;
 
-	/* ³‚µ‚­•ÏŠ·‚Å‚«‚È‚©‚Á‚½‚çA“à•”•\Œ»‚Åo—Í‚µ‚È‚¨‚· */
+	/* æ­£ã—ãå¤‰æ›ã§ããªã‹ã£ãŸã‚‰ã€å†…éƒ¨è¡¨ç¾ã§å‡ºåŠ›ã—ãªãŠã™ */
 	if (strtox (buf + 2) != *valp)
-	    fpconv_x_inreal (buf, valp);
+		fpconv_x_inreal (buf, valp);
 #endif
-    }
+	}
 }
 #endif	/* !NO_PRINTF_LDBL */
 
@@ -138,26 +138,26 @@ static boolean
 is_normalized_p (packed_decimal* valp)
 {
 
-    if ((valp->ul.hi<<1 | valp->ul.mi | valp->ul.lo) == 0)
-	return TRUE;					/* }0.0 */
+	if ((valp->ul.hi<<1 | valp->ul.mi | valp->ul.lo) == 0)
+	return TRUE;					/* Â±0.0 */
 
-    if ( ((valp->ul.hi & 0x7fff0000) == 0x7fff0000)	/* ”ñ”,–³ŒÀ‘å */
-      || ((valp->ul.hi & 0x3000fff0) != 0)		/* –¢g—pƒrƒbƒg‚ªƒZƒbƒg */
+	if ( ((valp->ul.hi & 0x7fff0000) == 0x7fff0000)	/* éæ•°,ç„¡é™å¤§ */
+	  || ((valp->ul.hi & 0x3000fff0) != 0)		/* æœªä½¿ç”¨ãƒ“ãƒƒãƒˆãŒã‚»ãƒƒãƒˆ */
 #if 0
-      || ((valp->ul.hi & 0x4fff0000) == 0x4fff0000)	/* ”ñ³‹K‰»” */
+	  || ((valp->ul.hi & 0x4fff0000) == 0x4fff0000)	/* éæ­£è¦åŒ–æ•° */
 #endif
-      || ((valp->ul.hi & 0x0000000f) > 9) )		/* BCD(®”Œ…)‚Ì’l‚ªˆÙí */
+	  || ((valp->ul.hi & 0x0000000f) > 9) )		/* BCD(æ•´æ•°æ¡)ã®å€¤ãŒç•°å¸¸ */
 	return FALSE;
 
-    {
+	{
 	int i;
 	unsigned char *ptr = &valp->uc[4];
 	for (i = 0; i < 8; i++) {
-	    unsigned char c = *ptr++;
-	    if ((c > (unsigned char)0x99) || ((c & 0x0f) > (unsigned char)0x09))
-		return FALSE;				/* BCD(¬”Œ…)‚Ì’l‚ªˆÙí */
+		unsigned char c = *ptr++;
+		if ((c > (unsigned char)0x99) || ((c & 0x0f) > (unsigned char)0x09))
+		return FALSE;				/* BCD(å°æ•°æ¡)ã®å€¤ãŒç•°å¸¸ */
 	}
-    }
+	}
 
    return TRUE;
 }
@@ -168,8 +168,8 @@ extern void
 fpconv_p (char* buf, packed_decimal* valp)
 {
 
-    if (Inreal_flag || !is_normalized_p (valp)) {
-	long* p = (long*)valp;				/* “Áê‚È’l‚È‚ç“à•”•\Œ»‚Åo—Í */
+	if (Inreal_flag || !is_normalized_p (valp)) {
+	long* p = (long*)valp;				/* ç‰¹æ®Šãªå€¤ãªã‚‰å†…éƒ¨è¡¨ç¾ã§å‡ºåŠ› */
 
 	*buf++ = '!';
 	buf = itox8_without_0supress (buf, *p++);
@@ -178,55 +178,55 @@ fpconv_p (char* buf, packed_decimal* valp)
 	*buf++ = '_';
 	(void)itox8_without_0supress (buf, *p);
 
-    } else {
+	} else {
 	*buf++ = '0';
 	*buf++ = 'f';
 	if (valp->uc[0] & 0x80)
-	    *buf++ = '-';
+		*buf++ = '-';
 
-	/* ‰¼”‚Ì®”•” */
+	/* ä»®æ•°ã®æ•´æ•°éƒ¨ */
 	*buf++ = '0' + (valp->ul.hi & 0x0000000f);
 	*buf++ = '.';
 
-	/* ‰¼”‚Ì¬”•” */
+	/* ä»®æ•°ã®å°æ•°éƒ¨ */
 	{
-	    int i;
-	    unsigned char *ptr = &valp->uc[4];
+		int i;
+		unsigned char *ptr = &valp->uc[4];
 
-	    for (i = 0; i < 8; i++) {
+		for (i = 0; i < 8; i++) {
 		unsigned char c = *ptr++;
 		*buf++ = '0' + (c >> 4);
 		*buf++ = '0' + (c & 0x0f);
-	    }
+		}
 	}
 
-	/* ––”ö‚Ì'0'‚ğíœ */
+	/* æœ«å°¾ã®'0'ã‚’å‰Šé™¤ */
 	while (*--buf == (char)'0')
-	    ;
+		;
 	if (*buf != (char)'.')
-	    buf++;
+		buf++;
 
-	/* w” */
+	/* æŒ‡æ•° */
 	{
-	    int expo = (valp->uc[0] & 0x0f)*100
-		     + (valp->uc[1] >> 4)*10
-		     + (valp->uc[1] & 0x0f);
+		int expo = (valp->uc[0] & 0x0f)*100
+			 + (valp->uc[1] >> 4)*10
+			 + (valp->uc[1] & 0x0f);
 
-	    if ((expo == 0) && !(valp->uc[0] & 0x40)) {
-		/* "e+0"‚ÍÈ—ª‚·‚é */
+		if ((expo == 0) && !(valp->uc[0] & 0x40)) {
+		/* "e+0"ã¯çœç•¥ã™ã‚‹ */
 		*buf = '\0';
-	    } else {
+		} else {
 		*buf++ = 'e';
 		*buf++ = (valp->uc[0] & 0x40) ? '-' : '+';
 		buf += (expo >= 100) + (expo >= 10) + 1;
 		*buf = '\0';
 		do {
-		    *--buf = '0' + (expo % 10);
-		    expo /= 10;
+			*--buf = '0' + (expo % 10);
+			expo /= 10;
 		} while (expo);
-	    }
+		}
 	}
-    }
+	}
 }
 
 
@@ -234,10 +234,10 @@ fpconv_p (char* buf, packed_decimal* valp)
 extern void
 fpconv_q (char* buf, quadword* valp)
 {
-    *buf++ = '!';
-    buf = itox8_without_0supress (buf, valp->ul.hi);
-    *buf++ = '_';
-    (void)itox8_without_0supress (buf, valp->ul.lo);
+	*buf++ = '!';
+	buf = itox8_without_0supress (buf, valp->ul.hi);
+	*buf++ = '_';
+	(void)itox8_without_0supress (buf, valp->ul.lo);
 }
 
 

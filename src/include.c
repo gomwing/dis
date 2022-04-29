@@ -1,7 +1,7 @@
-/* $Id: include.c,v 1.1 1996/11/07 08:03:42 ryo freeze $
+ï»¿/* $Id: include.c,v 1.1 1996/11/07 08:03:42 ryo freeze $
  *
- *	ƒ\[ƒXƒR[ƒhƒWƒFƒlƒŒ[ƒ^
- *	ƒCƒ“ƒNƒ‹[ƒhƒtƒ@ƒCƒ‹“Ç‚İ‚İƒ‚ƒWƒ…[ƒ‹
+ *	ã‚½ãƒ¼ã‚¹ã‚³ãƒ¼ãƒ‰ã‚¸ã‚§ãƒãƒ¬ãƒ¼ã‚¿
+ *	ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰ãƒ•ã‚¡ã‚¤ãƒ«èª­ã¿è¾¼ã¿ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«
  *	Copyright (C) 1989,1990 K.Abe, 1994 R.ShimiZu
  *	All rights reserved.
  *	Copyright (C) 1997-2010 Tachibana
@@ -40,7 +40,7 @@ const char*   fefunc_mac = "fefunc.mac";
 #endif	/* OSKDIS */
 
 
-/* static ŠÖ”ƒvƒƒgƒ^ƒCƒv */
+/* static é–¢æ•°ãƒ—ãƒ­ãƒˆã‚¿ã‚¤ãƒ— */
 #ifndef	OSKDIS
 private void	search_and_readfile (const char** bufptr, const char* filename,
 			char*** label, int hbyte, char* callname, int max);
@@ -52,56 +52,56 @@ private int	readfile (const char* filename, char*** label,
 #ifdef	OSKDIS
 /*
 
-  os9defs.d mathdefs.d ciodefs.d ‚ğ
-  ŠÂ‹«•Ï” DISDEFS ‚É‚µ‚½‚ª‚Á‚Ä“Ç‚İ‚Ş.
+  os9defs.d mathdefs.d ciodefs.d ã‚’
+  ç’°å¢ƒå¤‰æ•° DISDEFS ã«ã—ãŸãŒã£ã¦èª­ã¿è¾¼ã‚€.
 
 */
 
 extern void
 load_OS_sym (void)
 {
-    static const char os9defs_d[] = "os9defs.d";
-    static const char mathdefs_d[] = "mathdefs.d";
-    static const char ciodefs_d[] = "ciodefs.d";
-    char* dis_inc;
-    int plen;
+	static const char os9defs_d[] = "os9defs.d";
+	static const char mathdefs_d[] = "mathdefs.d";
+	static const char ciodefs_d[] = "ciodefs.d";
+	char* dis_inc;
+	int plen;
 
-    eprintf ("%s %s %s ‚ğ“Ç‚İ‚İ‚Ü‚·.\n", os9defs_d, mathdefs_d, ciodefs_d);
+	eprintf ("%s %s %s ã‚’èª­ã¿è¾¼ã¿ã¾ã™.\n", os9defs_d, mathdefs_d, ciodefs_d);
 
-    if ((dis_inc = getenv ("DISDEFS")) == NULL) {
-    /*  err ("ŠÂ‹«•Ï” DISDEFS ‚ªİ’è‚³‚ê‚Ä‚¢‚Ü‚¹‚ñ.\n");  */
-	eprintf ("ŠÂ‹«•Ï” DISDEFS ‚ªİ’è‚³‚ê‚Ä‚¢‚Ü‚¹‚ñ.\n");
+	if ((dis_inc = getenv ("DISDEFS")) == NULL) {
+	/*  err ("ç’°å¢ƒå¤‰æ•° DISDEFS ãŒè¨­å®šã•ã‚Œã¦ã„ã¾ã›ã‚“.\n");  */
+	eprintf ("ç’°å¢ƒå¤‰æ•° DISDEFS ãŒè¨­å®šã•ã‚Œã¦ã„ã¾ã›ã‚“.\n");
 	return;
-    }
-    plen = strlen (dis_inc);
+	}
+	plen = strlen (dis_inc);
 
-    OS9_mac_path = Malloc (plen + sizeof os9defs_d + 2);
-    strcat (strcat (strcpy (OS9_mac_path, dis_inc), "/"), os9defs_d);
-    if (!readfile (OS9_mac_path, OS9label, 0, "OS9")) {
-	eprintf ("%s ‚ğƒI[ƒvƒ“o—ˆ‚Ü‚¹‚ñ.\n", os9defs_d);
+	OS9_mac_path = Malloc (plen + sizeof os9defs_d + 2);
+	strcat (strcat (strcpy (OS9_mac_path, dis_inc), "/"), os9defs_d);
+	if (!readfile (OS9_mac_path, OS9label, 0, "OS9")) {
+	eprintf ("%s ã‚’ã‚ªãƒ¼ãƒ—ãƒ³å‡ºæ¥ã¾ã›ã‚“.\n", os9defs_d);
 	OS9_mac_path = NULL;
-    }
+	}
 
-    MATH_mac_path = Malloc (plen + sizeof mathdefs_d + 2);
-    strcat (strcat (strcpy (MATH_mac_path, dis_inc), "/"), mathdefs_d);
-    if (!readfile (MATH_mac_path, MATHlabel, 0, "T$Math")) {
-	eprintf ("%s ‚ğƒI[ƒvƒ“o—ˆ‚Ü‚¹‚ñ.\n", mathdefs_d);
+	MATH_mac_path = Malloc (plen + sizeof mathdefs_d + 2);
+	strcat (strcat (strcpy (MATH_mac_path, dis_inc), "/"), mathdefs_d);
+	if (!readfile (MATH_mac_path, MATHlabel, 0, "T$Math")) {
+	eprintf ("%s ã‚’ã‚ªãƒ¼ãƒ—ãƒ³å‡ºæ¥ã¾ã›ã‚“.\n", mathdefs_d);
 	MATH_mac_path = NULL;
-    }
+	}
 
-    CIO_mac_path = Malloc (plen + sizeof ciodefs_d + 2);
-    strcat (strcat (strcpy (CIO_mac_path, dis_inc), "/"), ciodefs_d);
-    if (!readfile (CIO_mac_path, CIOlabel, 0, "CIO$Trap")) {
-	eprintf ("%s ‚ğƒI[ƒvƒ“o—ˆ‚Ü‚¹‚ñ.\n", ciodefs_d);
+	CIO_mac_path = Malloc (plen + sizeof ciodefs_d + 2);
+	strcat (strcat (strcpy (CIO_mac_path, dis_inc), "/"), ciodefs_d);
+	if (!readfile (CIO_mac_path, CIOlabel, 0, "CIO$Trap")) {
+	eprintf ("%s ã‚’ã‚ªãƒ¼ãƒ—ãƒ³å‡ºæ¥ã¾ã›ã‚“.\n", ciodefs_d);
 	CIO_mac_path = NULL;
-    }
+	}
 }
 
 #else	/* !OSKDIS */
 /*
 
-  doscall.mac iocscall.mac fefunc.mac ‚ğƒJƒŒƒ“ƒgƒfƒBƒŒƒNƒgƒŠá‚µ‚­‚Í
-  ŠÂ‹«•Ï” (dis_)include ‚É‚µ‚½‚ª‚Á‚Ä“Ç‚İ‚Ş.
+  doscall.mac iocscall.mac fefunc.mac ã‚’ã‚«ãƒ¬ãƒ³ãƒˆãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªè‹¥ã—ãã¯
+  ç’°å¢ƒå¤‰æ•° (dis_)include ã«ã—ãŸãŒã£ã¦èª­ã¿è¾¼ã‚€.
 
 */
 
@@ -109,16 +109,16 @@ extern void
 load_OS_sym (void)
 {
 
-    search_and_readfile (&Doscall_mac_path, doscall_mac, &OSlabel,  0xff,  OSCallName, 256);
-    search_and_readfile (&Iocscall_mac_path,iocscall_mac,&IOCSlabel,0x00,IOCSCallName, 256);
-    search_and_readfile (&Fefunc_mac_path,  fefunc_mac,  &FElabel,  0xfe,  FECallName, 256);
+	search_and_readfile (&Doscall_mac_path, doscall_mac, &OSlabel,  0xff,  OSCallName, 256);
+	search_and_readfile (&Iocscall_mac_path,iocscall_mac,&IOCSlabel,0x00,IOCSCallName, 256);
+	search_and_readfile (&Fefunc_mac_path,  fefunc_mac,  &FElabel,  0xfe,  FECallName, 256);
 
-    if (Disasm_SX_Window
+	if (Disasm_SX_Window
 	&& (Sxcall_mac_path = getenv ("dis_sxmac")) != NULL
 	&& *Sxcall_mac_path) {
 	if (!readfile (Sxcall_mac_path, &SXlabel, 0x0a, SXCallName, SXCALL_MAX))
-	    err ("%s ‚ğƒI[ƒvƒ“o—ˆ‚Ü‚¹‚ñ.\n" , Sxcall_mac_path);
-    }
+		err ("Can not open %s.\n" , Sxcall_mac_path);
+	}
 }
 #endif	/* OSKDIS */
 
@@ -126,77 +126,77 @@ load_OS_sym (void)
 #ifndef	OSKDIS
 /*
 
-  1) ./ (-Y ƒIƒvƒVƒ‡ƒ“w’è‚Ì‚İ)
+  1) ./ (-Y ã‚ªãƒ—ã‚·ãƒ§ãƒ³æŒ‡å®šæ™‚ã®ã¿)
   2) $dis_include/
   3) $include/
-  ‚Ì‡‚É readfile() ‚ğ‚·.
+  ã®é †ã« readfile() ã‚’è©¦ã™.
 
 */
 private void
 search_and_readfile (const char** bufptr, const char* filename,
 			char*** label, int hbyte, char* callname, int max)
 {
-    char* dis_inc = NULL;
-    char* include = NULL;
-    int path_flag;
+	char* dis_inc = NULL;
+	char* include = NULL;
+	int path_flag;
 
-    /* --exclude-***call w’è‚Í“Ç‚İ‚Ü‚È‚¢ */
-    if (filename == NULL)
+	/* --exclude-***call æŒ‡å®šæ™‚ã¯èª­ã¿è¾¼ã¾ãªã„ */
+	if (filename == NULL)
 	return;
 
-    path_flag = strchr (filename, ':') || strchr (filename, '/');
+	path_flag = strchr (filename, ':') || strchr (filename, '/');
 
-    /* -Y ƒIƒvƒVƒ‡ƒ“w’è‚ÍƒJƒŒƒ“ƒgƒfƒBƒŒƒNƒgƒŠ‚©‚çŒŸõ‚·‚é. */
-    /* ƒtƒ@ƒCƒ‹–¼‚ÉƒpƒXƒfƒŠƒ~ƒ^‚ªŠÜ‚Ü‚ê‚éê‡‚à‚»‚Ì‚Ü‚ÜŒŸõ. */
-    if (path_flag || option_Y) {
+	/* -Y ã‚ªãƒ—ã‚·ãƒ§ãƒ³æŒ‡å®šæ™‚ã¯ã‚«ãƒ¬ãƒ³ãƒˆãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‹ã‚‰æ¤œç´¢ã™ã‚‹. */
+	/* ãƒ•ã‚¡ã‚¤ãƒ«åã«ãƒ‘ã‚¹ãƒ‡ãƒªãƒŸã‚¿ãŒå«ã¾ã‚Œã‚‹å ´åˆã‚‚ãã®ã¾ã¾æ¤œç´¢. */
+	if (path_flag || option_Y) {
 	if (readfile (filename, label, hbyte, callname, max)) {
-	    *bufptr = filename;
-	    return;
+		*bufptr = filename;
+		return;
 	}
-    }
+	}
 
-    /* ƒpƒXƒfƒŠƒ~ƒ^‚ªŠÜ‚Ü‚ê‚È‚¯‚ê‚ÎŠÂ‹«•Ï”‚ğQÆ‚·‚é. */
-    if (!path_flag) { 
+	/* ãƒ‘ã‚¹ãƒ‡ãƒªãƒŸã‚¿ãŒå«ã¾ã‚Œãªã‘ã‚Œã°ç’°å¢ƒå¤‰æ•°ã‚’å‚ç…§ã™ã‚‹. */
+	if (!path_flag) {
 	int flen = strlen (filename) + 2;
 	char* buf;
 
-	/* ŠÂ‹«•Ï” dis_include ‚ÌƒpƒX‚©‚çŒŸõ‚·‚é. */
+	/* ç’°å¢ƒå¤‰æ•° dis_include ã®ãƒ‘ã‚¹ã‹ã‚‰æ¤œç´¢ã™ã‚‹. */
 	if ((dis_inc = getenv ("dis_include")) != NULL) {
-	    buf = (char*) Malloc (strlen (dis_inc) + flen);
-	    strcat (strcat (strcpy (buf, dis_inc), "/"), filename);
-	    if (readfile (buf, label, hbyte, callname, max)) {
+		buf = (char*) Malloc (strlen (dis_inc) + flen);
+		strcat (strcat (strcpy (buf, dis_inc), "/"), filename);
+		if (readfile (buf, label, hbyte, callname, max)) {
 		*bufptr = buf;
 		return;
-	    }
-	    Mfree (buf);
+		}
+		Mfree (buf);
 	}
 
-	/* ŠÂ‹«•Ï” include ‚ÌƒpƒX‚©‚çŒŸõ‚·‚é. */
+	/* ç’°å¢ƒå¤‰æ•° include ã®ãƒ‘ã‚¹ã‹ã‚‰æ¤œç´¢ã™ã‚‹. */
 	if ((include = getenv ("include")) != NULL) {
-	    buf = (char*) Malloc (strlen (include) + flen);
-	    strcat (strcat (strcpy (buf, include), "/"), filename);
-	    if (readfile (buf, label, hbyte, callname, max)) {
+		buf = (char*) Malloc (strlen (include) + flen);
+		strcat (strcat (strcpy (buf, include), "/"), filename);
+		if (readfile (buf, label, hbyte, callname, max)) {
 		*bufptr = buf;
 		return;
-	    }
-	    Mfree (buf);
+		}
+		Mfree (buf);
 	}
-    }
+	}
 
-    if (path_flag || dis_inc || include)
-	err ("%s ‚ğƒI[ƒvƒ“o—ˆ‚Ü‚¹‚ñ.\n", filename);
-    else
-	err ("ŠÂ‹«•Ï” (dis_)include ‚ªİ’è‚³‚ê‚Ä‚¢‚Ü‚¹‚ñ.\n");
+	if (path_flag || dis_inc || include)
+	err ("Unable to open %s.\n", filename);
+	else
+	err ("Environment variable (dis_)include is not set.\n");
 }
 #endif	/* !OSKDIS */
 
 
 /*
-	includeƒtƒ@ƒCƒ‹‚©‚ç“Ç‚İ‚ñ‚¾•¶š—ñ‚ğ
-	ƒVƒ“ƒ{ƒ‹–¼A‹^—–½—ß–¼A”š(‚Ü‚½‚Í‰¼ˆø”–¼)
-	‚É•ªŠ„‚µAŠe•¶š—ñ‚Ö‚Ìƒ|ƒCƒ“ƒ^‚ğİ’è‚µ‚Ä•Ô‚·.
+	includeãƒ•ã‚¡ã‚¤ãƒ«ã‹ã‚‰èª­ã¿è¾¼ã‚“ã æ–‡å­—åˆ—ã‚’
+	ã‚·ãƒ³ãƒœãƒ«åã€ç–‘ä¼¼å‘½ä»¤åã€æ•°å­—(ã¾ãŸã¯ä»®å¼•æ•°å)
+	ã«åˆ†å‰²ã—ã€å„æ–‡å­—åˆ—ã¸ã®ãƒã‚¤ãƒ³ã‚¿ã‚’è¨­å®šã—ã¦è¿”ã™.
 
-	•¶š—ñ‚Ì“à—e‚ª³‚µ‚­‚È‚©‚Á‚½ê‡‚Í0A³‚µ‚¯‚ê‚Î1‚ğ•Ô‚·.
+	æ–‡å­—åˆ—ã®å†…å®¹ãŒæ­£ã—ããªã‹ã£ãŸå ´åˆã¯0ã€æ­£ã—ã‘ã‚Œã°1ã‚’è¿”ã™.
 */
 
 #define IS_EOL(p) ((*(p) < 0x20) || \
@@ -205,167 +205,167 @@ search_and_readfile (const char** bufptr, const char* filename,
 private int
 separate_line (char* ptr, char** symptr, char** psdptr, char** parptr)
 {
-    char* p = ptr;
-    unsigned char c;
+	char* p = ptr;
+	unsigned char c;
 
-    /* s“ª‚Ì‹ó”’‚ğ”ò‚Î‚· */
-    while ((*p == (char)' ') || (*p == (char)'\t'))
+	/* è¡Œé ­ã®ç©ºç™½ã‚’é£›ã°ã™ */
+	while ((*p == (char)' ') || (*p == (char)'\t'))
 	p++;
 
-    /* ‹ós‚Ü‚½‚Í’ßs‚È‚çƒGƒ‰[ */
-    if (IS_EOL (p))
+	/* ç©ºè¡Œã¾ãŸã¯æ³¨é‡ˆè¡Œãªã‚‰ã‚¨ãƒ©ãƒ¼ */
+	if (IS_EOL (p))
 	return 0;
 
-    /* ƒVƒ“ƒ{ƒ‹–¼‚Ìû“¾ */
-    *symptr = p;
+	/* ã‚·ãƒ³ãƒœãƒ«åã®åå¾— */
+	*symptr = p;
 
-    /* ƒVƒ“ƒ{ƒ‹–¼‚Ì––”ö‚ğNUL‚É‚·‚é */
-    p = strpbrk (p, ":. \t");
-    if (p == NULL)
+	/* ã‚·ãƒ³ãƒœãƒ«åã®æœ«å°¾ã‚’NULã«ã™ã‚‹ */
+	p = strpbrk (p, ":. \t");
+	if (p == NULL)
 	return 0;
-    c = *p;
-    *p++ = '\0';
+	c = *p;
+	*p++ = '\0';
 
-    /* ƒVƒ“ƒ{ƒ‹’è‹`‚Ì':'A‹ó”’A‹^—–½—ß‚Ì'.'‚ğ”ò‚Î‚· */
-    while (c == (char)':')
+	/* ã‚·ãƒ³ãƒœãƒ«å®šç¾©ã®':'ã€ç©ºç™½ã€ç–‘ä¼¼å‘½ä»¤ã®'.'ã‚’é£›ã°ã™ */
+	while (c == (char)':')
 	c = *p++;
-    while ((c == (char)' ') || (c == (char)'\t'))
+	while ((c == (char)' ') || (c == (char)'\t'))
 	c = *p++;
-    if (c == (char)'.')
+	if (c == (char)'.')
 	c = *p++;
-    p--;
+	p--;
 
-    /* ‹^—–½—ß‚ª‹Lq‚³‚ê‚Ä‚¢‚È‚¯‚ê‚ÎƒGƒ‰[ */
-    if (IS_EOL (p))
+	/* ç–‘ä¼¼å‘½ä»¤ãŒè¨˜è¿°ã•ã‚Œã¦ã„ãªã‘ã‚Œã°ã‚¨ãƒ©ãƒ¼ */
+	if (IS_EOL (p))
 	return 0;
 
-    /* ‹^—–½—ß‚Ö‚Ìƒ|ƒCƒ“ƒ^‚ğİ’è */
-    *psdptr = p;
+	/* ç–‘ä¼¼å‘½ä»¤ã¸ã®ãƒã‚¤ãƒ³ã‚¿ã‚’è¨­å®š */
+	*psdptr = p;
 
-    /* ‹^—–½—ß–¼‚Ì––”ö‚ğNUL‚É‚·‚é */
-    p = strpbrk (p, " \t");
-    if (p == NULL)
+	/* ç–‘ä¼¼å‘½ä»¤åã®æœ«å°¾ã‚’NULã«ã™ã‚‹ */
+	p = strpbrk (p, " \t");
+	if (p == NULL)
 	return 0;
-    *p++ = '\0';
+	*p++ = '\0';
 
-    /* ƒpƒ‰ƒ[ƒ^‚Ü‚Å‚Ì‹ó”’‚ğ”ò‚Î‚· */
-    while ((*p == (char)' ') || (*p == (char)'\t'))
+	/* ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã¾ã§ã®ç©ºç™½ã‚’é£›ã°ã™ */
+	while ((*p == (char)' ') || (*p == (char)'\t'))
 	p++;
 
-    /* ƒpƒ‰ƒ[ƒ^‚ª‹Lq‚³‚ê‚Ä‚¢‚È‚¯‚ê‚ÎƒGƒ‰[ */
-    if (IS_EOL (p))
+	/* ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ãŒè¨˜è¿°ã•ã‚Œã¦ã„ãªã‘ã‚Œã°ã‚¨ãƒ©ãƒ¼ */
+	if (IS_EOL (p))
 	return 0;
 
-    /* ƒpƒ‰ƒ[ƒ^‚Ö‚Ìƒ|ƒCƒ“ƒ^‚ğİ’è */
-    *parptr = p;
+	/* ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã¸ã®ãƒã‚¤ãƒ³ã‚¿ã‚’è¨­å®š */
+	*parptr = p;
 
-    /* ƒpƒ‰ƒ[ƒ^‚Ì––”ö‚ğNUL‚É‚·‚é */
-    while (*(unsigned char*)p++ > 0x20)
+	/* ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã®æœ«å°¾ã‚’NULã«ã™ã‚‹ */
+	while (*(unsigned char*)p++ > 0x20)
 	;
-    *--p = '\0';
+	*--p = '\0';
 
-    return 1;
+	return 1;
 }
 
 
 /*
 
-	ƒAƒZƒ“ƒuƒ‰‚Ìequ/macro‹^—–½—ß‚Ìs‚ğ“Ç‚İæ‚é.
-	ƒVƒ“ƒ{ƒ‹’è‹`‚ğ“Ç‚İæ‚Á‚½‚ç1‚ğ•Ô‚µA‚»‚êˆÈŠO‚Í0‚ğ•Ô‚·.
-	(“ñ“x–Ú‚Ì’è‹`‚ğ–³‹‚µ‚½‚âAmacro’è‹`‚È‚Ç‚à0)
+	ã‚¢ã‚»ãƒ³ãƒ–ãƒ©ã®equ/macroç–‘ä¼¼å‘½ä»¤ã®è¡Œã‚’èª­ã¿å–ã‚‹.
+	ã‚·ãƒ³ãƒœãƒ«å®šç¾©ã‚’èª­ã¿å–ã£ãŸã‚‰1ã‚’è¿”ã—ã€ãã‚Œä»¥å¤–ã¯0ã‚’è¿”ã™.
+	(äºŒåº¦ç›®ã®å®šç¾©ã‚’ç„¡è¦–ã—ãŸæ™‚ã‚„ã€macroå®šç¾©ãªã©ã‚‚0)
 
 */
 
 private int
 getlabel (char* linebuf, char** label, int hbyte, char* callname)
 {
-    char* symptr;
-    char* psdptr;
-    char* parptr;
+	char* symptr;
+	char* psdptr;
+	char* parptr;
 
-    if (separate_line (linebuf, &symptr, &psdptr, &parptr)) {
+	if (separate_line (linebuf, &symptr, &psdptr, &parptr)) {
 
-	/* ƒR[ƒ‹–¼ equ ƒR[ƒ‹”Ô† */
+	/* ã‚³ãƒ¼ãƒ«å equ ã‚³ãƒ¼ãƒ«ç•ªå· */
 	if (strcasecmp (psdptr, "equ") == 0) {
-	    int val;
-	    if (*parptr == (char)'$')
+		int val;
+		if (*parptr == (char)'$')
 		parptr++;
-	    else if (strncasecmp (parptr, "0x", 2) == 0)
+		else if (strncasecmp (parptr, "0x", 2) == 0)
 		parptr += 2;
-	    else
+		else
 		return 0;
-	    val = atox (parptr);
+		val = atox (parptr);
 
-	    if (hbyte == 0xa) {		/* SXCALL */
+		if (hbyte == 0xa) {		/* SXCALL */
 		if (((val >> 12) == hbyte) && !label[val & 0xfff]) {
-		    label[val & 0xfff] = strcpy (Malloc (strlen (symptr) + 1), symptr);
-		    return 1;
+			label[val & 0xfff] = strcpy (Malloc (strlen (symptr) + 1), symptr);
+			return 1;
 		}
-	    }
-	    else {			/* DOS, IOCS, FPACK */
+		}
+		else {			/* DOS, IOCS, FPACK */
 		if (((val >> 8) == hbyte) && !label[val & 0xff]) {
-		    label[val & 0xff] = strcpy (Malloc (strlen (symptr) + 1), symptr);
-		    return 1;
+			label[val & 0xff] = strcpy (Malloc (strlen (symptr) + 1), symptr);
+			return 1;
 		}
-	    }
+		}
 	}
 
-	/* ƒ}ƒNƒ–¼: .macro Àˆø”–¼ */
+	/* ãƒã‚¯ãƒ­å: .macro å®Ÿå¼•æ•°å */
 	else if (strcasecmp (psdptr, "macro") == 0) {
-	    if (strlen (symptr) < MAX_MACRO_LEN)
+		if (strlen (symptr) < MAX_MACRO_LEN)
 		strcpy (callname, symptr);
 #if 0
-	    else
-		eprintf ("Warning : ƒ}ƒNƒ–¼‚ª’·‚·‚¬‚Ü‚·(%s)\n", symptr);
+		else
+		eprintf ("Warning : ãƒã‚¯ãƒ­åãŒé•·ã™ãã¾ã™(%s)\n", symptr);
 #endif
 	}
-    }
-    return 0;
+	}
+	return 0;
 }
 
 
 /*
-	ƒtƒ@ƒCƒ‹‚©‚çƒVƒ“ƒ{ƒ‹’è‹`‚ğ“Ç‚İ‚Ş.
-	ƒtƒ@ƒCƒ‹‚ÌƒI[ƒvƒ“‚É¸”s‚µ‚½ê‡‚Í0‚ğ•Ô‚µA‚»‚êˆÈŠO‚Í1‚ğ•Ô‚·.
-	ƒVƒ“ƒ{ƒ‹‚ªˆêŒÂ‚à’è‹`‚³‚ê‚Ä‚¢‚È‚­‚Ä‚àŒx‚ğ•\¦‚·‚é‚¾‚¯‚Å
-	ƒAƒ{[ƒg‚Í‚µ‚È‚¢.
+	ãƒ•ã‚¡ã‚¤ãƒ«ã‹ã‚‰ã‚·ãƒ³ãƒœãƒ«å®šç¾©ã‚’èª­ã¿è¾¼ã‚€.
+	ãƒ•ã‚¡ã‚¤ãƒ«ã®ã‚ªãƒ¼ãƒ—ãƒ³ã«å¤±æ•—ã—ãŸå ´åˆã¯0ã‚’è¿”ã—ã€ãã‚Œä»¥å¤–ã¯1ã‚’è¿”ã™.
+	ã‚·ãƒ³ãƒœãƒ«ãŒä¸€å€‹ã‚‚å®šç¾©ã•ã‚Œã¦ã„ãªãã¦ã‚‚è­¦å‘Šã‚’è¡¨ç¤ºã™ã‚‹ã ã‘ã§
+	ã‚¢ãƒœãƒ¼ãƒˆã¯ã—ãªã„.
 */
 private int
 readfile (const char* filename, char*** label, int hbyte, char* callname, int max)
 {
-    int label_num;
-    FILE* fp;
+	int label_num;
+	FILE* fp;
 
-    if ((fp = fopen (filename, "rt")) == NULL)
+	if ((fp = fopen (filename, "rt")) == NULL)
 	return 0;
 
-    /* ƒtƒ@ƒ“ƒNƒVƒ‡ƒ“–¼‚Ö‚Ì”z—ñ‚ğŠm•Û */
-    {
+	/* ãƒ•ã‚¡ãƒ³ã‚¯ã‚·ãƒ§ãƒ³åã¸ã®é…åˆ—ã‚’ç¢ºä¿ */
+	{
 	char** p;
 	int i;
 
 	p = *label = Malloc (sizeof (char*) * max);
 	for (i = 0; i < max; i++)
-	    *p++ = NULL;
-    }
+		*p++ = NULL;
+	}
 
-    eprintf ("Reading %s...\n", filename);
-    {
+	eprintf ("Reading %s...\n", filename);
+	{
 	char linebuf[256];
 
 	label_num = 0;
 	while (fgets (linebuf, sizeof linebuf, fp))
-	    label_num += getlabel (linebuf, *label, hbyte, callname);
-    }
-    fclose (fp);
+		label_num += getlabel (linebuf, *label, hbyte, callname);
+	}
+	fclose (fp);
 
-    if (label_num == 0)
+	if (label_num == 0)
 #if 0
-	err ("Error : %s ‚É‚ÍƒVƒ“ƒ{ƒ‹‚ª‚P‚Â‚à’è‹`‚³‚ê‚Ä‚¢‚Ü‚¹‚ñ.\n", filename);
+	err ("Error : %s ã«ã¯ã‚·ãƒ³ãƒœãƒ«ãŒï¼‘ã¤ã‚‚å®šç¾©ã•ã‚Œã¦ã„ã¾ã›ã‚“.\n", filename);
 #else
-	eprintf ("Warning : %s ‚É‚ÍƒVƒ“ƒ{ƒ‹‚ª‚P‚Â‚à’è‹`‚³‚ê‚Ä‚¢‚Ü‚¹‚ñ.\n", filename);
+	eprintf ("Warning : %s ã«ã¯ã‚·ãƒ³ãƒœãƒ«ãŒï¼‘ã¤ã‚‚å®šç¾©ã•ã‚Œã¦ã„ã¾ã›ã‚“.\n", filename);
 #endif
-    return 1;
+	return 1;
 }
 
 

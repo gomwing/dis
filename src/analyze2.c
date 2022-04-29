@@ -1,7 +1,7 @@
-/* $Id: analyze2.c,v 1.1 1996/11/07 08:02:52 ryo freeze $
+ï»¿/* $Id: analyze2.c,v 1.1 1996/11/07 08:02:52 ryo freeze $
  *
- *	ƒ\[ƒXƒR[ƒhƒWƒFƒlƒŒ[ƒ^
- *	©“®‰ğÍƒ‚ƒWƒ…[ƒ‹‚Q
+ *	ã‚½ãƒ¼ã‚¹ã‚³ãƒ¼ãƒ‰ã‚¸ã‚§ãƒãƒ¬ãƒ¼ã‚¿
+ *	è‡ªå‹•è§£æãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ï¼’
  *	Copyright (C) 1989,1990 K.Abe
  *	All rights reserved.
  *	Copyright (C) 1997-2010 Tachibana
@@ -26,25 +26,25 @@ USEOPTION	option_y, option_i, option_h;
 
 /*
 
-  ƒf[ƒ^ƒGƒŠƒA’†‚ÌƒvƒƒOƒ‰ƒ€—Ìˆæ‚ğ”»•Ê‚·‚é
-  ƒvƒƒOƒ‰ƒ€‚Æ”F¯‚µ‚½ƒAƒhƒŒƒX‚Ì”‚ğ•Ô‚·
+  ãƒ‡ãƒ¼ã‚¿ã‚¨ãƒªã‚¢ä¸­ã®ãƒ—ãƒ­ã‚°ãƒ©ãƒ é ˜åŸŸã‚’åˆ¤åˆ¥ã™ã‚‹
+  ãƒ—ãƒ­ã‚°ãƒ©ãƒ ã¨èªè­˜ã—ãŸã‚¢ãƒ‰ãƒ¬ã‚¹ã®æ•°ã‚’è¿”ã™
 
 */
 extern int
 research_data (void)
 {
-    lblbuf* lptr = next (BeginTEXT);
-    address pc = lptr->label;
-    lblmode nmode = lptr->mode;	/* Ÿ‚Ì—Ìˆæ‚Ì‘®« */
-    lblmode mode = PROLABEL;	/* Œ»İ‚Ì—Ìˆæ‚Ì‘®« */
-    int rc = 0;
+	lblbuf* lptr = next (BeginTEXT);
+	address pc = lptr->label;
+	lblmode nmode = lptr->mode;	/* æ¬¡ã®é ˜åŸŸã®å±æ€§ */
+	lblmode mode = PROLABEL;	/* ç¾åœ¨ã®é ˜åŸŸã®å±æ€§ */
+	int rc = 0;
 
 #ifdef	DEBUG
-    printf ("enter research_data\n");
+	printf ("enter research_data\n");
 #endif
 
-    PCEND = Available_text_end;
-    while (pc < Available_text_end) {
+	PCEND = Available_text_end;
+	while (pc < Available_text_end) {
 	address nlabel;
 
 	mode = nmode;
@@ -57,101 +57,101 @@ research_data (void)
 #endif
 	if (!((long)pc & 1) && isDATLABEL (mode) && !(mode & FORCE)
 	 && !depend_address (pc) && (mode & 0xff) == UNKNOWN && !isTABLE (mode)) {
-	    address dummy = pc;
-	    disasm code;
+		address dummy = pc;
+		disasm code;
 
-	    if (!option_y
-	     || (!((ULONG)nlabel & 1) &&
+		if (!option_y
+		 || (!((UINTPTR)nlabel & 1) &&
 		 ( (dis (nlabel - 2 + Ofst, &code, &dummy),
-		       (code.flag != OTHER && code.flag != UNDEF))
+			   (code.flag != OTHER && code.flag != UNDEF))
 		|| (dis (nlabel - 4 + Ofst, &code, &dummy) == 4
-		    && (code.flag != OTHER && code.flag != UNDEF))
+			&& (code.flag != OTHER && code.flag != UNDEF))
 		|| (dis (nlabel - 6 + Ofst, &code, &dummy) == 6
-		    && (code.flag != OTHER && code.flag != UNDEF))
-	        ))
-	    ) {
+			&& (code.flag != OTHER && code.flag != UNDEF))
+			))
+		) {
 		if (analyze (pc, option_i ? ANALYZE_IGNOREFAULT : ANALYZE_NORMAL)) {
-		    rc++;
+			rc++;
 #ifdef	DEBUG
-		    printf ("* maybe program %5x - %5x\n", pc, nlabel);
+			printf ("* maybe program %5x - %5x\n", pc, nlabel);
 #endif
 		}
-	    }
+		}
 	}
 	pc = nlabel;
-    }
+	}
 
 #ifdef	DEBUG
-    printf ("exit research_data (rc=%d)\n", rc);
+	printf ("exit research_data (rc=%d)\n", rc);
 #endif
 
-    return rc;
+	return rc;
 }
 
 /*
 
-  ƒf[ƒ^—Ìˆæ‚É‚ ‚éƒAƒhƒŒƒXˆË‘¶‚Ìƒf[ƒ^‚ğ“o˜^‚·‚é
-  ƒf[ƒ^—Ìˆæ‚É‚ ‚é 0x4e75(rts) ‚ÌŸ‚ÌƒAƒhƒŒƒX‚ğ“o˜^‚·‚é
+  ãƒ‡ãƒ¼ã‚¿é ˜åŸŸã«ã‚ã‚‹ã‚¢ãƒ‰ãƒ¬ã‚¹ä¾å­˜ã®ãƒ‡ãƒ¼ã‚¿ã‚’ç™»éŒ²ã™ã‚‹
+  ãƒ‡ãƒ¼ã‚¿é ˜åŸŸã«ã‚ã‚‹ 0x4e75(rts) ã®æ¬¡ã®ã‚¢ãƒ‰ãƒ¬ã‚¹ã‚’ç™»éŒ²ã™ã‚‹
 
 */
 extern void
 analyze_data (void)
 {
-    address data_from, adrs;
-    address data_to = BeginTEXT;
+	address data_from, adrs;
+	address data_to = BeginTEXT;
 
-    do {
+	do {
 	data_from = next_datlabel (data_to)->label;
-	data_to   = (address) min ((ULONG) next_prolabel (data_from)->label,
-				   (ULONG) BeginBSS);
+	data_to   = (address) min ((UINTPTR) next_prolabel (data_from)->label,
+				   (UINTPTR) BeginBSS);
 	charout ('#');
 
-	/* ƒAƒhƒŒƒXˆË‘¶‚Ìƒf[ƒ^‚ª‚ ‚ê‚ÎA‚»‚ÌƒAƒhƒŒƒX‚ğ“o˜^‚·‚é */
+	/* ã‚¢ãƒ‰ãƒ¬ã‚¹ä¾å­˜ã®ãƒ‡ãƒ¼ã‚¿ãŒã‚ã‚Œã°ã€ãã®ã‚¢ãƒ‰ãƒ¬ã‚¹ã‚’ç™»éŒ²ã™ã‚‹ */
 	for (adrs = data_from;
-	     (adrs = nearadrs (adrs)) < data_to && adrs < data_to;
-	     adrs += 4) {
+		 (adrs = nearadrs (adrs)) < data_to && adrs < data_to;
+		 adrs += 4) {
 #ifdef	DEBUG
-	    printf ("depend_address %x\n", (address) peekl (adrs + Ofst));
+		printf ("depend_address %x\n", (address) peekl (adrs + Ofst));
 #endif
-	    regist_label ((address) peekl (adrs + Ofst), DATLABEL | UNKNOWN);
+		regist_label ((address) (UINTPTR) peekl (adrs + Ofst), DATLABEL | UNKNOWN);
 	}
 
-	/* rts ‚ÌŸ‚ÌƒAƒhƒŒƒX‚ğ“o˜^‚·‚é */
+	/* rts ã®æ¬¡ã®ã‚¢ãƒ‰ãƒ¬ã‚¹ã‚’ç™»éŒ²ã™ã‚‹ */
 	if (option_h && data_from < Available_text_end) {
-	    for (adrs = data_from + ((int)data_from & 1); adrs < data_to; adrs += 2) {
+		for (adrs = data_from + ((UINTPTR)data_from & 1); adrs < data_to; adrs += 2) {
 		if (peekw (adrs + Ofst) == 0x4e75) {
 #ifdef	DEBUG
-		    printf ("found 0x4e75 in %x\n", (int) adrs);
+			printf ("found 0x4e75 in %"PRI_UINTPTR"\n", (UINTPTR) adrs);
 #endif
-		    regist_label (adrs + 2, DATLABEL | UNKNOWN);
+			regist_label (adrs + 2, DATLABEL | UNKNOWN);
 		}
 
 #ifdef	OSKDIS
-		/* link –½—ß‚É’–Ú */
+		/* link å‘½ä»¤ã«æ³¨ç›® */
 		if ((peekw (adrs + Ofst) & 0xfff8) == 0x4e50)
-		    regist_label (adrs, DATLABEL | UNKNOWN);
+			regist_label (adrs, DATLABEL | UNKNOWN);
 #endif	/* OSKDIS   */
 
-	    }
+		}
 	}
 
-    } while (data_to < BeginBSS && adrs != (address)-1);
+	} while (data_to < BeginBSS && adrs != (address)-1);
 }
 
 
 /*
 
-  ƒAƒhƒŒƒXƒe[ƒuƒ‹‚ğ‘{‚·
+  ã‚¢ãƒ‰ãƒ¬ã‚¹ãƒ†ãƒ¼ãƒ–ãƒ«ã‚’æœã™
 
 */
 extern void
 search_adrs_table (void)
 {
-    lblbuf* lptr = next (BeginTEXT);
-    address pc = lptr->label;
-    lblmode nmode = lptr->mode;
+	lblbuf* lptr = next (BeginTEXT);
+	address pc = lptr->label;
+	lblmode nmode = lptr->mode;
 
-    while (pc < (address) BeginBSS) {
+	while (pc < (address) BeginBSS) {
 	address nlabel;
 	lblmode mode = nmode;
 
@@ -162,32 +162,32 @@ search_adrs_table (void)
 	printf ("chk1(%x)", pc);
 #endif
 	if (isDATLABEL (mode)) {
-	    address labeltop;
-	    int count;
+		address labeltop;
+		int count;
 
-	    pc = (address) min((ULONG) nearadrs (pc), (ULONG) nlabel);
+		pc = (address) min((UINTPTR) nearadrs (pc), (UINTPTR) nlabel);
 #ifdef DEBUG
-	    printf ("chk2(%x)", pc);
+		printf ("chk2(%x)", pc);
 #endif
-	    labeltop = pc;
-	    for (count = 0; depend_address (pc) && pc < nlabel; count++)
+		labeltop = pc;
+		for (count = 0; depend_address (pc) && pc < nlabel; count++)
 		pc += 4;
 #ifdef DEBUG
-	    printf ("count(%d)\n", count);
+		printf ("count(%d)\n", count);
 #endif
-	    if (count >= 3) {
+		if (count >= 3) {
 		int i;
 #ifdef	DEBUG
 		printf ("* found address table at %6x %d\n", pc - count * 4, count);
 #endif
 		for (i = 0; i < count; i++) {
-		    address label = (address) peekl (labeltop + i * 4 + Ofst);
-		    analyze (label, (option_i ? ANALYZE_IGNOREFAULT : ANALYZE_NORMAL));
+			address label = (address) (UINTPTR) peekl (labeltop + i * 4 + Ofst);
+			analyze (label, (option_i ? ANALYZE_IGNOREFAULT : ANALYZE_NORMAL));
 		}
-	    }
+		}
 	}
 	pc = nlabel;
-    }
+	}
 }
 
 
@@ -196,81 +196,81 @@ search_adrs_table (void)
 #ifdef	OSKDIS
 /*
 
-  ‚h‚c‚‚”‚‚©‚ç‰Šú‰»ƒf[ƒ^‚ğ“o˜^‚·‚é
+  ï¼©ï¼¤ï½ï½”ï½ã‹ã‚‰åˆæœŸåŒ–ãƒ‡ãƒ¼ã‚¿ã‚’ç™»éŒ²ã™ã‚‹
 
 */
 extern void
 analyze_idata (void)
 {
-    address offset = (address) (Top - (ULONG) Head.base + (ULONG) HeadOSK.idata);
+	address offset = (address) (Top - (UINTPTR) Head.base + (UINTPTR) HeadOSK.idata);
 
-    BeginDATA = BeginBSS + peekl (offset + 0);
-    regist_label (BeginDATA, DATLABEL | UNKNOWN);
-    regist_label (BeginDATA + peekl (offset + 4), DATLABEL | UNKNOWN);
+	BeginDATA = BeginBSS + peekl (offset + 0);
+	regist_label (BeginDATA, DATLABEL | UNKNOWN);
+	regist_label (BeginDATA + peekl (offset + 4), DATLABEL | UNKNOWN);
 }
 
 /*
 
-  ‚h‚q‚…‚†‚“‚ğ‰ğÍ
+  ï¼©ï¼²ï½…ï½†ï½“ã‚’è§£æ
 
 */
 static void
 analyze_irefs_sub (int codelbl, ULONG* idatp, ULONG offset, int mode)
 {
-    if (peekl (idatp) <= offset && offset < (peekl (idatp) + peekl (&idatp[1]))) {
+	if (peekl (idatp) <= offset && offset < (peekl (idatp) + peekl (&idatp[1]))) {
 	address p = (address) &idatp[2];
 	ULONG* w = (ULONG*) (p + offset - peekl (idatp));
 
 	regist_label (peekl (w) + codelbl ? 0 : BeginBSS, mode);
-    }
+	}
 }
 
 extern void
 analyze_irefs (void)
 {
-    struct REFSTBL {
+	struct REFSTBL {
 	UWORD base;
 	UWORD cnt;
-    } *offset;
-    ULONG* idatp = (ULONG*) (Top - (ULONG) Head.base + (ULONG) HeadOSK.idata);
+	} *offset;
+	ULONG* idatp = (ULONG*) (Top - (UINTPTR) Head.base + (UINTPTR) HeadOSK.idata);
 
-    offset = (struct REFSTBL*) (Top - (ULONG) Head.base + (ULONG) HeadOSK.irefs);
+	offset = (struct REFSTBL*) (Top - (UINTPTR) Head.base + (UINTPTR) HeadOSK.irefs);
 
-    while (ofset->cnt) {	/* ƒR[ƒhƒ|ƒCƒ“ƒ^ */
-	ULONG wk = BeginBSS + ((ULONG) ofset->base << 16);
+	while (ofset->cnt) {	/* ã‚³ãƒ¼ãƒ‰ãƒã‚¤ãƒ³ã‚¿ */
+	ULONG wk = BeginBSS + ((UINTPTR) ofset->base << 16);
 	UWORD* p = (UWORD*) &ofset[1];
 	int i;
 
 	for (i = 0; i < ofset->cnt; i++) {
-	    charout ('#');
+		charout ('#');
 #ifdef DEBUG
-	    eprintf (":regist_label:%08x\n", BeginBSS + wk + peekw (p));
+		eprintf (":regist_label:%08x\n", BeginBSS + wk + peekw (p));
 #endif
-	    regist_label (wk + peekw (p), DATLABEL | LONGSIZE | CODEPTR | FORCE);
-	    regist_label (wk + peekw (p) + 4, DATLABEL | UNKNOWN);
-	    analyze_irefs_sub (TRUE, idatp, peekl (p), DATLABEL | UNKNOWN);
-	    p++;
+		regist_label (wk + peekw (p), DATLABEL | LONGSIZE | CODEPTR | FORCE);
+		regist_label (wk + peekw (p) + 4, DATLABEL | UNKNOWN);
+		analyze_irefs_sub (TRUE, idatp, peekl (p), DATLABEL | UNKNOWN);
+		p++;
 	}
 	offset = (struct REFSTBL*) p;
-    }
-    offset++;
-    while (ofset->cnt) {	/* ƒf[ƒ^ƒ|ƒCƒ“ƒ^ */
-	ULONG wk = BeginBSS + ((ULONG) ofset->base << 16);
+	}
+	offset++;
+	while (ofset->cnt) {	/* ãƒ‡ãƒ¼ã‚¿ãƒã‚¤ãƒ³ã‚¿ */
+	ULONG wk = BeginBSS + ((UINTPTR) ofset->base << 16);
 	UWORD* p = (UWORD*) &ofset[1];
 	int i;
 
 	for (i = 0; i < ofset->cnt; i++) {
-	    charout ('#');
+		charout ('#');
 #ifdef DEBUG
-	    eprintf (":regist_label:%08x\n", BeginBSS + wk + peekw (p));
+		eprintf (":regist_label:%08x\n", BeginBSS + wk + peekw (p));
 #endif
-	    regist_label (wk + peekw (p), DATLABEL | LONGSIZE | DATAPTR | FORCE);
-	    regist_label (wk + peekw (p) + 4, DATLABEL | UNKNOWN);
-	    analyze_irefs_sub (FALSE, idatp, peekl (p), DATLABEL | UNKNOWN);
-	    p++;
+		regist_label (wk + peekw (p), DATLABEL | LONGSIZE | DATAPTR | FORCE);
+		regist_label (wk + peekw (p) + 4, DATLABEL | UNKNOWN);
+		analyze_irefs_sub (FALSE, idatp, peekl (p), DATLABEL | UNKNOWN);
+		p++;
 	}
 	offset = (struct REFSTBL*) p;
-    }
+	}
 }
 #endif	/* OSKDIS   */
 

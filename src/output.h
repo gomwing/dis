@@ -1,7 +1,7 @@
-/* $Id: output.h,v 1.1 1996/10/24 04:27:50 ryo freeze $
+ï»¿/* $Id: output.h,v 1.1 1996/10/24 04:27:50 ryo freeze $
  *
- *	ƒ\[ƒXƒR[ƒhƒWƒFƒlƒŒ[ƒ^
- *	o—Íƒ‹[ƒ`ƒ“‰º¿‚¯ƒwƒbƒ_
+ *	ã‚½ãƒ¼ã‚¹ã‚³ãƒ¼ãƒ‰ã‚¸ã‚§ãƒãƒ¬ãƒ¼ã‚¿
+ *	å‡ºåŠ›ãƒ«ãƒ¼ãƒãƒ³ä¸‹è«‹ã‘ãƒ˜ãƒƒãƒ€
  *	Copyright (C) 1989,1990 K.Abe
  *	All rights reserved.
  *	Copyright (C) 1997-2010 Tachibana

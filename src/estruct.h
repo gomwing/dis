@@ -1,7 +1,7 @@
-/* $Id: estruct.h,v 1.1 1996/10/24 04:27:44 ryo freeze $
+ï»¿/* $Id: estruct.h,v 1.1 1996/10/24 04:27:44 ryo freeze $
  *
- *	ƒ\[ƒXƒR[ƒhƒWƒFƒlƒŒ[ƒ^
- *	\‘¢‘Ì’è‹`ƒtƒ@ƒCƒ‹
+ *	ã‚½ãƒ¼ã‚¹ã‚³ãƒ¼ãƒ‰ã‚¸ã‚§ãƒãƒ¬ãƒ¼ã‚¿
+ *	æ§‹é€ ä½“å®šç¾©ãƒ•ã‚¡ã‚¤ãƒ«
  *	Copyright (C) 1989,1990 K.Abe, 1994 R.ShimiZu
  *	All rights reserved.
  *	Copyright (C) 1997-2010 Tachibana
@@ -15,13 +15,18 @@
 #define __attribute__(x) /* NOTHING */
 #endif
 
-/* #include <class.h> */
-typedef unsigned char	UBYTE;
-typedef short		WORD;
-typedef unsigned short	UWORD;
-typedef long		LONG;
-typedef unsigned long	ULONG;
+#include <stdint.h>
 
+typedef uint8_t  UBYTE;
+typedef int16_t  WORD;
+typedef uint16_t UWORD;
+typedef int32_t  LONG;
+typedef uint32_t ULONG;
+
+typedef unsigned long UINTPTR;
+typedef long INTPTR;
+#define PRI_UINTPTR "lx"
+#define SIZEOF_ULONG 4
 
 #ifdef	TRUE
 #undef	TRUE
@@ -32,92 +37,109 @@ typedef unsigned long	ULONG;
 typedef enum { FALSE, TRUE } boolean;
 
 typedef enum {
-    BYTESIZE,		/* ƒoƒCƒg */
-    WORDSIZE,		/* ƒ[ƒh */
-    LONGSIZE,		/* ƒƒ“ƒOƒ[ƒh */
-    QUADSIZE,		/* ƒNƒƒbƒhƒ[ƒh */
-    SHORTSIZE,		/* ƒVƒ‡[ƒg( ‘Š‘Î•ªŠò–½—ß ) */
+	BYTESIZE,		/* ãƒã‚¤ãƒˆ */
+	WORDSIZE,		/* ãƒ¯ãƒ¼ãƒ‰ */
+	LONGSIZE,		/* ãƒ­ãƒ³ã‚°ãƒ¯ãƒ¼ãƒ‰ */
+	QUADSIZE,		/* ã‚¯ãƒ¯ãƒƒãƒ‰ãƒ¯ãƒ¼ãƒ‰ */
+	SHORTSIZE,		/* ã‚·ãƒ§ãƒ¼ãƒˆ( ç›¸å¯¾åˆ†å²å‘½ä»¤ ) */
 
-    SINGLESIZE,		/* 32bitÀ”Œ^ */
-    DOUBLESIZE,		/* 64bitÀ”Œ^ */
-    EXTENDSIZE,		/* 96bitÀ”Œ^ */
-    PACKEDSIZE,		/* 96bitBCDÀ”Œ^ */
-    NOTHING,		/* –³‚µ */
+	SINGLESIZE,		/* 32bitå®Ÿæ•°å‹ */
+	DOUBLESIZE,		/* 64bitå®Ÿæ•°å‹ */
+	EXTENDSIZE,		/* 96bitå®Ÿæ•°å‹ */
+	PACKEDSIZE,		/* 96bitBCDå®Ÿæ•°å‹ */
+	NOTHING,		/* ç„¡ã— */
 
-    STRING,		/* •¶š—ñ */
-    RELTABLE,		/* ƒŠƒƒP[ƒ^ƒuƒ‹ƒIƒtƒZƒbƒgƒe[ƒuƒ‹ */
-    RELLONGTABLE,	/* ƒƒ“ƒOƒ[ƒh‚ÈƒŠƒƒP[ƒ^ƒuƒ‹ƒIƒtƒZƒbƒgƒe[ƒuƒ‹ */
-    ZTABLE,		/* â‘Î”Ô’nƒe[ƒuƒ‹ */
+	STRING,		/* æ–‡å­—åˆ— */
+	RELTABLE,		/* ãƒªãƒ­ã‚±ãƒ¼ã‚¿ãƒ–ãƒ«ã‚ªãƒ•ã‚»ãƒƒãƒˆãƒ†ãƒ¼ãƒ–ãƒ« */
+	RELLONGTABLE,	/* ãƒ­ãƒ³ã‚°ãƒ¯ãƒ¼ãƒ‰ãªãƒªãƒ­ã‚±ãƒ¼ã‚¿ãƒ–ãƒ«ã‚ªãƒ•ã‚»ãƒƒãƒˆãƒ†ãƒ¼ãƒ–ãƒ« */
+	ZTABLE,		/* çµ¶å¯¾ç•ªåœ°ãƒ†ãƒ¼ãƒ–ãƒ« */
 #ifdef	OSKDIS
-    WTABLE,		/* ƒ[ƒhƒe[ƒuƒ‹ */
+	WTABLE,		/* ãƒ¯ãƒ¼ãƒ‰ãƒ†ãƒ¼ãƒ–ãƒ« */
 #endif	/* OSKDIS */
 
-    EVENID,
-    CRID,
-    WORDID,
-    LONGID,
-    BYTEID,
-    ASCIIID,
-    ASCIIZID,
-    LASCIIID,
-    BREAKID,
-    ENDTABLEID,
-    UNKNOWN = 128	/* •s–¾ */
+	EVENID,
+	CRID,
+	WORDID,
+	LONGID,
+	BYTEID,
+	ASCIIID,
+	ASCIIZID,
+	LASCIIID,
+	BREAKID,
+	ENDTABLEID,
+	UNKNOWN = 128	/* ä¸æ˜ */
 } opesize;
 
 
 typedef UBYTE*	address;
 
+#pragma pack(push,1)
 
-typedef struct {	/* .x ƒtƒ@ƒCƒ‹‚Ìƒwƒbƒ_ */
-    UWORD   head;
-    char    reserve2;
-    char    mode;
-    address base;
-    address exec;
-    ULONG   text;
-    ULONG   data;
-    ULONG   bss;
-    ULONG   offset;
-    ULONG   symbol;
-    char    reserve[ 0x1c ];
-    ULONG   bindinfo;
-} __attribute__ ((packed)) xheader;
+typedef struct {	/* .x ãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ˜ãƒƒãƒ€ */
+	UWORD   head;
+	char    reserve2;
+	char    mode;
+	address base;
+	address exec;
+	ULONG   text;
+	ULONG   data;
+	ULONG   bss;
+	ULONG   offset;
+	ULONG   symbol;
+	char    reserve[ 0x1c ];
+	ULONG   bindinfo;
+} /*__attribute__ ((packed))*/ xheader;
 
-typedef struct {	/* .z ƒtƒ@ƒCƒ‹‚Ìƒwƒbƒ_ */
-    UWORD   header;
-    ULONG   text;
-    ULONG   data;
-    ULONG   bss;
-    char    reserve[8];
-    address base;
-    UWORD   pudding;
-} __attribute__ ((packed)) zheader;
+typedef struct {    /* .x ãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ˜ãƒƒãƒ€ */
+	unsigned short   head;
+	char    reserve2;
+	char    mode;
+	unsigned int  base;
+	unsigned int  exec;
+	unsigned int   text;
+	unsigned int   data;
+	unsigned int   bss;
+	unsigned int   offset;
+	unsigned int   symbol;
+	char    reserve[ 0x1c ];
+	unsigned int   bindinfo;
+} /*__attribute__ ((packed))*/ xfileheader;
 
+typedef struct {	/* .z ãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ˜ãƒƒãƒ€ */
+	UWORD   header;
+	ULONG   text;
+	ULONG   data;
+	ULONG   bss;
+	char    reserve[8];
+	address base;
+	UWORD   pudding;
+} /*__attribute__ ((packed))*/ zheader;
+
+#pragma pack(pop)
 
 #ifdef	OSKDIS
-typedef struct {	/* OS-9/680x0 ƒ‚ƒWƒ…[ƒ‹‚Ìƒwƒbƒ_    */
-    UWORD   head;	/* +00 $4AFC			    */
-    UWORD   sysrev;	/* +02 ƒŠƒrƒWƒ‡ƒ“‚h‚c		    */
-    ULONG   size;	/* +04 ƒ‚ƒWƒ…[ƒ‹ƒTƒCƒY		    */
-    ULONG   owner;	/* +08 ƒI[ƒi‚h‚c		    */
-    address name;	/* +0C ƒ‚ƒWƒ…[ƒ‹–¼ƒIƒtƒZƒbƒg	    */
-    UWORD   accs;	/* +10 ƒAƒNƒZƒX‹–‰Â		    */
-    UWORD   type;	/* +12 ƒ‚ƒWƒ…[ƒ‹ƒ^ƒCƒv^Œ¾Œê	    */
-    UWORD   attr;	/* +14 ‘®«^ƒŠƒrƒWƒ‡ƒ“		    */
-    UWORD   edition;	/* +16 ƒGƒfƒBƒVƒ‡ƒ“		    */
-    address usage;	/* +18 g‚¢•ûƒRƒƒ“ƒg‚ÌƒIƒtƒZƒbƒg   */
-    address symbol;	/* +1C ƒVƒ“ƒ{ƒ‹ƒe[ƒuƒ‹		    */
-    char    resv[14];	/* +20 —\–ñÏ‚İ			    */
-    UWORD   parity;	/* +2E ƒwƒbƒ_ƒpƒŠƒeƒB		    */
-    address exec;	/* +30 ÀsƒIƒtƒZƒbƒg		    */
-    address excpt;	/* +34 ƒ†[ƒUƒgƒ‰ƒbƒvƒGƒ“ƒgƒŠ	    */
-    ULONG   mem;	/* +38 ƒƒ‚ƒŠƒTƒCƒY		    */
-    ULONG   stack;	/* +3C ƒXƒ^ƒbƒNƒTƒCƒY		    */
-    address idata;	/* +40 ‰Šú‰»ƒf[ƒ^ƒIƒtƒZƒbƒg	    */
-    address irefs;	/* +44 ‰Šú‰»QÆƒIƒtƒZƒbƒg	    */
-    address init;	/* +48 ‰Šú‰»ÀsƒGƒ“ƒgƒŠ(TRAPLIB)  */
-    address term;	/* +4C I—¹ÀsƒGƒ“ƒgƒŠ(TRAPLIB)    */
+typedef struct {	/* OS-9/680x0 ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ã®ãƒ˜ãƒƒãƒ€    */
+	UWORD   head;	/* +00 $4AFC			    */
+	UWORD   sysrev;	/* +02 ãƒªãƒ“ã‚¸ãƒ§ãƒ³ï¼©ï¼¤		    */
+	ULONG   size;	/* +04 ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ã‚µã‚¤ã‚º		    */
+	ULONG   owner;	/* +08 ã‚ªãƒ¼ãƒŠï¼©ï¼¤		    */
+	address name;	/* +0C ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«åã‚ªãƒ•ã‚»ãƒƒãƒˆ	    */
+	UWORD   accs;	/* +10 ã‚¢ã‚¯ã‚»ã‚¹è¨±å¯		    */
+	UWORD   type;	/* +12 ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ã‚¿ã‚¤ãƒ—ï¼è¨€èª	    */
+	UWORD   attr;	/* +14 å±æ€§ï¼ãƒªãƒ“ã‚¸ãƒ§ãƒ³		    */
+	UWORD   edition;	/* +16 ã‚¨ãƒ‡ã‚£ã‚·ãƒ§ãƒ³		    */
+	address usage;	/* +18 ä½¿ã„æ–¹ã‚³ãƒ¡ãƒ³ãƒˆã®ã‚ªãƒ•ã‚»ãƒƒãƒˆ   */
+	address symbol;	/* +1C ã‚·ãƒ³ãƒœãƒ«ãƒ†ãƒ¼ãƒ–ãƒ«		    */
+	char    resv[14];	/* +20 äºˆç´„æ¸ˆã¿			    */
+	UWORD   parity;	/* +2E ãƒ˜ãƒƒãƒ€ãƒ‘ãƒªãƒ†ã‚£		    */
+	address exec;	/* +30 å®Ÿè¡Œã‚ªãƒ•ã‚»ãƒƒãƒˆ		    */
+	address excpt;	/* +34 ãƒ¦ãƒ¼ã‚¶ãƒˆãƒ©ãƒƒãƒ—ã‚¨ãƒ³ãƒˆãƒª	    */
+	ULONG   mem;	/* +38 ãƒ¡ãƒ¢ãƒªã‚µã‚¤ã‚º		    */
+	ULONG   stack;	/* +3C ã‚¹ã‚¿ãƒƒã‚¯ã‚µã‚¤ã‚º		    */
+	address idata;	/* +40 åˆæœŸåŒ–ãƒ‡ãƒ¼ã‚¿ã‚ªãƒ•ã‚»ãƒƒãƒˆ	    */
+	address irefs;	/* +44 åˆæœŸåŒ–å‚ç…§ã‚ªãƒ•ã‚»ãƒƒãƒˆ	    */
+	address init;	/* +48 åˆæœŸåŒ–å®Ÿè¡Œã‚¨ãƒ³ãƒˆãƒª(TRAPLIB)  */
+	address term;	/* +4C çµ‚äº†å®Ÿè¡Œã‚¨ãƒ³ãƒˆãƒª(TRAPLIB)    */
 } __attribute__ ((packed)) os9header;
 #endif	/* OSKDIS */
 

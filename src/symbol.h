@@ -1,7 +1,7 @@
-/* $Id: symbol.h,v 1.1 1996/10/24 04:27:50 ryo freeze $
+ï»¿/* $Id: symbol.h,v 1.1 1996/10/24 04:27:50 ryo freeze $
  *
- *	ƒ\[ƒXƒR[ƒhƒWƒFƒlƒŒ[ƒ^
- *	ƒVƒ“ƒ{ƒ‹ƒl[ƒ€ŠÇ—ƒ‚ƒWƒ…[ƒ‹ƒwƒbƒ_
+ *	ã‚½ãƒ¼ã‚¹ã‚³ãƒ¼ãƒ‰ã‚¸ã‚§ãƒãƒ¬ãƒ¼ã‚¿
+ *	ã‚·ãƒ³ãƒœãƒ«ãƒãƒ¼ãƒ ç®¡ç†ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ãƒ˜ãƒƒãƒ€
  *	Copyright (C) 1989,1990 K.Abe
  *	All rights reserved.
  *	Copyright (C) 1997-2010 Tachibana
@@ -13,14 +13,14 @@
 
 
 typedef struct _symlist {
-    struct _symlist* next;
-    UWORD  type;
-    char*  sym;
+	struct _symlist* next;
+	UWORD  type;
+	char*  sym;
 } symlist;
 
 typedef struct {
-    address adrs;
-    symlist first;
+	address adrs;
+	symlist first;
 } symbol;
 
 

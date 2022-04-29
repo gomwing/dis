@@ -1,7 +1,7 @@
-/* $Id: search.c,v 1.1 1996/11/07 08:03:58 ryo freeze $
+ï»¿/* $Id: search.c,v 1.1 1996/11/07 08:03:58 ryo freeze $
  *
- *	ƒ\[ƒXƒR[ƒhƒWƒFƒlƒŒ[ƒ^
- *	•¶š—ñ”»’è
+ *	ã‚½ãƒ¼ã‚¹ã‚³ãƒ¼ãƒ‰ã‚¸ã‚§ãƒãƒ¬ãƒ¼ã‚¿
+ *	æ–‡å­—åˆ—åˆ¤å®š
  *	Copyright (C) 1989,1990 K.Abe
  *	All rights reserved.
  *	Copyright (C) 1997-2010 Tachibana
@@ -25,137 +25,137 @@
 static INLINE void
 foundstr (address pc, address ltemp)
 {
-    charout ('s');
+	charout ('s');
 #ifdef	DEBUG
-    printf ("    * FOUND STRING AT %x - %x \n", pc, ltemp);
+	printf ("    * FOUND STRING AT %x - %x \n", pc, ltemp);
 #endif
-    regist_label (pc, DATLABEL | STRING);
+	regist_label (pc, DATLABEL | STRING);
 }
 
 
 /*
 
-  •¶š—ñ‚©‚Ç‚¤‚©‚ğ’²‚×‚é
+  æ–‡å­—åˆ—ã‹ã©ã†ã‹ã‚’èª¿ã¹ã‚‹
   *newend = last string address
 
 */
 private boolean
 is_string (address from, address end, address* newend, int str_min)
 {
-    unsigned char* store;
+	unsigned char* store;
 
 #ifdef DEBUG
-    printf ("  * is_string %x - %x\n", from, end);
+	printf ("  * is_string %x - %x\n", from, end);
 #endif
-    *newend = end;
-    store = from + Ofst;
+	*newend = end;
+	store = from + Ofst;
 
-    while (store - Ofst < end) {
+	while (store - Ofst < end) {
 	unsigned char c = *store++;
 
-	if (isprkana (c))			/* ANK •¶š */
-	    ;
-	else if (iskanji (c)) {			/* ‘SŠp•¶š */
-	    if (!iskanji2 (*store++))
+	if (isprkana (c))			/* ANK æ–‡å­— */
+		;
+	else if (iskanji (c)) {			/* å…¨è§’æ–‡å­— */
+		if (!iskanji2 (*store++))
 		return FALSE;
 	}
-	else if (c == 0x80) {			/* ”¼Šp‚Ğ‚ç‚ª‚È */
-	    c = *store++;
-	    if (c < 0x86 || 0xfc < c)
+	else if (c == 0x80) {			/* åŠè§’ã²ã‚‰ãŒãª */
+		c = *store++;
+		if (c < 0x86 || 0xfc < c)
 		return FALSE;
 	}
 	else {
-	    switch (c) {
-	    case 0x07:	/* BEL */
-	    case 0x09:	/* TAB */
-	    case 0x0d:	/* CR  */
-	    case 0x0a:	/* LF  */
-	    case 0x1a:	/* EOF */
-	    case 0x1b:	/* ESC */
+		switch (c) {
+		case 0x07:	/* BEL */
+		case 0x09:	/* TAB */
+		case 0x0d:	/* CR  */
+		case 0x0a:	/* LF  */
+		case 0x1a:	/* EOF */
+		case 0x1b:	/* ESC */
 		break;
 
-	    case 0x00:	/* NUL */
-		/* 10 ‰­‚ª .dc.b ';šÊ',0 ‚É‚È‚ç‚È‚¢‚æ‚¤‚É‚·‚é */
-		if (((int) store & 1) == 0
+		case 0x00:	/* NUL */
+		/* 10 å„„ãŒ .dc.b ';æ¯€',0 ã«ãªã‚‰ãªã„ã‚ˆã†ã«ã™ã‚‹ */
+		if (((UINTPTR) store & 1) == 0
 		 && peekl (store - sizeof (ULONG)) == 1000000000L
 		 && (store - sizeof (ULONG) - Ofst) == from)
-		    return FALSE;
+			return FALSE;
 
 		if (from + str_min < store - Ofst) {
-		    while (store - Ofst < end && !*store)
+			while (store - Ofst < end && !*store)
 			store++;
-		    *newend = (address) min ((ULONG) (store - Ofst), (ULONG) end);
-		    return TRUE;
+			*newend = (address) min ((UINTPTR) (store - Ofst), (UINTPTR) end);
+			return TRUE;
 		}
 		return FALSE;
-	    default:
+		default:
 		return FALSE;
-	    }
+		}
 	}
-    }
+	}
 
-    if (from + str_min <= store - Ofst) {
-	*newend = (address) min ((ULONG) (store - Ofst), (ULONG) end);
+	if (from + str_min <= store - Ofst) {
+	*newend = (address) min ((UINTPTR) (store - Ofst), (UINTPTR) end);
 	return TRUE;
-    }
-    return FALSE;
+	}
+	return FALSE;
 }
 
 
 /*
 
-  pc ‚©‚ç nlabel ‚Ü‚Å‚Ìƒf[ƒ^—Ìˆæ’†‚Ì•¶š—ñ‚ğƒ`ƒFƒbƒN
+  pc ã‹ã‚‰ nlabel ã¾ã§ã®ãƒ‡ãƒ¼ã‚¿é ˜åŸŸä¸­ã®æ–‡å­—åˆ—ã‚’ãƒã‚§ãƒƒã‚¯
 
 */
 private int
 check_data_area (address pc, address nlabel, int str_min)
 {
-    int num_of_str = 0;
+	int num_of_str = 0;
 
 #ifdef	DEBUG
-    printf ("* check_data_area %x - %x \n", pc, nlabel);
+	printf ("* check_data_area %x - %x \n", pc, nlabel);
 #endif
 
-    while (pc < nlabel) {
+	while (pc < nlabel) {
 	address ltemp, nlabel2;
 
-	nlabel2 = ltemp = (address) min ((ULONG) nearadrs (pc), (ULONG) nlabel);
+	nlabel2 = ltemp = (address) min ((UINTPTR) nearadrs (pc), (UINTPTR) nlabel);
 	while (pc < nlabel2) {
-	    if (is_string (pc, ltemp, &ltemp, str_min)) {
+		if (is_string (pc, ltemp, &ltemp, str_min)) {
 		foundstr (pc, ltemp);
 		num_of_str++;
 		while (depend_address (ltemp) && ltemp + 4 <= nlabel2)
-		    ltemp += 4;
+			ltemp += 4;
 		regist_label (ltemp, DATLABEL | UNKNOWN);
 		pc = ltemp;
-		ltemp = (address) min ((ULONG) nearadrs (pc), (ULONG) nlabel);
-	    }
-	    else
+		ltemp = (address) min ((UINTPTR) nearadrs (pc), (UINTPTR) nlabel);
+		}
+		else
 		pc = nlabel2;
 	}
 	while (depend_address (pc))
-	    pc += 4;
-    }
+		pc += 4;
+	}
 
-    return num_of_str;
+	return num_of_str;
 }
 
 
 /*
 
-  •¶š—ñƒT[ƒ`
-  •¶š—ñ‚Æ‚µ‚Ä”F¯‚µ‚½”‚ğ•Ô‚·
+  æ–‡å­—åˆ—ã‚µãƒ¼ãƒ
+  æ–‡å­—åˆ—ã¨ã—ã¦èªè­˜ã—ãŸæ•°ã‚’è¿”ã™
 
 */
 extern int
 search_string (int str_min)
 {
-    lblbuf* nadrs = next (BeginTEXT);
-    lblmode nmode = nadrs->mode;
-    address pc = nadrs->label;		/* Å‰ */
-    int num_of_str = 0;
+	lblbuf* nadrs = next (BeginTEXT);
+	lblmode nmode = nadrs->mode;
+	address pc = nadrs->label;		/* æœ€åˆ */
+	int num_of_str = 0;
 
-    while (pc < BeginBSS) {
+	while (pc < BeginBSS) {
 	lblmode mode = nmode;
 	address nlabel;
 
@@ -165,12 +165,12 @@ search_string (int str_min)
 	nmode = nadrs->mode;
 
 	if (isDATLABEL (mode) && (mode & 0xff) == UNKNOWN)
-	    num_of_str += check_data_area (pc, nlabel, str_min);
+		num_of_str += check_data_area (pc, nlabel, str_min);
 
 	pc = nlabel;
-    }
+	}
 
-    return num_of_str;
+	return num_of_str;
 }
 
 

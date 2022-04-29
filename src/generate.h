@@ -1,7 +1,7 @@
-/* $Id: generate.h,v 1.1 1996/10/24 04:27:44 ryo freeze $
+ï»¿/* $Id: generate.h,v 1.1 1996/10/24 04:27:44 ryo freeze $
  *
- *	ƒ\[ƒXƒR[ƒhƒWƒFƒlƒŒ[ƒ^
- *	ƒ\[ƒXƒR[ƒhƒWƒFƒlƒŒ[ƒgƒ‚ƒWƒ…[ƒ‹ƒwƒbƒ_
+ *	ã‚½ãƒ¼ã‚¹ã‚³ãƒ¼ãƒ‰ã‚¸ã‚§ãƒãƒ¬ãƒ¼ã‚¿
+ *	ã‚½ãƒ¼ã‚¹ã‚³ãƒ¼ãƒ‰ã‚¸ã‚§ãƒãƒ¬ãƒ¼ãƒˆãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ãƒ˜ãƒƒãƒ€
  *	Copyright (C) 1989,1990 K.Abe
  *	All rights reserved.
  *	Copyright (C) 1997-2010 Tachibana
@@ -16,9 +16,9 @@
 #include "estruct.h"	/* typedef LONG, ULONG */
 
 typedef enum {
-    SIZE_NORMAL,
-    SIZE_OMIT,
-    SIZE_NOT_OMIT
+	SIZE_NORMAL,
+	SIZE_OMIT,
+	SIZE_NOT_OMIT
 } size_mode;
 
 extern	void	generate (char*, char*, time_t, int, char*[]);

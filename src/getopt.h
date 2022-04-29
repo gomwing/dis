@@ -1,6 +1,6 @@
-/*
+ï»¿/*
  *
- *	ƒ\[ƒXƒR[ƒhƒWƒFƒlƒŒ[ƒ^
+ *	ã‚½ãƒ¼ã‚¹ã‚³ãƒ¼ãƒ‰ã‚¸ã‚§ãƒãƒ¬ãƒ¼ã‚¿
  *	getopt
  *	Copyright (C) 2010 Tachibana
  *
